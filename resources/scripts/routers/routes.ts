@@ -16,6 +16,7 @@ import AccountApiContainer from '@/components/dashboard/AccountApiContainer';
 import AccountSSHContainer from '@/components/dashboard/ssh/AccountSSHContainer';
 import ActivityLogContainer from '@/components/dashboard/activity/ActivityLogContainer';
 import ServerActivityLogContainer from '@/components/server/ServerActivityLogContainer';
+import SubdomainContainer from '@/components/server/subdomain/SubdomainContainer';
 import ModContainer from '@/components/server/mods/ModContainer';
 import HytaleModContainer from '@/components/server/hytalemods/ModContainer';
 import HytaleWorldContainer from '@/components/server/hytaleworlds/WorldContainer';
@@ -131,6 +132,12 @@ export default {
             permission: 'allocation.*',
             name: 'Network',
             component: NetworkContainer,
+        },
+        {
+            path: '/subdomain',
+            permission: 'subdomain.*',
+            name: 'Subdomain',
+            component: SubdomainContainer,
         },
         {
             path: '/startup',

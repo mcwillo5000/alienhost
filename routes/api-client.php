@@ -228,4 +228,10 @@ Route::group([
         Route::post('/link-back', [Client\Servers\MinecraftPluginController::class,'handleBackPolymart'])->name('minecraft-plugins.link-back')->withoutMiddleware([\Pterodactyl\Http\Middleware\VerifyCsrfToken::class, ServerSubject::class,'auth', 'api', \Pterodactyl\Http\Middleware\Api\Client\RequireClientApiKey::class,AuthenticateServerAccess::class]);
         Route::post('/disconnect', [Client\Servers\MinecraftPluginController::class,'disconnectPolymart']);
     });
+        Route::group(['prefix' => '/subdomain'], function () {
+        Route::get('/', [Client\Servers\SubdomainManagerController::class, 'index']);
+        Route::post('/create', [Client\Servers\SubdomainManagerController::class, 'create']);
+        Route::post('/sync/{subdomainId}', [Client\Servers\SubdomainManagerController::class, 'sync']);
+        Route::delete('/{subdomainId}', [Client\Servers\SubdomainManagerController::class, 'delete']);
+    });
 });

@@ -243,3 +243,20 @@ Route::group(['prefix' => 'veltastudios'], function () {
     Route::patch('/schedule-templates/{id}', [Admin\VeltaStudios\ScheduleTemplateController::class, 'update'])->name('admin.veltastudios.schedule-templates.update');
     Route::delete('/schedule-templates/{id}', [Admin\VeltaStudios\ScheduleTemplateController::class, 'destroy'])->name('admin.veltastudios.schedule-templates.destroy');
 });
+/*
+|--------------------------------------------------------------------------
+| SubDomain Controller Routes
+|--------------------------------------------------------------------------
+|
+| Endpoint: /admin/subdomain
+|
+*/
+Route::group(['prefix' => 'subdomain'], function () {
+    Route::get('/', [Admin\SubDomainManagerController::class, 'index'])->name('admin.subdomain');
+    Route::get('/new', [Admin\SubDomainManagerController::class, 'new'])->name('admin.subdomain.new');
+    Route::get('/edit/{id}', [Admin\SubDomainManagerController::class, 'edit'])->name('admin.subdomain.edit');
+    Route::post('/settings', [Admin\SubDomainManagerController::class, 'settings'])->name('admin.subdomain.settings');
+    Route::post('/create', [Admin\SubDomainManagerController::class, 'create'])->name('admin.subdomain.create');
+    Route::post('/update/{id}', [Admin\SubDomainManagerController::class, 'update'])->name('admin.subdomain.update');
+    Route::delete('/delete', [Admin\SubDomainManagerController::class, 'delete'])->name('admin.subdomain.delete');
+});

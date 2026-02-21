@@ -127,6 +127,11 @@
                                 <i class="fa fa-calendar"></i> <span>Schedule Template Manager</span>
                             </a>
                         </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.subdomain') ?: 'active' }}">
+                            <a href="{{ route('admin.subdomain') }}">
+                                <i class="fa fa-globe"></i> <span>SubDomain Manager</span>
+                            </a>
+                        </li>
                     </ul>
                 </section>
             </aside>

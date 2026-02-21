@@ -160,7 +160,12 @@ class Permission extends Model
                 'delete' => 'Allows a user to delete an allocation from the server.',
             ],
         ],
-
+'subdomain' => [
+    'description' => 'Manage Subdomain',
+    'keys' => [
+        'manage' => 'Create / Delete subdomain for current server.',
+    ],
+],
         // Controls permissions for editing or viewing a server's startup parameters.
         'startup' => [
             'description' => 'Permissions that control a user\'s ability to view this server\'s startup parameters.',

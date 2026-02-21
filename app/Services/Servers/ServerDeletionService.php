@@ -9,6 +9,7 @@ use Illuminate\Database\ConnectionInterface;
 use Pterodactyl\Repositories\Wings\DaemonServerRepository;
 use Pterodactyl\Services\Databases\DatabaseManagementService;
 use Pterodactyl\Exceptions\Http\Connection\DaemonConnectionException;
+use Pterodactyl\Services\Servers\SubDomainManagerDeletionService;
 
 class ServerDeletionService
 {
@@ -20,6 +21,7 @@ class ServerDeletionService
     public function __construct(
         private ConnectionInterface $connection,
         private DaemonServerRepository $daemonServerRepository,
+        private SubDomainManagerDeletionService $subDomainManagerDeletionService,
         private DatabaseManagementService $databaseManagementService,
     ) {
     }
@@ -80,7 +82,7 @@ class ServerDeletionService
             // clear any allocation notes for the server
             $server->allocations()->update(['notes' => null]);
 
-
+            $this->subDomainManagerDeletionService->delete($server->id, $server->egg_id);
             $server->delete();
         });
     }
