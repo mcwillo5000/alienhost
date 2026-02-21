@@ -226,3 +226,20 @@ Route::group(['prefix' => 'nests'], function () {
     Route::delete('/egg/{egg:id}', [Admin\Nests\EggController::class, 'destroy']);
     Route::delete('/egg/{egg:id}/variables/{variable:id}', [Admin\Nests\EggVariableController::class, 'destroy']);
 });
+/*
+|--------------------------------------------------------------------------
+| Velta Studios Controller Routes
+|--------------------------------------------------------------------------
+|
+| Endpoint: /admin/veltastudios
+|
+*/
+Route::group(['prefix' => 'veltastudios'], function () {
+    Route::get('/schedule-templates', [Admin\VeltaStudios\ScheduleTemplateController::class, 'index'])->name('admin.veltastudios.schedule-templates');
+    Route::get('/schedule-templates/version', [Admin\VeltaStudios\ScheduleTemplateController::class, 'getVersion'])->name('admin.veltastudios.schedule-templates.version');
+    Route::get('/schedule-templates/create', [Admin\VeltaStudios\ScheduleTemplateController::class, 'create'])->name('admin.veltastudios.schedule-templates.create');
+    Route::post('/schedule-templates', [Admin\VeltaStudios\ScheduleTemplateController::class, 'store'])->name('admin.veltastudios.schedule-templates.store');
+    Route::get('/schedule-templates/{id}/edit', [Admin\VeltaStudios\ScheduleTemplateController::class, 'edit'])->name('admin.veltastudios.schedule-templates.edit');
+    Route::patch('/schedule-templates/{id}', [Admin\VeltaStudios\ScheduleTemplateController::class, 'update'])->name('admin.veltastudios.schedule-templates.update');
+    Route::delete('/schedule-templates/{id}', [Admin\VeltaStudios\ScheduleTemplateController::class, 'destroy'])->name('admin.veltastudios.schedule-templates.destroy');
+});

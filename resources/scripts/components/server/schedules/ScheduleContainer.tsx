@@ -13,6 +13,7 @@ import tw from 'twin.macro';
 import GreyRowBox from '@/components/elements/GreyRowBox';
 import { Button } from '@/components/elements/button/index';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
+import TemplateModal from '@/components/server/schedules/ScheduleTemplateModal';
 
 export default () => {
     const match = useRouteMatch();
@@ -25,6 +26,25 @@ export default () => {
 
     const schedules = ServerContext.useStoreState((state) => state.schedules.data);
     const setSchedules = ServerContext.useStoreActions((actions) => actions.schedules.setSchedules);
+    const [templateVisible, setTemplateVisible] = useState(false);
+
+const refreshSchedules = async () => {
+    clearFlashes('schedules');
+    try {
+        const schedules = await getServerSchedules(uuid);
+        setSchedules(schedules);
+    } catch (error) {
+        addError({ message: httpErrorToHuman(error), key: 'schedules' });
+        console.error(error);
+    } finally {
+        setLoading(false);
+    }
+};
+
+useEffect(() => {
+    refreshSchedules();
+}, []);
+
 
     useEffect(() => {
         clearFlashes('schedules');
@@ -67,6 +87,17 @@ export default () => {
                     <Can action={'schedule.create'}>
                         <div css={tw`mt-8 flex justify-end`}>
                             <EditScheduleModal visible={visible} onModalDismissed={() => setVisible(false)} />
+                                <TemplateModal
+    visible={templateVisible}
+    onClose={() => setTemplateVisible(false)}
+    uuid={uuid}
+    openManualModal={() => setVisible(true)}
+    refreshSchedules={refreshSchedules}
+/>
+<Button type={'button'} onClick={() => setTemplateVisible(true)} css={tw`mr-4`}>
+    Templates
+</Button>
+
                             <Button type={'button'} onClick={() => setVisible(true)}>
                                 Create schedule
                             </Button>

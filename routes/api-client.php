@@ -99,6 +99,7 @@ Route::group([
         Route::get('/', [Client\Servers\ScheduleController::class, 'index']);
         Route::middleware([ResourceLimit::Schedule->middleware()])
             ->post('/', [Client\Servers\ScheduleController::class, 'store']);
+        Route::get('/templates', [Client\Servers\ScheduleTemplateController::class, 'index']);
         Route::get('/{schedule}', [Client\Servers\ScheduleController::class, 'view']);
         Route::post('/{schedule}', [Client\Servers\ScheduleController::class, 'update']);
         Route::post('/{schedule}/execute', [Client\Servers\ScheduleController::class, 'execute']);
