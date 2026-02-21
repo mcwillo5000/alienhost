@@ -190,4 +190,24 @@ Route::group([
         Route::get('/worlds/{world}', [Client\Servers\HytaleWorldsController::class, 'show']);
         Route::post('/worlds/{world}', [Client\Servers\HytaleWorldsController::class, 'update']);
     });
+    Route::group(['prefix' => '/hytale-players'], function () {
+        Route::get('/', [Client\Servers\HytalePlayerManagerController::class, 'getAllData']);
+        Route::get('/permissions', [Client\Servers\HytalePlayerManagerController::class, 'getPermissions']);
+        Route::post('/permissions', [Client\Servers\HytalePlayerManagerController::class, 'updatePermissions']);
+        Route::post('/permissions/group', [Client\Servers\HytalePlayerManagerController::class, 'createGroup']);
+        Route::put('/permissions/group', [Client\Servers\HytalePlayerManagerController::class, 'updateGroup']);
+        Route::delete('/permissions/group', [Client\Servers\HytalePlayerManagerController::class, 'deleteGroup']);
+        Route::post('/permissions/player', [Client\Servers\HytalePlayerManagerController::class, 'addPlayerToGroup']);
+        Route::delete('/permissions/player', [Client\Servers\HytalePlayerManagerController::class, 'removePlayerFromGroup']);
+        Route::get('/whitelist', [Client\Servers\HytalePlayerManagerController::class, 'getWhitelist']);
+        Route::post('/whitelist/toggle', [Client\Servers\HytalePlayerManagerController::class, 'toggleWhitelist']);
+        Route::post('/whitelist/player', [Client\Servers\HytalePlayerManagerController::class, 'addToWhitelist']);
+        Route::delete('/whitelist/player', [Client\Servers\HytalePlayerManagerController::class, 'removeFromWhitelist']);
+        Route::get('/bans', [Client\Servers\HytalePlayerManagerController::class, 'getBans']);
+        Route::post('/bans', [Client\Servers\HytalePlayerManagerController::class, 'addBan']);
+        Route::delete('/bans', [Client\Servers\HytalePlayerManagerController::class, 'removeBan']);
+        Route::get('/players', [Client\Servers\HytalePlayerManagerController::class, 'getPlayers']);
+        Route::delete('/players', [Client\Servers\HytalePlayerManagerController::class, 'deletePlayer']);
+        Route::post('/players/gamemode', [Client\Servers\HytalePlayerManagerController::class, 'changePlayerGamemode']);
+    });
 });
