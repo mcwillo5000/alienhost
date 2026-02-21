@@ -25,6 +25,7 @@ import HytaleSettingsContainer from '@/components/server/hytalegamesettings/Hyta
 import HytalePlayerManagerContainer from '@/components/server/hytale-players/HytalePlayerManagerContainer';
 import ServerImporterContainer from '@/components/server/serverimporter/ServerImporterContainer';
 import GameConfigContainer from '@/components/server/game-config/GameConfigContainer';
+import MCPManagerContainer from '@/components/server/mcpmanager/Container';
 
 // Each of the router files is already code split out appropriately — so
 // all of the items above will only be loaded in when that router is loaded.
@@ -225,6 +226,12 @@ export default {
             permission: 'file.*',
             name: 'Game Config',
             component: GameConfigContainer,
+        },
+        {
+            path: '/minecraft/player-manager',
+            permission: 'file.read',
+            name: 'Minecraft Player Manager',
+            component: MCPManagerContainer,
         },
     ],
 } as Routes;

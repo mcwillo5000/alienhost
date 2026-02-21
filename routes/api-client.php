@@ -240,6 +240,33 @@ Route::group([
         Route::get('/content', [Client\Servers\GameConfigController::class, 'getConfig']);
         Route::post('/update', [Client\Servers\GameConfigController::class, 'updateConfig']);
     });
+    Route::group(['prefix' => '/players'], function () {
+        Route::get('/fast-query', [Client\Servers\MCPManager\MCPQueryController::class, 'index']);
+        Route::post('/check-autosave', [Client\Servers\MCPManager\MCPQueryController::class, 'checkAutosave']);
+        Route::get('/server-type', [Client\Servers\MCPManager\MCPQueryController::class, 'getServerType']);
+        Route::get('/advancements-wiki', [Client\Servers\MCPManager\MCPQueryController::class, 'getAdvancementsFromWiki']);
+        Route::get('/worlds', [Client\Servers\MCPManager\MCPQueryController::class, 'getDetectedWorlds']);
+        Route::post('/action', [Client\Servers\MCPManager\MCPQueryController::class, 'performAction']);
+        Route::post('/kick', [Client\Servers\MCPManager\MCPQueryController::class, 'kickPlayer']);
+        Route::prefix('/{uuid}')->group(function () {
+            Route::get('/advancements', [Client\Servers\MCPManager\MCPQueryController::class, 'getPlayerAdvancements']);
+            Route::get('/items', [Client\Servers\MCPManager\MCPQueryController::class, 'getPlayerItems']);
+            Route::post('/stats', [Client\Servers\MCPManager\MCPQueryController::class, 'updatePlayerStats']);
+            Route::post('/whitelist', [Client\Servers\MCPManager\MCPQueryController::class, 'whitelistPlayer']);
+            Route::delete('/whitelist', [Client\Servers\MCPManager\MCPQueryController::class, 'unwhitelistPlayer']);
+            Route::post('/ban', [Client\Servers\MCPManager\MCPQueryController::class, 'banPlayer']);
+            Route::delete('/ban', [Client\Servers\MCPManager\MCPQueryController::class, 'unbanPlayer']);
+            Route::post('/op', [Client\Servers\MCPManager\MCPQueryController::class, 'opPlayer']);
+            Route::delete('/op', [Client\Servers\MCPManager\MCPQueryController::class, 'deopPlayer']);
+            Route::post('/clear-inventory', [Client\Servers\MCPManager\MCPQueryController::class, 'clearInventory']);
+            Route::delete('/wipe-data', [Client\Servers\MCPManager\MCPQueryController::class, 'wipePlayerData']);
+            Route::post('/gamemode', [Client\Servers\MCPManager\MCPQueryController::class, 'changeGamemode']);
+            Route::post('/ban-ip', [Client\Servers\MCPManager\MCPQueryController::class, 'banIp']);
+            Route::delete('/ban-ip', [Client\Servers\MCPManager\MCPQueryController::class, 'unbanIp']);
+            Route::post('/give-item', [Client\Servers\MCPManager\MCPQueryController::class, 'giveItem']);
+            Route::post('/add-effect', [Client\Servers\MCPManager\MCPQueryController::class, 'addEffect']);
+            Route::post('/clear-effect', [Client\Servers\MCPManager\MCPQueryController::class, 'clearEffect']);
+            Route::post('/modify-stat', [Client\Servers\MCPManager\MCPQueryController::class, 'modifyPlayerStat']);
+        });
+    });
 });
-
-Route::prefix('/extensions/serverimporter')->group(base_path('routes/client-serverimporter.php'));
