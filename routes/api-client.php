@@ -157,4 +157,13 @@ Route::group([
         Route::post('/reinstall', [Client\Servers\SettingsController::class, 'reinstall']);
         Route::put('/docker-image', [Client\Servers\SettingsController::class, 'dockerImage']);
     });
+        Route::group(['prefix' => '/hytale-mods'], function () {
+        Route::get('/', [Client\Servers\HytaleModInstallerController::class, 'index']);
+        Route::get('/hytale-versions', [Client\Servers\HytaleModInstallerController::class, 'getHytaleVersions']);
+        Route::get('/installed', [Client\Servers\HytaleModInstallerController::class, 'getInstalledModsVersions']);
+        Route::get('/installed-mods', [Client\Servers\HytaleModInstallerController::class, 'getInstalledMods']);
+        Route::get('/{modId}/versions', [Client\Servers\HytaleModInstallerController::class, 'versions']);
+        Route::post('/install', [Client\Servers\HytaleModInstallerController::class, 'install']);
+        Route::delete('/remove/{modId}', [Client\Servers\HytaleModInstallerController::class, 'removeMod']);
+    });
 });
