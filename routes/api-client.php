@@ -174,4 +174,13 @@ Route::group([
         Route::post('/install', [Client\Servers\HytaleWorldInstallerController::class, 'install']);
         Route::get('/download-status/{downloadId}', [Client\Servers\HytaleWorldInstallerController::class, 'downloadStatus']);
     });
+        Route::group(['prefix' => '/hytale-prefabs'], function () {
+        Route::get('/', [Client\Servers\HytalePrefabsInstallerController::class, 'index']);
+        Route::get('/hytale-versions', [Client\Servers\HytalePrefabsInstallerController::class, 'getHytaleVersions']);
+        Route::get('/installed', [Client\Servers\HytalePrefabsInstallerController::class, 'getInstalledPrefabsVersions']);
+        Route::get('/installed-prefabs', [Client\Servers\HytalePrefabsInstallerController::class, 'getInstalledPrefabs']);
+        Route::delete('/remove/{prefabId}', [Client\Servers\HytalePrefabsInstallerController::class, 'removePrefab']);
+        Route::get('/{prefabId}/versions', [Client\Servers\HytalePrefabsInstallerController::class, 'versions']);
+        Route::post('/install', [Client\Servers\HytalePrefabsInstallerController::class, 'install']);
+    });
 });
