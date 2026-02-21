@@ -14,7 +14,7 @@ import isEqual from 'react-fast-compare';
 import CopyOnClick from '@/components/elements/CopyOnClick';
 import { ip } from '@/lib/formatters';
 import { Button } from '@/components/elements/button/index';
-
+import CrashLogURLBox from '@/components/server/settings/CrashLogURLBox';
 export default () => {
     const username = useStoreState((state) => state.user.data!.username);
     const id = ServerContext.useStoreState((state) => state.server.data!.id);
@@ -76,6 +76,11 @@ export default () => {
                             <RenameServerBox />
                         </div>
                     </Can>
+                    <Can action={'startup.update'}>
+    <div css={tw`mb-6 md:mb-10`}>
+        <CrashLogURLBox />
+    </div>
+</Can>
                     <Can action={'settings.reinstall'}>
                         <ReinstallServerBox />
                     </Can>

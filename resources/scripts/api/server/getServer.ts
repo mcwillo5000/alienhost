@@ -34,6 +34,7 @@ export interface Server {
     uuid: string;
     name: string;
     node: string;
+    crashlogUrl: string | null;
     isNodeUnderMaintenance: boolean;
     status: ServerStatus;
     sftpDetails: {
@@ -74,6 +75,7 @@ export const rawDataToServerObject = ({ attributes: data }: FractalResponseData)
     status: data.status,
     invocation: data.invocation,
     dockerImage: data.docker_image,
+    crashlogUrl: data.crash_webhook,
     sftpDetails: {
         ip: data.sftp_details.ip,
         port: data.sftp_details.port,

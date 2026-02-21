@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Settings\RenameServerRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Settings\SetDockerImageRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Settings\ReinstallServerRequest;
+use Pterodactyl\Http\Requests\Api\Client\Servers\Settings\CrashURLServerRequest;
 
 class SettingsController extends ClientApiController
 {
@@ -55,7 +56,28 @@ class SettingsController extends ClientApiController
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }
+    /**
+     * Change crash webhook url parametr.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     *
+     * @throws \Pterodactyl\Exceptions\Model\DataValidationException
+     * @throws \Pterodactyl\Exceptions\Repository\RecordNotFoundException
+     */
+    public function crashlogs(CrashURLServerRequest $request, Server $server)
+    {
+        $this->repository->update($server->id, [
+            'crash_webhook' => $request->input('url'),
+        ]);
 
+        if ($server->crash_webhook !== $request->input('url')) {
+            Activity::event('server:settings.webhook_url')
+                ->property(['old' => $server->crash_webhook, 'new' => $request->input('url')])
+                ->log();
+        }
+
+        return new JsonResponse([], Response::HTTP_NO_CONTENT);
+    }
     /**
      * Reinstalls the server on the daemon.
      *
