@@ -61,12 +61,14 @@ class SettingsController extends ClientApiController
      *
      * @throws \Throwable
      */
-    public function reinstall(ReinstallServerRequest $request, Server $server): JsonResponse
+public function reinstall(ReinstallServerRequest $request, Server $server): JsonResponse
     {
-        $this->reinstallServerService->handle($server);
-
-        Activity::event('server:reinstall')->log();
-
+        $reinstallType = $request->input('reinstall_type', 'keep_files');
+        
+        $this->reinstallServerService->handle($server, $reinstallType);
+        Activity::event('server:reinstall')
+            ->property('type', $reinstallType)
+            ->log();
         return new JsonResponse([], Response::HTTP_ACCEPTED);
     }
 

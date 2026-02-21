@@ -92,15 +92,20 @@ class DaemonServerRepository extends DaemonRepository
      *
      * @throws DaemonConnectionException
      */
-    public function reinstall(): void
+public function reinstall(bool $purge = false): void
     {
         Assert::isInstanceOf($this->server, Server::class);
-
         try {
+            $options = [];
+            // Only send purge parameter when we want to delete files
+            // Default Wings behavior (no body) should keep files
+            if ($purge) {
+                $options['json'] = ['purge' => true];
+            }
             $this->getHttpClient()->post(sprintf(
                 '/api/servers/%s/reinstall',
                 $this->server->uuid
-            ));
+            ), $options);
         } catch (TransferException $exception) {
             throw new DaemonConnectionException($exception);
         }
