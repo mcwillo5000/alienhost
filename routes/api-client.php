@@ -216,4 +216,15 @@ Route::group([
         Route::get('/versions', [Client\Servers\ModpackController::class, 'versions']);
         Route::post('/install', [Client\Servers\ModpackController::class, 'install']);
     });
+        Route::get('/minecraft-software', [Client\Servers\MinecraftSoftwareController::class,'index']);
+        Route::group(['prefix' => '/minecraft-plugins'], function () {
+        Route::get('/', [Client\Servers\MinecraftPluginController::class, 'index']);
+        Route::get('/versions', [Client\Servers\MinecraftPluginController::class, 'versions']);
+        Route::post('/install', [Client\Servers\MinecraftPluginController::class,'installPlugin']);
+        Route::get('/installed', [Client\Servers\MinecraftPluginController::class,'getInstalledPluginsVersions']);
+        Route::get('/is-linked', [Client\Servers\MinecraftPluginController::class, 'isLinked']);
+        Route::post('/link', [Client\Servers\MinecraftPluginController::class, 'linkPolymart'])->name('minecraft-plugins.link');
+        Route::post('/link-back', [Client\Servers\MinecraftPluginController::class,'handleBackPolymart'])->name('minecraft-plugins.link-back')->withoutMiddleware([\Pterodactyl\Http\Middleware\VerifyCsrfToken::class, ServerSubject::class,'auth', 'api', \Pterodactyl\Http\Middleware\Api\Client\RequireClientApiKey::class,AuthenticateServerAccess::class]);
+        Route::post('/disconnect', [Client\Servers\MinecraftPluginController::class,'disconnectPolymart']);
+    });
 });

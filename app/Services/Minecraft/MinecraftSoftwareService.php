@@ -3,15 +3,15 @@
 namespace Pterodactyl\Services\Minecraft;
 
 use GuzzleHttp\Client;
-use Webmozart\Assert\Assert;
-use Pterodactyl\Models\Server;
-use Illuminate\Support\Facades\Cache;
 use GuzzleHttp\Exception\ClientException;
-use Pterodactyl\Repositories\Wings\DaemonFileRepository;
+use Illuminate\Support\Facades\Cache;
 use Pterodactyl\Exceptions\Http\Connection\DaemonConnectionException;
+use Pterodactyl\Models\Server;
+use Pterodactyl\Repositories\Wings\DaemonFileRepository;
+use Webmozart\Assert\Assert;
 
-class MinecraftSoftwareService
-{
+class MinecraftSoftwareService {
+
     protected Client $client;
     protected ?Server $server;
 
@@ -24,7 +24,7 @@ class MinecraftSoftwareService
 
     /**
      * Set the server model this request is stemming from.
-     *
+     * 
      * @return $this
      */
     public function setServer(Server $server): self
@@ -68,7 +68,7 @@ class MinecraftSoftwareService
                 $files = $this->daemonFileRepository->getDirectory($forgeDirectory);
 
                 if (isset($files[0])) {
-                    $fileName = $forgeDirectory . '/' . $files[0]['name'] . '/forge-' . $files[0]['name'] . '-server.jar';
+                    $fileName = $forgeDirectory.'/'.$files[0]['name'].'/'.'forge-'.$files[0]['name'].'-server.jar';
                     $hash = $this->daemonFileRepository->getFingerprints([$fileName])[$fileName];
 
                     $data = $this->getBuildInformationFromHash($hash);
@@ -83,7 +83,7 @@ class MinecraftSoftwareService
                     $files = $this->daemonFileRepository->getDirectory($neoforgeDirectory);
 
                     if (isset($files[0])) {
-                        $fileName = $neoforgeDirectory . '/' . $files[0]['name'] . '/neoforge-' . $files[0]['name'] . '-server.jar';
+                        $fileName = $neoforgeDirectory.'/'.$files[0]['name'].'/'.'neoforge-'.$files[0]['name'].'-server.jar';
                         $hash = $this->daemonFileRepository->getFingerprints([$fileName])[$fileName];
 
                         $data = $this->getBuildInformationFromHash($hash);
@@ -97,11 +97,11 @@ class MinecraftSoftwareService
     }
 
     /**
-     * @param $hash string must be SHA512
+     * @param  $hash  string must be SHA512
      */
     protected function getBuildInformationFromHash(string $hash): array
     {
-        return Cache::remember('minecraft-build-hash-' . $hash, 3600 * 24 * 7, function () use ($hash) {
+        return Cache::remember('minecraft-build-hash-'.$hash, 3600 * 24 * 7, function () use ($hash) {
             try {
                 $res = $this->client->post('api/v2/build', [
                     'json' => [
@@ -123,14 +123,13 @@ class MinecraftSoftwareService
             $buildInformation = [
                 'buildType' => $type,
                 'versionName' => $versionName,
-                'java' => $data['version']['java'] ?? null,
             ];
 
             return $buildInformation;
         });
     }
 
-    /**
+   /**
      * Get paths of files in $directory.
      *
      * @return string[]
@@ -141,9 +140,8 @@ class MinecraftSoftwareService
         try {
             $entries = $this->daemonFileRepository->getDirectory($directory);
 
-            $paths = array_map(fn ($v) => $directory . '/' . $v['name'], array_filter($entries, fn ($e) => $e['file']));
-        } catch (DaemonConnectionException) {
-        }
+            $paths = array_map(fn ($v) => $directory . '/'.$v['name'], array_filter($entries, fn ($e) => $e['file']));
+        } catch (DaemonConnectionException) {}
 
         return $paths;
     }
@@ -180,7 +178,7 @@ class MinecraftSoftwareService
                     'version_id' => null,
                     'version_name' => null,
                     'icon_url' => null,
-                    'update' => null,
+                    'update' => null
                 ];
             }, $curseForgeVersions['other']);
         }

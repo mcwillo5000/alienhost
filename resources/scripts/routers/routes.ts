@@ -8,6 +8,8 @@ import NetworkContainer from '@/components/server/network/NetworkContainer';
 import StartupContainer from '@/components/server/startup/StartupContainer';
 import FileManagerContainer from '@/components/server/files/FileManagerContainer';
 import ModpacksContainer from '@/components/server/minecraft-modpacks/ModpacksContainer';
+import MinecraftPluginContainer from '@/components/server/minecraft-plugins/MinecraftPluginContainer';
+import MinecraftInstalledPluginsContainer from '@/components/server/minecraft-plugins/MinecraftInstalledPluginsContainer';
 import SettingsContainer from '@/components/server/settings/SettingsContainer';
 import AccountOverviewContainer from '@/components/dashboard/AccountOverviewContainer';
 import AccountApiContainer from '@/components/dashboard/AccountApiContainer';
@@ -189,7 +191,19 @@ export default {
             permission: 'file.*',
             name: 'Modpacks',
             component: ModpacksContainer,
-            eggIds: [1, 3],
+        },
+        {
+            path: '/minecraft-plugins',
+            permission: 'file.*',
+            name: 'Plugins',
+            component: MinecraftPluginContainer,
+        },
+        {
+            path: '/minecraft-plugins/installed',
+            permission: 'file.*',
+            name: undefined,
+            component: MinecraftInstalledPluginsContainer,
+
         },
     ],
 } as Routes;
