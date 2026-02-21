@@ -166,4 +166,12 @@ Route::group([
         Route::post('/install', [Client\Servers\HytaleModInstallerController::class, 'install']);
         Route::delete('/remove/{modId}', [Client\Servers\HytaleModInstallerController::class, 'removeMod']);
     });
+        Route::group(['prefix' => '/hytale-worlds'], function () {
+        Route::get('/', [Client\Servers\HytaleWorldInstallerController::class, 'index']);
+        Route::get('/hytale-versions', [Client\Servers\HytaleWorldInstallerController::class, 'getHytaleVersions']);
+        Route::get('/installed', [Client\Servers\HytaleWorldInstallerController::class, 'getInstalledWorldsVersions']);
+        Route::get('/{worldId}/versions', [Client\Servers\HytaleWorldInstallerController::class, 'versions']);
+        Route::post('/install', [Client\Servers\HytaleWorldInstallerController::class, 'install']);
+        Route::get('/download-status/{downloadId}', [Client\Servers\HytaleWorldInstallerController::class, 'downloadStatus']);
+    });
 });
