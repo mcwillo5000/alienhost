@@ -33,4 +33,5 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+        'curseforge_api_key' => env('CURSEFORGE_API_KEY'),
 ];

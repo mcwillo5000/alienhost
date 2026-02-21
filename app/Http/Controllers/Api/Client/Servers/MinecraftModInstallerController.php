@@ -1,0 +1,413 @@
+<?php
+
+namespace Pterodactyl\Http\Controllers\Api\Client\Servers;
+
+use Illuminate\Http\Request;
+use Pterodactyl\Models\Server;
+use Illuminate\Validation\Rule;
+use Pterodactyl\Models\Permission;
+use Pterodactyl\Exceptions\DisplayException;
+use Illuminate\Auth\Access\AuthorizationException;
+use Pterodactyl\Repositories\Wings\DaemonFileRepository;
+use Pterodactyl\Services\Minecraft\MinecraftSoftwareService;
+use Pterodactyl\Http\Controllers\Api\Client\ClientApiController;
+use Pterodactyl\Services\Minecraft\Mods\ModrinthModService;
+use Pterodactyl\Services\Minecraft\Mods\CurseForgeModService;
+use Pterodactyl\Services\Minecraft\Mods\MinecraftModProvider;
+
+class MinecraftModInstallerController extends ClientApiController
+{
+    private const MANIFEST_PATH = '/mods/.installed_mods.json';
+
+    /**
+     * MinecraftModInstallerController constructor.
+     */
+    public function __construct(private DaemonFileRepository $daemonFileRepository)
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Read the installed mods manifest from the server.
+     */
+    private function readManifest(Server $server): array
+    {
+        try {
+            $content = $this->daemonFileRepository->setServer($server)->getContent(self::MANIFEST_PATH);
+            $data = json_decode($content, true);
+            return is_array($data) ? $data : [];
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Write the installed mods manifest to the server.
+     */
+    private function writeManifest(Server $server, array $manifest): void
+    {
+        $this->daemonFileRepository->setServer($server)->putContent(
+            self::MANIFEST_PATH,
+            json_encode(array_values($manifest), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)
+        );
+    }
+
+    /**
+     * Returns searched Minecraft mods.
+     */
+    public function index(Request $request, Server $server): array
+    {
+        if (!$request->user()->can(Permission::ACTION_FILE_READ, $server)) {
+            throw new AuthorizationException();
+        }
+        $validated = $request->validate([
+            'provider' => ['required', Rule::enum(MinecraftModProvider::class)],
+            'page' => 'required|numeric|integer|min:1',
+            'page_size' => 'required|numeric|integer|max:50', 
+            'search_query' => 'nullable|string',
+            'minecraft_version' => 'nullable|string',
+            'mod_loader' => 'nullable|string',
+            'sort' => 'nullable|string',
+        ]);
+
+        $provider = MinecraftModProvider::from($validated['provider']);
+        $page = (int) $validated['page'];
+        $pageSize = (int) $validated['page_size'];
+        $searchQuery = $validated['search_query'] ?? '';
+        $minecraftVersion = $validated['minecraft_version'] ?? '';
+        $modLoader = $validated['mod_loader'] ?? '';
+        $sort = $validated['sort'] ?? 'relevance';
+
+        $service = $this->getModService($provider);
+
+        $data = $service->search(compact('searchQuery', 'pageSize', 'page', 'minecraftVersion', 'modLoader', 'sort'));
+
+        $mods = $data['data'];
+
+        return [
+            'object' => 'list',
+            'data' => $mods,
+            'meta' => [
+                'pagination' => [
+                    'total' => $data['total'],
+                    'count' => count($mods),
+                    'per_page' => $pageSize,
+                    'current_page' => $page,
+                    'total_pages' => ceil($data['total'] / $pageSize),
+                    'links' => [],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Returns a mod's installable versions.
+     */
+    public function versions(Request $request, Server $server, string $modId): array
+    {
+        if (!$request->user()->can(Permission::ACTION_FILE_READ, $server)) {
+            throw new AuthorizationException();
+        }
+        $validated = $request->validate([
+            'provider' => ['required', Rule::enum(MinecraftModProvider::class)],
+            'mod_loader' => 'nullable|string',
+            'minecraft_version' => 'nullable|string',
+        ]);
+
+        $provider = MinecraftModProvider::from($validated['provider']);
+        $modLoader = $validated['mod_loader'] ?? null;
+        $minecraftVersion = $validated['minecraft_version'] ?? null;
+
+        $service = $this->getModService($provider);
+
+        
+        $modDetails = $service->getModDetails($modId);
+        $versions = $service->versions($modId, $modLoader, $minecraftVersion);
+
+        return [
+            'project' => $modDetails,
+            'versions' => $versions,
+        ];
+    }
+
+    protected function getModService(MinecraftModProvider $provider)
+    {
+        $class = match ($provider) {
+            MinecraftModProvider::CurseForge => CurseForgeModService::class,
+            MinecraftModProvider::Modrinth => ModrinthModService::class,
+        };
+
+        return app($class);
+    }
+
+    /**
+     * Install a mod.
+     */
+    public function install(Request $request, Server $server)
+    {
+        if (!$request->user()->can(Permission::ACTION_FILE_CREATE, $server)) {
+            throw new AuthorizationException();
+        }
+
+        $validated = $request->validate([
+            'provider' => ['required', Rule::enum(MinecraftModProvider::class)],
+            'mod_id' => 'required|string',
+            'version' => 'required|string',
+            'mod_name' => 'nullable|string',
+            'mod_icon' => 'nullable|string',
+            'mod_author' => 'nullable|string',
+        ]);
+        
+        $provider = MinecraftModProvider::from($validated['provider']);
+        $modId = $validated['mod_id'];
+        $versionId = $validated['version'];
+
+        $service = $this->getModService($provider);
+        $downloadDetails = $service->getDownloadDetails($modId, $versionId);
+
+        try {
+            
+            $pullOptions = [
+                'foreground' => true,
+                'filename' => $downloadDetails['fileName'] ?? null,
+            ];
+            
+            
+            if (isset($downloadDetails['use_header'])) {
+                $pullOptions['use_header'] = $downloadDetails['use_header'];
+            } else {
+                $pullOptions['use_header'] = true; 
+            }
+            
+            
+            foreach ($downloadDetails as $key => $value) {
+                if (!in_array($key, ['downloadUrl', 'fileName', 'use_header'])) {
+                    $pullOptions[$key] = $value;
+                }
+            }
+            
+            
+            logger()->info('Attempting to download mod', [
+                'provider' => $provider->value,
+                'mod_id' => $modId,
+                'version_id' => $versionId,
+                'download_url' => $downloadDetails['downloadUrl'],
+                'file_name' => $downloadDetails['fileName'] ?? null,
+            ]);
+            
+            $this->daemonFileRepository->setServer($server)->pull(
+                $downloadDetails['downloadUrl'],
+                '/mods',
+                $pullOptions
+            );
+        } catch (\Exception $e) {
+            
+            logger()->error('Failed to download mod', [
+                'provider' => $provider->value,
+                'mod_id' => $modId,
+                'version_id' => $versionId,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            
+            throw new DisplayException('You need to download this mod manually at ' . $downloadDetails['downloadUrl']);
+        }
+
+        // Save to installed mods manifest
+        $fileName = $downloadDetails['fileName'] ?? null;
+        try {
+            $manifest = $this->readManifest($server);
+
+            // Remove old entry for this mod if exists (update scenario)
+            $oldFileName = null;
+            $manifest = array_filter($manifest, function ($entry) use ($modId, $provider, &$oldFileName) {
+                if ((string) ($entry['mod_id'] ?? '') === (string) $modId && ($entry['provider'] ?? '') === $provider->value) {
+                    $oldFileName = $entry['file_name'] ?? null;
+                    return false;
+                }
+                return true;
+            });
+
+            // If updating and old file differs, delete old file
+            if ($oldFileName && $oldFileName !== $fileName) {
+                try {
+                    $this->daemonFileRepository->setServer($server)->deleteFiles('/mods', [$oldFileName]);
+                } catch (\Exception $e) {
+                    logger()->warning('Failed to delete old mod file during update', ['file' => $oldFileName, 'error' => $e->getMessage()]);
+                }
+            }
+
+            $manifest[] = [
+                'mod_id' => $modId,
+                'provider' => $provider->value,
+                'version_id' => $versionId,
+                'mod_name' => $validated['mod_name'] ?? '',
+                'mod_icon' => $validated['mod_icon'] ?? '',
+                'mod_author' => $validated['mod_author'] ?? '',
+                'file_name' => $fileName,
+                'installed_at' => now()->toIso8601String(),
+            ];
+
+            $this->writeManifest($server, $manifest);
+        } catch (\Exception $e) {
+            logger()->warning('Failed to update installed mods manifest', ['error' => $e->getMessage()]);
+        }
+
+        return response()->noContent();
+    }
+
+    /**
+     * Get list of installed mods from manifest.
+     */
+    public function getInstalledMods(Request $request, Server $server): array
+    {
+        if (!$request->user()->can(Permission::ACTION_FILE_READ, $server)) {
+            throw new AuthorizationException();
+        }
+
+        $manifest = $this->readManifest($server);
+
+        // Verify file existence — auto-remove entries whose files were manually deleted
+        try {
+            $files = $this->daemonFileRepository->setServer($server)->getDirectory('/mods');
+            $existingFiles = collect($files)->pluck('name')->all();
+            $originalCount = count($manifest);
+
+            $manifest = array_filter($manifest, function ($entry) use ($existingFiles) {
+                $fileName = $entry['file_name'] ?? '';
+                return $fileName === '' || in_array($fileName, $existingFiles);
+            });
+
+            if (count($manifest) < $originalCount) {
+                try {
+                    $this->writeManifest($server, $manifest);
+                } catch (\Exception $e) {
+                    logger()->warning('Failed to auto-clean installed mods manifest', ['error' => $e->getMessage()]);
+                }
+            }
+        } catch (\Exception $e) {
+            logger()->warning('Failed to list /mods directory for file verification', ['error' => $e->getMessage()]);
+        }
+
+        // Enrich with latest version info
+        $enriched = [];
+        foreach ($manifest as $entry) {
+            $modId = $entry['mod_id'] ?? '';
+            $providerStr = $entry['provider'] ?? 'modrinth';
+            $latestVersionId = null;
+            $latestVersionName = null;
+
+            try {
+                $provider = MinecraftModProvider::from($providerStr);
+                $service = $this->getModService($provider);
+                $versions = $service->versions($modId);
+                if (!empty($versions)) {
+                    $latestVersionId = $versions[0]['id'] ?? null;
+                    $latestVersionName = $versions[0]['name'] ?? null;
+                }
+            } catch (\Exception $e) {
+                // ignore
+            }
+
+            $enriched[] = [
+                'mod_id' => $modId,
+                'provider' => $providerStr,
+                'version_id' => $entry['version_id'] ?? '',
+                'mod_name' => $entry['mod_name'] ?? '',
+                'mod_icon' => $entry['mod_icon'] ?? '',
+                'mod_author' => $entry['mod_author'] ?? '',
+                'file_name' => $entry['file_name'] ?? '',
+                'installed_at' => $entry['installed_at'] ?? '',
+                'latest_version_id' => $latestVersionId,
+                'latest_version_name' => $latestVersionName,
+                'has_update' => $latestVersionId && (string) $latestVersionId !== (string) ($entry['version_id'] ?? ''),
+            ];
+        }
+
+        return ['data' => $enriched];
+    }
+
+    /**
+     * Remove an installed mod.
+     */
+    public function removeMod(Request $request, Server $server, string $modId)
+    {
+        if (!$request->user()->can(Permission::ACTION_FILE_DELETE, $server)) {
+            throw new AuthorizationException();
+        }
+
+        $validated = $request->validate([
+            'provider' => 'nullable|string',
+        ]);
+        $providerStr = $validated['provider'] ?? '';
+
+        $manifest = $this->readManifest($server);
+        $fileToDelete = null;
+
+        $manifest = array_filter($manifest, function ($entry) use ($modId, $providerStr, &$fileToDelete) {
+            if ((string) ($entry['mod_id'] ?? '') === (string) $modId && (empty($providerStr) || ($entry['provider'] ?? '') === $providerStr)) {
+                $fileToDelete = $entry['file_name'] ?? null;
+                return false;
+            }
+            return true;
+        });
+
+        // Delete the actual mod file
+        if ($fileToDelete) {
+            try {
+                $this->daemonFileRepository->setServer($server)->deleteFiles('/mods', [$fileToDelete]);
+            } catch (\Exception $e) {
+                logger()->warning('Failed to delete mod file', ['file' => $fileToDelete, 'error' => $e->getMessage()]);
+            }
+        }
+
+        // Update manifest
+        try {
+            $this->writeManifest($server, $manifest);
+        } catch (\Exception $e) {
+            throw new DisplayException('Failed to update installed mods manifest.');
+        }
+
+        return response()->noContent();
+    }
+
+    /**
+     * Returns normalized mod versions from `mods/` hashes.
+     *
+     * @return array{identified: array<array{id: string, project_id: string, name: string, provider: string}>, other: array<string>}
+     */
+    public function getInstalledModsVersions(Server $server, MinecraftSoftwareService $minecraftSoftwareService): array
+    {
+        return $minecraftSoftwareService->setServer($server)->getInstalledProjectsVersions('mods');
+    }
+
+    /**
+     * Get Minecraft versions for filtering.
+     */
+    public function getMinecraftVersions(Request $request, Server $server): array
+    {
+        $validated = $request->validate([
+            'provider' => ['required', Rule::enum(MinecraftModProvider::class)],
+        ]);
+
+        $provider = MinecraftModProvider::from($validated['provider']);
+        $service = $this->getModService($provider);
+
+        return $service->getMinecraftVersions();
+    }
+
+    /**
+     * Get mod loaders for filtering.
+     */
+    public function getModLoaders(Request $request, Server $server): array
+    {
+        $validated = $request->validate([
+            'provider' => ['required', Rule::enum(MinecraftModProvider::class)],
+        ]);
+
+        $provider = MinecraftModProvider::from($validated['provider']);
+        $service = $this->getModService($provider);
+
+        return $service->getModLoaders();
+    }
+}

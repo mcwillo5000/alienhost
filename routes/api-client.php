@@ -142,7 +142,16 @@ Route::group([
         Route::get('/', [Client\Servers\StartupController::class, 'index']);
         Route::put('/variable', [Client\Servers\StartupController::class, 'update']);
     });
-
+    Route::group(['prefix' => '/mods'], function () {
+        Route::get('/', [Client\Servers\MinecraftModInstallerController::class, 'index']);
+        Route::get('/minecraft-versions', [Client\Servers\MinecraftModInstallerController::class, 'getMinecraftVersions']);
+        Route::get('/loaders', [Client\Servers\MinecraftModInstallerController::class, 'getModLoaders']);
+        Route::get('/installed', [Client\Servers\MinecraftModInstallerController::class, 'getInstalledModsVersions']);
+        Route::get('/installed-mods', [Client\Servers\MinecraftModInstallerController::class, 'getInstalledMods']);
+        Route::delete('/remove/{modId}', [Client\Servers\MinecraftModInstallerController::class, 'removeMod']);
+        Route::get('/{modId}/versions', [Client\Servers\MinecraftModInstallerController::class, 'versions']);
+        Route::post('/install', [Client\Servers\MinecraftModInstallerController::class, 'install']);
+    });
     Route::group(['prefix' => '/settings'], function () {
         Route::post('/rename', [Client\Servers\SettingsController::class, 'rename']);
         Route::post('/reinstall', [Client\Servers\SettingsController::class, 'reinstall']);
