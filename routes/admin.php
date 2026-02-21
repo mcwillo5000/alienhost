@@ -260,5 +260,23 @@ Route::group(['prefix' => 'subdomain'], function () {
     Route::post('/update/{id}', [Admin\SubDomainManagerController::class, 'update'])->name('admin.subdomain.update');
     Route::delete('/delete', [Admin\SubDomainManagerController::class, 'delete'])->name('admin.subdomain.delete');
 });
-
+/*
+|--------------------------------------------------------------------------
+| Game Config Definition Routes
+|--------------------------------------------------------------------------
+|
+| Endpoint: /admin/game-configs
+|
+*/
+Route::group(['prefix' => 'game-configs'], function () {
+    Route::get('/', [Admin\GameConfigDefinitionController::class, 'index'])->name('admin.game-configs');
+    Route::get('/list', [Admin\GameConfigDefinitionController::class, 'list'])->name('admin.game-configs.list');
+    Route::post('/', [Admin\GameConfigDefinitionController::class, 'store'])->name('admin.game-configs.store');
+    Route::get('/{gameConfigDefinition}', [Admin\GameConfigDefinitionController::class, 'show'])->name('admin.game-configs.show');
+    Route::patch('/{gameConfigDefinition}', [Admin\GameConfigDefinitionController::class, 'update'])->name('admin.game-configs.update');
+    Route::delete('/{gameConfigDefinition}', [Admin\GameConfigDefinitionController::class, 'destroy'])->name('admin.game-configs.destroy');
+    Route::post('/{gameConfigDefinition}/files', [Admin\GameConfigDefinitionController::class, 'storeFile'])->name('admin.game-configs.files.store');
+    Route::patch('/files/{file}', [Admin\GameConfigDefinitionController::class, 'updateFile'])->name('admin.game-configs.files.update');
+    Route::delete('/files/{file}', [Admin\GameConfigDefinitionController::class, 'destroyFile'])->name('admin.game-configs.files.destroy');
+});
 include 'admin-serverimporter.php';

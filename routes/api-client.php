@@ -234,6 +234,12 @@ Route::group([
         Route::post('/sync/{subdomainId}', [Client\Servers\SubdomainManagerController::class, 'sync']);
         Route::delete('/{subdomainId}', [Client\Servers\SubdomainManagerController::class, 'delete']);
     });
+        Route::group(['prefix' => '/game-config'], function () {
+        Route::get('/detect', [Client\Servers\GameConfigController::class, 'detectGameType']);
+        Route::get('/files', [Client\Servers\GameConfigController::class, 'getConfigFiles']);
+        Route::get('/content', [Client\Servers\GameConfigController::class, 'getConfig']);
+        Route::post('/update', [Client\Servers\GameConfigController::class, 'updateConfig']);
+    });
 });
 
 Route::prefix('/extensions/serverimporter')->group(base_path('routes/client-serverimporter.php'));

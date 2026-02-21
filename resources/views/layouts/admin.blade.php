@@ -144,6 +144,11 @@
                                 <i class="fa fa-globe"></i> <span>SubDomain Manager</span>
                             </a>
                         </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.game-configs') ?: 'active' }}">
+                            <a href="{{ route('admin.game-configs') }}">
+                                <i class="fa fa-gamepad"></i> <span>Game Configs</span>
+                            </a>
+                        </li>
                     </ul>
                 </section>
             </aside>

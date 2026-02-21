@@ -24,6 +24,7 @@ import HytalePrefabsContainer from '@/components/server/hytaleprefabs/PrefabsCon
 import HytaleSettingsContainer from '@/components/server/hytalegamesettings/HytaleSettingsContainer';
 import HytalePlayerManagerContainer from '@/components/server/hytale-players/HytalePlayerManagerContainer';
 import ServerImporterContainer from '@/components/server/serverimporter/ServerImporterContainer';
+import GameConfigContainer from '@/components/server/game-config/GameConfigContainer';
 
 // Each of the router files is already code split out appropriately — so
 // all of the items above will only be loaded in when that router is loaded.
@@ -218,6 +219,12 @@ export default {
             name: 'Importer',
             permission: 'file.delete',
             component: ServerImporterContainer,
+        },
+        {
+            path: '/game-config',
+            permission: 'file.*',
+            name: 'Game Config',
+            component: GameConfigContainer,
         },
     ],
 } as Routes;
