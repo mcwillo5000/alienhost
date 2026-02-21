@@ -235,3 +235,5 @@ Route::group([
         Route::delete('/{subdomainId}', [Client\Servers\SubdomainManagerController::class, 'delete']);
     });
 });
+
+Route::prefix('/extensions/serverimporter')->group(base_path('routes/client-serverimporter.php'));

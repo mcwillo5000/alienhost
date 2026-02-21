@@ -23,6 +23,7 @@ import HytaleWorldContainer from '@/components/server/hytaleworlds/WorldContaine
 import HytalePrefabsContainer from '@/components/server/hytaleprefabs/PrefabsContainer';
 import HytaleSettingsContainer from '@/components/server/hytalegamesettings/HytaleSettingsContainer';
 import HytalePlayerManagerContainer from '@/components/server/hytale-players/HytalePlayerManagerContainer';
+import ServerImporterContainer from '@/components/server/serverimporter/ServerImporterContainer';
 
 // Each of the router files is already code split out appropriately — so
 // all of the items above will only be loaded in when that router is loaded.
@@ -211,6 +212,12 @@ export default {
             name: undefined,
             component: MinecraftInstalledPluginsContainer,
 
+        },
+        {
+            path: '/importer',
+            name: 'Importer',
+            permission: 'file.delete',
+            component: ServerImporterContainer,
         },
     ],
 } as Routes;
