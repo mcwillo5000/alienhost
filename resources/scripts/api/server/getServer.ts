@@ -24,6 +24,7 @@ export interface Server {
     id: string | Identifier<'serv'>;
     identifier: Identifier<'serv'>; // Set from "server_identifier" and should be used moving forward to reference a server.
     internalId: number | string;
+    eggId: number;
     /**
      * Exists only to maintain support in cases where the short-uuid is necessary for server reference
      * and cannot be easily replaced with "identifier".
@@ -67,6 +68,7 @@ export const rawDataToServerObject = ({ attributes: data }: FractalResponseData)
     id: data.identifier,
     identifier: data.server_identifier,
     internalId: data.internal_id,
+    eggId: data.egg_id,
     __deprecatedUuidShort: data.__deprecated_uuid_short,
     uuid: data.uuid,
     name: data.name,

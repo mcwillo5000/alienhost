@@ -47,6 +47,7 @@ class ServerTransformer extends BaseClientTransformer
             // to the current however, and would be quite a breaking change to URLs.
             'server_identifier' => $server->identifier,
             'internal_id' => $server->id,
+            'egg_id' => $server->egg_id,
             'uuid' => $server->uuid,
             'name' => $server->name,
             'crash_webhook' => $server->crash_webhook,

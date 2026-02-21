@@ -211,4 +211,9 @@ Route::group([
         Route::delete('/players', [Client\Servers\HytalePlayerManagerController::class, 'deletePlayer']);
         Route::post('/players/gamemode', [Client\Servers\HytalePlayerManagerController::class, 'changePlayerGamemode']);
     });
+        Route::group(['prefix' => '/minecraft-modpacks'], function () {
+        Route::get('/', [Client\Servers\ModpackController::class, 'index']);
+        Route::get('/versions', [Client\Servers\ModpackController::class, 'versions']);
+        Route::post('/install', [Client\Servers\ModpackController::class, 'install']);
+    });
 });
