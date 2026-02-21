@@ -183,4 +183,11 @@ Route::group([
         Route::get('/{prefabId}/versions', [Client\Servers\HytalePrefabsInstallerController::class, 'versions']);
         Route::post('/install', [Client\Servers\HytalePrefabsInstallerController::class, 'install']);
     });
+        Route::group(['prefix' => '/hytale'], function () {
+        Route::get('/settings', [Client\Servers\HytaleSettingsController::class, 'index']);
+        Route::post('/settings', [Client\Servers\HytaleSettingsController::class, 'update']);
+        Route::get('/worlds', [Client\Servers\HytaleWorldsController::class, 'index']);
+        Route::get('/worlds/{world}', [Client\Servers\HytaleWorldsController::class, 'show']);
+        Route::post('/worlds/{world}', [Client\Servers\HytaleWorldsController::class, 'update']);
+    });
 });

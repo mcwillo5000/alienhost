@@ -17,6 +17,7 @@ import ModContainer from '@/components/server/mods/ModContainer';
 import HytaleModContainer from '@/components/server/hytalemods/ModContainer';
 import HytaleWorldContainer from '@/components/server/hytaleworlds/WorldContainer';
 import HytalePrefabsContainer from '@/components/server/hytaleprefabs/PrefabsContainer';
+import HytaleSettingsContainer from '@/components/server/hytalegamesettings/HytaleSettingsContainer';
 
 // Each of the router files is already code split out appropriately — so
 // all of the items above will only be loaded in when that router is loaded.
@@ -167,6 +168,12 @@ export default {
             permission: 'file.*',
             name: 'Hytale Prefabs',
             component: HytalePrefabsContainer,
+        },
+        {
+            path: '/hytale/game-settings',
+            permission: 'file.*',
+            name: 'Game Settings',
+            component: HytaleSettingsContainer,
         },
     ],
 } as Routes;
