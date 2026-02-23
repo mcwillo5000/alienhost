@@ -7,10 +7,12 @@ use Illuminate\Http\Response;
 use Pterodactyl\Models\Server;
 use Illuminate\Http\JsonResponse;
 use Pterodactyl\Facades\Activity;
+use Pterodactyl\Models\RecycledFile;
 use Pterodactyl\Services\Nodes\NodeJWTService;
 use Pterodactyl\Repositories\Wings\DaemonFileRepository;
 use Pterodactyl\Transformers\Api\Client\FileObjectTransformer;
 use Pterodactyl\Http\Controllers\Api\Client\ClientApiController;
+use Pterodactyl\Transformers\Api\Client\RecycledFileTransformer;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Files\CopyFileRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Files\PullFileRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Files\ListFilesRequest;
@@ -18,6 +20,7 @@ use Pterodactyl\Http\Requests\Api\Client\Servers\Files\ChmodFilesRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Files\DeleteFileRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Files\RenameFileRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Files\CreateFolderRequest;
+use Pterodactyl\Http\Requests\Api\Client\Servers\Files\RestoreFilesRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Files\CompressFilesRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Files\DecompressFilesRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Files\GetFileContentsRequest;
@@ -42,9 +45,28 @@ class FileController extends ClientApiController
      */
     public function directory(ListFilesRequest $request, Server $server): array
     {
+        if ($request->get('directory') === '/.trash') {
+            $contents = $server->recycledFiles()->get();
+
+            return $this->fractal->collection($contents)
+                ->transformWith($this->getTransformer(RecycledFileTransformer::class))
+                ->toArray();
+        }
+
         $contents = $this->fileRepository
             ->setServer($server)
             ->getDirectory($request->get('directory') ?? '/');
+
+        if (($request->get('directory') ?? '/') === '/') {
+            if (!$this->hasDirectory($contents, '.trash')) {
+                $this->fileRepository
+                    ->setServer($server)
+                    ->createDirectory('.trash', '/');
+                $contents = $this->fileRepository
+                    ->setServer($server)
+                    ->getDirectory('/');
+            }
+        }
 
         return $this->fractal->collection($contents)
             ->transformWith($this->getTransformer(FileObjectTransformer::class))
@@ -214,15 +236,52 @@ class FileController extends ClientApiController
      */
     public function delete(DeleteFileRequest $request, Server $server): JsonResponse
     {
-        $this->fileRepository->setServer($server)->deleteFiles(
-            $request->input('root'),
-            $request->input('files')
-        );
+        $fileRoot = $request->input('root');
+        $repo = $this->fileRepository->setServer($server);
+
+        if ($fileRoot !== '/.trash') {
+            $rootDir = $repo->getDirectory('/');
+            if (!$this->hasDirectory($rootDir, '.trash')) {
+                $repo->createDirectory('.trash', '/');
+            }
+            $renames = [];
+            foreach ($request->input('files') as $file) {
+                $metadata = new RecycledFile();
+                $metadata->server_id = $server->id;
+                $metadata->path = ltrim($fileRoot, '/') . '/' . $file;
+                $metadata->save();
+                $renames[] = ['from' => ltrim($fileRoot, '/') . '/' . $file, 'to' => '.trash/' . $metadata->id];
+            }
+            $repo->renameFiles('/', $renames);
+        } else {
+            $repo->deleteFiles($fileRoot, $request->input('files'));
+            RecycledFile::whereIn('id', array_map(fn(string $v) => intval($v), $request->input('files')))->delete();
+        }
 
         Activity::event('server:file.delete')
-            ->property('directory', $request->input('root'))
+            ->property('directory', $fileRoot)
             ->property('files', $request->input('files'))
             ->log();
+
+        return new JsonResponse([], Response::HTTP_NO_CONTENT);
+    }
+
+    private function hasDirectory(array $root, string $dir): bool
+    {
+        foreach ($root as $item) {
+            if (($item['name'] ?? '') === $dir && !($item['file'] ?? true)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function restore(RestoreFilesRequest $request, Server $server): JsonResponse
+    {
+        $files = RecycledFile::whereIn('id', $request->input('files'))->get();
+        $renames = $files->map(fn($f) => ['from' => '.trash/' . $f->id, 'to' => $f->path])->toArray();
+        $this->fileRepository->setServer($server)->renameFiles('/', $renames);
+        RecycledFile::whereIn('id', $files->pluck('id'))->delete();
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);
     }

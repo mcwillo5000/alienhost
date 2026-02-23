@@ -92,6 +92,7 @@ Route::group([
         Route::post('/chmod', [Client\Servers\FileController::class, 'chmod']);
         Route::middleware([ResourceLimit::FilePull->middleware()])
             ->post('/pull', [Client\Servers\FileController::class, 'pull']);
+        Route::post('/restore', [Client\Servers\FileController::class, 'restore']);
         Route::get('/upload', Client\Servers\FileUploadController::class);
     });
 

@@ -418,4 +418,9 @@ class Server extends Model implements Identifiable
             throw new ServerStateConflictException($this);
         }
     }
+
+    public function recycledFiles(): HasMany
+    {
+        return $this->hasMany(RecycledFile::class, 'server_id');
+    }
 }

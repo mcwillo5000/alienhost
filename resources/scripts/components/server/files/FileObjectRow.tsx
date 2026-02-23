@@ -109,8 +109,14 @@ const FileObjectRow = ({ file }: { file: FileObject }) => {
                 <div css={tw`flex-1 min-w-0`}>
                     <Clickable file={file}>
                         <div className="font-medium truncate" style={{ color: 'var(--theme-text-base)' }}>
-                            {file.name}
+                            {file.isTrash ? (file.name.length > 20 ? `...${file.name.slice(-20)}` : file.name) : file.name}
                         </div>
+                        {file.isTrash && (
+                            <div className="text-xs truncate" style={{ color: 'var(--theme-primary)', opacity: 0.8 }}>
+                                {/* original path restored from DB - shown via file metadata */}
+                                Trash item #{file.trashId}
+                            </div>
+                        )}
                         <div className="text-xs" style={{ color: 'var(--theme-text-muted)' }}>
                             {file.isFile ? (
                                 <>

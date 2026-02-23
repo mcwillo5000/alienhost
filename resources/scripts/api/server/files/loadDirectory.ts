@@ -9,6 +9,8 @@ export interface FileObject {
     size: number;
     isFile: boolean;
     isSymlink: boolean;
+    isTrash: boolean;
+    trashId?: number;
     mimetype: string;
     createdAt: Date;
     modifiedAt: Date;

@@ -10,12 +10,14 @@ import {
     faLevelUpAlt,
     faPencilAlt,
     faTrashAlt,
+    faHistory,
     IconDefinition,
 } from '@fortawesome/free-solid-svg-icons';
 import RenameFileModal from '@/components/server/files/RenameFileModal';
 import { ServerContext } from '@/state/server';
 import { join } from '@/lib/path';
 import deleteFiles from '@/api/server/files/deleteFiles';
+import restoreFiles from '@/api/server/files/restoreFiles';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import copyFile from '@/api/server/files/copyFile';
 import Can from '@/components/elements/Can';
@@ -124,6 +126,16 @@ const FileDropdownMenu = ({ file }: { file: FileObject }) => {
         });
     };
 
+    const doRestore = () => {
+        if (!file.trashId) return;
+        clearFlashes('files');
+        mutate((files) => files.filter((f) => f.key !== file.key), false);
+        restoreFiles(uuid, [file.trashId]).catch((error) => {
+            mutate();
+            clearAndAddHttpError({ key: 'files', error });
+        });
+    };
+
     const doCopy = () => {
         setShowSpinner(true);
         clearFlashes('files');
@@ -206,29 +218,38 @@ const FileDropdownMenu = ({ file }: { file: FileObject }) => {
                     </DotsButton>
                 )}
             >
-                <Can action={'file.update'}>
-                    <Row onClick={() => setModal('rename')} icon={faPencilAlt} title={t('files.dropdown.rename')} />
-                    <Row onClick={() => setModal('move')} icon={faLevelUpAlt} title={t('files.dropdown.move')} />
-                    <Row onClick={() => setModal('chmod')} icon={faFileCode} title={t('files.dropdown.chmod')} />
-                </Can>
-                {file.isFile && (
-                    <Can action={'file.create'}>
-                        <Row onClick={doCopy} icon={faCopy} title={t('files.dropdown.copy')} />
-                    </Can>
-                )}
-                {file.isArchiveType() ? (
-                    <Can action={'file.create'}>
-                        <Row onClick={doUnarchive} icon={faBoxOpen} title={t('files.dropdown.decompress')} />
+                {file.isTrash ? (
+                    <Can action={'file.delete'}>
+                        <Row onClick={doRestore} icon={faHistory} title={'Restore'} />
+                        <Row onClick={() => setShowConfirmation(true)} icon={faTrashAlt} title={'Delete Permanently'} $danger />
                     </Can>
                 ) : (
-                    <Can action={'file.archive'}>
-                        <Row onClick={doArchive} icon={faFileArchive} title={t('files.dropdown.compress')} />
-                    </Can>
+                    <>
+                        <Can action={'file.update'}>
+                            <Row onClick={() => setModal('rename')} icon={faPencilAlt} title={t('files.dropdown.rename')} />
+                            <Row onClick={() => setModal('move')} icon={faLevelUpAlt} title={t('files.dropdown.move')} />
+                            <Row onClick={() => setModal('chmod')} icon={faFileCode} title={t('files.dropdown.chmod')} />
+                        </Can>
+                        {file.isFile && (
+                            <Can action={'file.create'}>
+                                <Row onClick={doCopy} icon={faCopy} title={t('files.dropdown.copy')} />
+                            </Can>
+                        )}
+                        {file.isArchiveType() ? (
+                            <Can action={'file.create'}>
+                                <Row onClick={doUnarchive} icon={faBoxOpen} title={t('files.dropdown.decompress')} />
+                            </Can>
+                        ) : (
+                            <Can action={'file.archive'}>
+                                <Row onClick={doArchive} icon={faFileArchive} title={t('files.dropdown.compress')} />
+                            </Can>
+                        )}
+                        {file.isFile && <Row onClick={doDownload} icon={faFileDownload} title={t('files.dropdown.download')} />}
+                        <Can action={'file.delete'}>
+                            <Row onClick={() => setShowConfirmation(true)} icon={faTrashAlt} title={t('files.dropdown.delete')} $danger />
+                        </Can>
+                    </>
                 )}
-                {file.isFile && <Row onClick={doDownload} icon={faFileDownload} title={t('files.dropdown.download')} />}
-                <Can action={'file.delete'}>
-                    <Row onClick={() => setShowConfirmation(true)} icon={faTrashAlt} title={t('files.dropdown.delete')} $danger />
-                </Can>
             </DropdownMenu>
         </>
     );

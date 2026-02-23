@@ -19,6 +19,7 @@ class FileObjectTransformer extends BaseClientTransformer
             'size' => Arr::get($item, 'size'),
             'is_file' => Arr::get($item, 'file', true),
             'is_symlink' => Arr::get($item, 'symlink', false),
+            'is_trash' => false,
             'mimetype' => Arr::get($item, 'mime', 'application/octet-stream'),
             'created_at' => Carbon::parse(Arr::get($item, 'created', ''))->toAtomString(),
             'modified_at' => Carbon::parse(Arr::get($item, 'modified', ''))->toAtomString(),

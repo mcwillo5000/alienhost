@@ -13,7 +13,8 @@ import RenameFileModal from '@/components/server/files/RenameFileModal';
 import Portal from '@/components/elements/Portal';
 import { Dialog } from '@/components/elements/dialog';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowsAlt, faFileArchive, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faArrowsAlt, faFileArchive, faTrash, faHistory } from '@fortawesome/free-solid-svg-icons';
+import restoreFiles from '@/api/server/files/restoreFiles';
 import { useTranslation } from 'react-i18next';
 
 const MassActionsBar = () => {
@@ -54,6 +55,24 @@ const MassActionsBar = () => {
         setLoadingMessage(t('files.massActions.deleting'));
 
         deleteFiles(uuid, directory, selectedFiles)
+            .then(() => {
+                mutate((files) => files.filter((f) => selectedFiles.indexOf(f.name) < 0), false);
+                setSelectedFiles([]);
+            })
+            .catch((error) => {
+                mutate();
+                clearAndAddHttpError({ key: 'files', error });
+            })
+            .then(() => setLoading(false));
+    };
+
+    const onClickRestore = () => {
+        setLoading(true);
+        clearFlashes('files');
+        setLoadingMessage('Restoring...');
+
+        const ids = selectedFiles.map((f) => parseInt(f, 10)).filter((n) => !isNaN(n));
+        restoreFiles(uuid, ids)
             .then(() => {
                 mutate((files) => files.filter((f) => selectedFiles.indexOf(f.name) < 0), false);
                 setSelectedFiles([]);
@@ -119,7 +138,18 @@ const MassActionsBar = () => {
                                     flexWrap: 'wrap',
                                     justifyContent: 'center'
                                 }}>
-                                    <Button 
+                                    {directory === '/.trash' && (
+                                        <Button
+                                            size={Options.Size.Compact}
+                                            variant={Options.Variant.Primary}
+                                            onClick={onClickRestore}
+                                            style={{ minWidth: '80px', fontSize: '0.875rem' }}
+                                        >
+                                            <FontAwesomeIcon icon={faHistory} className="mr-1" />
+                                            Restore
+                                        </Button>
+                                    )}
+                                    {directory !== '/.trash' && <Button 
                                         size={Options.Size.Compact}
                                         variant={Options.Variant.Primary}
                                         onClick={() => setShowMove(true)}
@@ -130,8 +160,8 @@ const MassActionsBar = () => {
                                     >
                                         <FontAwesomeIcon icon={faArrowsAlt} className="mr-1" />
                                         {t('files.massActions.move')}
-                                    </Button>
-                                    <Button 
+                                    </Button>}
+                                    {directory !== '/.trash' && <Button 
                                         size={Options.Size.Compact}
                                         variant={Options.Variant.Primary}
                                         onClick={onClickCompress}
@@ -142,7 +172,7 @@ const MassActionsBar = () => {
                                     >
                                         <FontAwesomeIcon icon={faFileArchive} className="mr-1" />
                                         {t('files.massActions.compress')}
-                                    </Button>
+                                    </Button>}
                                     <Button.Danger 
                                         size={Options.Size.Compact}
                                         variant={Options.Variant.Primary} 
