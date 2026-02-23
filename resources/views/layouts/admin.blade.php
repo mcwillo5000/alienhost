@@ -154,6 +154,11 @@
                                 <i class="fa fa-gamepad"></i> <span>Game Configs</span>
                             </a>
                         </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.advertisements') ?: 'active' }}">
+                            <a href="{{ route('admin.advertisements.index') }}">
+                                <i class="fa fa-bullhorn"></i> <span>Advertisements</span>
+                            </a>
+                        </li>
                     </ul>
                 </section>
             </aside>

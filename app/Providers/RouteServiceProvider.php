@@ -12,6 +12,7 @@ use Pterodactyl\Http\Middleware\TrimStrings;
 use Pterodactyl\Http\Middleware\AdminAuthenticate;
 use Pterodactyl\Http\Middleware\RequireTwoFactorAuthentication;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Pterodactyl\Models\Advertisement;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -34,6 +35,7 @@ class RouteServiceProvider extends ServiceProvider
         // model. Without it you'll never trigger that logic flow thus resulting in a 404
         // error because we request databases with a HashID, and not with a normal ID.
         Route::model('database', Database::class);
+        Route::model('advertisement', Advertisement::class);
 
         $this->routes(function () {
             Route::middleware('web')->group(function () {

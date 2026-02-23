@@ -305,4 +305,13 @@ Route::group(['prefix' => 'rivion'], function () {
     Route::post('/settings', [Admin\RivionController::class, 'updateSettings'])->name('admin.rivion.settings.update');
     Route::post('/metadata', [Admin\RivionController::class, 'updateMetadata'])->name('admin.rivion.metadata.update');
 });
+Route::group(['prefix' => 'advertisements'], function () {
+    Route::get('/', [Admin\AdvertisementController::class, 'index'])->name('admin.advertisements.index');
+    Route::get('/create', [Admin\AdvertisementController::class, 'create'])->name('admin.advertisements.create');
+    Route::post('/', [Admin\AdvertisementController::class, 'store'])->name('admin.advertisements.store');
+    Route::get('/{advertisement}/edit', [Admin\AdvertisementController::class, 'edit'])->name('admin.advertisements.edit');
+    Route::patch('/{advertisement}', [Admin\AdvertisementController::class, 'update'])->name('admin.advertisements.update');
+    Route::post('/{advertisement}/send', [Admin\AdvertisementController::class, 'send'])->name('admin.advertisements.send');
+    Route::delete('/{advertisement}', [Admin\AdvertisementController::class, 'destroy'])->name('admin.advertisements.destroy');
+});
 include 'admin-serverimporter.php';
