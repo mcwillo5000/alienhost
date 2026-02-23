@@ -44,6 +44,7 @@ const StyledRow = styled.div<{ $danger?: boolean }>`
     background: transparent;
     color: var(--theme-text-base);
     transition: all 0.15s ease;
+    cursor: pointer;
     
     &:hover {
         background: color-mix(in srgb, var(--theme-primary) 8%, transparent);
@@ -76,6 +77,18 @@ const Row = ({ icon, title, ...props }: RowProps) => (
         <span className="ml-2" style={{ color: 'var(--theme-text-base)' }}>{title}</span>
     </StyledRow>
 );
+
+const DotsButton = styled.div`
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.375rem;
+    color: var(--theme-text-muted);
+    cursor: pointer;
+    transition: color 0.15s ease;
+
+    &:hover {
+        color: var(--theme-primary);
+    }
+`;
 
 const FileDropdownMenu = ({ file }: { file: FileObject }) => {
     const { t } = useTranslation();
@@ -169,7 +182,7 @@ const FileDropdownMenu = ({ file }: { file: FileObject }) => {
             <DropdownMenu
                 ref={onClickRef}
                 renderToggle={(onClick) => (
-                    <div className="px-4 py-2" onClick={onClick} style={{ color: 'var(--theme-text-muted)', cursor: 'pointer' }}>
+                    <DotsButton onClick={onClick}>
                         <FontAwesomeIcon icon={faEllipsisH} />
                         {modal ? (
                             modal === 'chmod' ? (
@@ -190,7 +203,7 @@ const FileDropdownMenu = ({ file }: { file: FileObject }) => {
                             )
                         ) : null}
                         <SpinnerOverlay visible={showSpinner} fixed size={'large'} />
-                    </div>
+                    </DotsButton>
                 )}
             >
                 <Can action={'file.update'}>

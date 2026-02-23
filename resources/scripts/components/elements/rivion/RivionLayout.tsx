@@ -16,7 +16,7 @@ export default ({ children }: RivionLayoutProps) => {
     
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'Escape' && sidebarOpen) {
+            if (event.key === 'Escape' && sidebarOpen && window.innerWidth < 1024) {
                 setSidebarOpen(false);
             }
         };

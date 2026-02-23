@@ -627,9 +627,9 @@ const ServerInfoContainer = () => {
                                 <FontAwesomeIcon icon={faNetworkWired} style={{ color: 'var(--theme-primary)' }} />
                                 {t('serverInfo.ipAddress')}
                             </InfoLabel>
-                            <CopyOnClick text={allocation}>
+                            <CopyOnClick text={hostname ? allocation.split(':')[0] : allocation}>
                                 <InfoValue style={{ cursor: 'pointer', transition: 'color 0.2s' }} className="hover-primary">
-                                    {allocation}
+                                    {hostname ? allocation.split(':')[0] : allocation}
                                 </InfoValue>
                             </CopyOnClick>
                         </InfoRow>
@@ -640,9 +640,9 @@ const ServerInfoContainer = () => {
                                     <FontAwesomeIcon icon={faGlobe} style={{ color: 'var(--theme-primary)' }} />
                                     {t('serverInfo.hostname')}
                                 </InfoLabel>
-                                <CopyOnClick text={`${hostname}:${allocation.split(':')[1] || ''}`}>
+                                <CopyOnClick text={hostname}>
                                     <InfoValue style={{ cursor: 'pointer', transition: 'color 0.2s' }} className="hover-primary">
-                                        {hostname}:{allocation.split(':')[1] || ''}
+                                        {hostname}
                                     </InfoValue>
                                 </CopyOnClick>
                             </InfoRow>

@@ -89,21 +89,21 @@ export default () => {
                                     {node}
                                 </code>
                             </div>
-                            <CopyOnClick text={uuid}>
-                                <div css={tw`flex items-center justify-between text-sm cursor-pointer`}>
+                            <div css={tw`flex items-center justify-between text-sm`}>
                                     <p style={{ color: 'var(--theme-text-base)' }}>{t('settings.debug.serverId')}</p>
-                                    <code 
-                                        css={tw`font-mono rounded px-2 py-1 text-xs`}
-                                        style={{
-                                            background: 'var(--theme-background-secondary)',
-                                            color: 'var(--theme-text-base)',
-                                            border: '1px solid var(--theme-border)'
-                                        }}
-                                    >
-                                        {uuid}
-                                    </code>
+                                    <CopyOnClick text={uuid}>
+                                        <code 
+                                            css={tw`font-mono rounded px-2 py-1 text-xs`}
+                                            style={{
+                                                background: 'var(--theme-background-secondary)',
+                                                color: 'var(--theme-text-base)',
+                                                border: '1px solid var(--theme-border)'
+                                            }}
+                                        >
+                                            {uuid}
+                                        </code>
+                                    </CopyOnClick>
                                 </div>
-                            </CopyOnClick>
                         </div>
                     </TitledGreyBox>
                 </div>

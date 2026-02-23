@@ -4,6 +4,10 @@ import Portal from '@/components/elements/Portal';
 import copy from 'copy-to-clipboard';
 import classNames from 'classnames';
 
+// Module-level reference to dismiss the currently visible notification
+// before showing a new one, preventing stacking.
+let dismissCurrent: (() => void) | null = null;
+
 interface CopyOnClickProps {
     text: string | number | null | undefined;
     showInNotification?: boolean;
@@ -18,7 +22,17 @@ const CopyOnClick = ({ text, showInNotification = true, children }: CopyOnClickP
 
         const timeout = setTimeout(() => {
             setCopied(false);
+            if (dismissCurrent === dismiss) {
+                dismissCurrent = null;
+            }
         }, 2500);
+
+        const dismiss = () => {
+            clearTimeout(timeout);
+            setCopied(false);
+        };
+
+        dismissCurrent = dismiss;
 
         return () => {
             clearTimeout(timeout);
@@ -34,6 +48,10 @@ const CopyOnClick = ({ text, showInNotification = true, children }: CopyOnClickP
         : React.cloneElement(React.Children.only(children), {
               className: classNames(children.props.className || '', 'cursor-pointer'),
               onClick: (e: React.MouseEvent<HTMLElement>) => {
+                  if (dismissCurrent) {
+                      dismissCurrent();
+                      dismissCurrent = null;
+                  }
                   copy(String(text));
                   setCopied(true);
                   if (typeof children.props.onClick === 'function') {

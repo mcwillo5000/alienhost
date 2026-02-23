@@ -15,80 +15,51 @@ interface Spinner extends React.FC<Props> {
     Suspense: React.FC<Props>;
 }
 
+const animLoaderSmall = keyframes`
+    0%   { box-shadow: 14px 0 rgba(var(--theme-primary-rgb), 0.25), 28px 0 var(--theme-primary), 42px 0 var(--theme-primary); }
+    50%  { box-shadow: 14px 0 var(--theme-primary), 28px 0 rgba(var(--theme-primary-rgb), 0.25), 42px 0 var(--theme-primary); }
+    100% { box-shadow: 14px 0 var(--theme-primary), 28px 0 var(--theme-primary), 42px 0 rgba(var(--theme-primary-rgb), 0.25); }
+`;
+
 const animLoader = keyframes`
-    0%   { height: 48px; } 
-    100% { height: 4px; }
+    0%   { box-shadow: 20px 0 rgba(var(--theme-primary-rgb), 0.25), 40px 0 var(--theme-primary), 60px 0 var(--theme-primary); }
+    50%  { box-shadow: 20px 0 var(--theme-primary), 40px 0 rgba(var(--theme-primary-rgb), 0.25), 60px 0 var(--theme-primary); }
+    100% { box-shadow: 20px 0 var(--theme-primary), 40px 0 var(--theme-primary), 60px 0 rgba(var(--theme-primary-rgb), 0.25); }
+`;
+
+const animLoaderLarge = keyframes`
+    0%   { box-shadow: 26px 0 rgba(var(--theme-primary-rgb), 0.25), 52px 0 var(--theme-primary), 78px 0 var(--theme-primary); }
+    50%  { box-shadow: 26px 0 var(--theme-primary), 52px 0 rgba(var(--theme-primary-rgb), 0.25), 78px 0 var(--theme-primary); }
+    100% { box-shadow: 26px 0 var(--theme-primary), 52px 0 var(--theme-primary), 78px 0 rgba(var(--theme-primary-rgb), 0.25); }
 `;
 
 const SpinnerComponent = styled.div<Props>`
     width: 8px;
-    height: 40px;
-    border-radius: 4px;
+    height: 48px;
     display: block;
-    margin: 20px auto;
+    margin: auto;
+    left: -20px;
     position: relative;
-    background: var(--theme-primary);
-    color: var(--theme-primary);
+    border-radius: 4px;
     box-sizing: border-box;
-    animation: ${animLoader} 0.3s 0.3s linear infinite alternate;
+    background-color: transparent;
+    animation: ${animLoader} 1s linear infinite alternate;
 
-    ${(props) =>
-        props.size === 'small'
-            ? css`
-                width: 6px;
-                height: 30px;
-                border-radius: 3px;
-                margin: 15px auto;
-                
-                &::after, &::before {
-                    width: 6px;
-                    height: 30px;
-                    border-radius: 3px;
-                    left: 15px;
-                }
-                
-                &::before {
-                    left: -15px;
-                }
-              `
-            : props.size === 'large'
-            ? css`
-                width: 10px;
-                height: 50px;
-                border-radius: 5px;
-                margin: 25px auto;
-                
-                &::after, &::before {
-                    width: 10px;
-                    height: 50px;
-                    border-radius: 5px;
-                    left: 25px;
-                }
-                
-                &::before {
-                    left: -25px;
-                }
-              `
-            : null};
+    ${({ size }) => size === 'small' && css`
+        width: 5px;
+        height: 30px;
+        left: -14px;
+        border-radius: 3px;
+        animation: ${animLoaderSmall} 1s linear infinite alternate;
+    `}
 
-    &::after, &::before {
-        content: '';
-        width: 8px;
-        height: 40px;
-        border-radius: 4px;
-        background: var(--theme-primary);
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        left: 20px;
-        box-sizing: border-box;
-        animation: ${animLoader} 0.3s 0.45s linear infinite alternate;
-    }
-    
-    &::before {
-        left: -20px;
-        animation-delay: 0s;
-    }
+    ${({ size }) => size === 'large' && css`
+        width: 10px;
+        height: 60px;
+        left: -26px;
+        border-radius: 5px;
+        animation: ${animLoaderLarge} 1s linear infinite alternate;
+    `}
 `;
 
 const Spinner: Spinner = ({ centered, ...props }) =>
