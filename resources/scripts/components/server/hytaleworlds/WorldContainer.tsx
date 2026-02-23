@@ -10,7 +10,6 @@ import { PaginatedResult } from '@/api/http';
 import Pagination from '@/components/elements/Pagination';
 import http from '@/api/http';
 import { useLocation } from 'react-router-dom';
-import Alert from '@/components/elements/alert/Alert';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
 import { formatDistanceToNow } from 'date-fns';
 import Select from '@/components/elements/Select';
@@ -25,60 +24,18 @@ const FilterGroup = styled.div`
     ${tw`relative flex items-center`};
 `;
 const FilterIcon = styled(FontAwesomeIcon)`
-    ${tw`absolute left-3 text-neutral-400 pointer-events-none`};
+    display: none;
 `;
 const StyledSelect = styled(Select)`
-    ${tw`pl-10 w-full`};
+    ${tw`pl-3 w-full`};
+    text-align: left;
+    text-align-last: left;
     & > option {
         ${tw`flex items-center`};
     }
 `;
 const StyledInput = styled(Input)`
     ${tw`w-full`};
-    &::placeholder {
-        ${tw`text-neutral-400`};
-    }
-`;
-const WorldCard = styled.div`
-    ${tw`bg-neutral-700 rounded-lg shadow-md transition-all duration-150 hover:shadow-lg border border-neutral-600 hover:border-neutral-500 cursor-pointer relative overflow-hidden`};
-    &:hover {
-        transform: translateY(-2px);
-        ${tw`shadow-xl`};
-        &::after {
-            opacity: 0.1;
-        }
-    }
-    &::after {
-        content: '';
-        ${tw`absolute inset-0 bg-white opacity-0 transition-opacity duration-150`};
-    }
-`;
-const WorldHeader = styled.div`
-    ${tw`flex items-start gap-4 p-4 border-b border-neutral-600`};
-`;
-const WorldIcon = styled.img`
-    ${tw`w-16 h-16 rounded-lg object-cover bg-neutral-600 border-2 border-neutral-500`};
-`;
-const PlaceholderIcon = styled.div`
-    ${tw`w-16 h-16 rounded-lg bg-neutral-600 border-2 border-neutral-500 flex items-center justify-center text-neutral-300`};
-`;
-const WorldInfo = styled.div`
-    ${tw`flex-1 min-w-0`};
-`;
-const WorldDescription = styled.p`
-    ${tw`mt-1 text-sm text-neutral-200 line-clamp-1`};
-`;
-const WorldFooter = styled.div`
-    ${tw`p-4 flex items-center justify-between`};
-`;
-const WorldStats = styled.div`
-    ${tw`text-xs text-neutral-300 flex items-center gap-4`};
-`;
-const StatItem = styled.span`
-    ${tw`flex items-center gap-1`};
-    svg {
-        ${tw`text-neutral-400`};
-    }
 `;
 interface World {
     id: string;
@@ -146,6 +103,8 @@ export default () => {
     });
     const [searchTerm, setSearchTerm] = useState('');
     const searchTimeoutRef = useRef<number | null>(null);
+    const isMountedRef = useRef(true);
+    useEffect(() => { return () => { isMountedRef.current = false; }; }, []);
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setSearchTerm(value);
@@ -175,7 +134,8 @@ export default () => {
     const loadGameVersions = () => {
         http.get(`/api/client/servers/${uuid}/hytale-worlds/hytale-versions`)
             .then(({ data }) => {
-                const versions = data.map((version: string) => ({
+                if (!isMountedRef.current) return;
+                const versions = (data || []).filter(Boolean).map((version: string) => ({
                     value: version,
                     label: version
                 }));
@@ -185,6 +145,7 @@ export default () => {
                 ]);
             })
             .catch(error => {
+                if (!isMountedRef.current) return;
                 console.error('Error loading Hytale versions:', error);
                 addError('Failed to load Hytale versions: ' + httpErrorToHuman(error));
             });
@@ -206,6 +167,7 @@ export default () => {
             }
         })
             .then(({ data }) => {
+                if (!isMountedRef.current) return;
                 if (data && data.meta && data.meta.pagination) {
                     setWorlds({
                         items: data.data || [],
@@ -232,11 +194,12 @@ export default () => {
                 }
             })
             .catch(error => {
+                if (!isMountedRef.current) return;
                 console.error('Error loading worlds:', error);
                 addError('Failed to load worlds: ' + httpErrorToHuman(error));
             })
             .finally(() => {
-                setLoading(false);
+                if (isMountedRef.current) setLoading(false);
             });
     };
     const handleInstall = (worldId: string, worldName: string) => {
@@ -258,9 +221,9 @@ export default () => {
         >
             <FlashMessageRender byKey={'worlds'} css={tw`mb-4`} />
             {message && (
-                <Alert type={message.type === 'success' ? 'warning' : message.type} className={'mb-4'}>
+                <div css={tw`mb-4 px-4 py-3 rounded text-sm`} style={{ backgroundColor: 'rgba(var(--theme-primary-rgb), 0.1)', border: '1px solid var(--theme-border)', color: 'var(--theme-text-base)', fontFamily: "'Electrolize', sans-serif" }}>
                     {message.text}
-                </Alert>
+                </div>
             )}
             <FilterContainer>
                 <FilterGroup>
@@ -283,9 +246,10 @@ export default () => {
                 <FilterGroup>
                     <FilterIcon icon={faGamepad} />
                     <StyledSelect
-                        value={filters.hytale_version}
+                        value={filters.hytale_version || ''}
                         onChange={e => {
-                            setFilters(prev => ({ ...prev, hytale_version: e.target.value }));
+                            const value = e.target.value;
+                            setFilters(prev => ({ ...prev, hytale_version: value }));
                             setPage(1);
                         }}
                     >
@@ -301,9 +265,10 @@ export default () => {
                 <FilterGroup>
                     <FilterIcon icon={faSort} />
                     <StyledSelect
-                        value={filters.sort}
+                        value={filters.sort || 'relevance'}
                         onChange={e => {
-                            setFilters(prev => ({ ...prev, sort: e.target.value }));
+                            const value = e.target.value;
+                            setFilters(prev => ({ ...prev, sort: value }));
                             setPage(1);
                         }}
                     >
@@ -329,60 +294,69 @@ export default () => {
             ) : (
                 <Pagination data={worlds || { items: [], pagination: { total: 0, count: 0, perPage: 10, currentPage: 1, totalPages: 1 } }} onPageSelect={setPage}>
                     {({ items }) => (
-                        <div css={tw`grid gap-4 md:grid-cols-2 lg:grid-cols-3`}>
+                        <div css={tw`flex flex-col gap-2`}>
                             {items.length > 0 ? items.map((world: World) => (
-                                <WorldCard key={world.id} onClick={() => handleInstall(world.id, world.name)}>
-                                    <WorldHeader>
-                                        {world.icon_url ? (
-                                            <WorldIcon src={world.icon_url} alt={world.name} />
-                                        ) : (
-                                            <PlaceholderIcon>
-                                                <FontAwesomeIcon icon={faGlobe} size="2x" />
-                                            </PlaceholderIcon>
-                                        )}
-                                        <WorldInfo>
-                                            <h3 css={tw`text-sm font-semibold truncate mb-1`}>
+                                <div
+                                    key={world.id}
+                                    css={tw`flex items-center gap-3 px-3 py-2.5 rounded transition-colors duration-150 cursor-pointer`}
+                                    style={{ backgroundColor: 'var(--theme-background-secondary)', border: '1px solid var(--theme-border)' }}
+                                    onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--theme-primary)')}
+                                    onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--theme-border)')}
+                                    onClick={() => handleInstall(world.id, world.name)}
+                                >
+                                    {world.icon_url ? (
+                                        <img src={world.icon_url} alt={world.name} css={tw`rounded w-10 h-10 object-contain flex-shrink-0`} />
+                                    ) : (
+                                        <div css={tw`w-10 h-10 rounded flex-shrink-0 flex items-center justify-center`} style={{ backgroundColor: 'var(--theme-background)', border: '1px solid var(--theme-border)' }}>
+                                            <FontAwesomeIcon icon={faGlobe} style={{ color: 'var(--theme-text-muted)' }} />
+                                        </div>
+                                    )}
+                                    <div css={tw`flex flex-col flex-1 min-w-0`}>
+                                        <div css={tw`flex items-center gap-2`}>
+                                            <span css={tw`text-sm font-medium truncate`} style={{ color: 'var(--theme-text-base)', fontFamily: "'Electrolize', sans-serif" }}>
                                                 {world.name}
-                                            </h3>
+                                            </span>
+                                        </div>
+                                        <div css={tw`flex items-center gap-3 mt-0.5 flex-wrap`}>
                                             {world.author && world.author.trim() !== '' && (
-                                                <p css={tw`text-xs text-neutral-300 mb-1`}>
-                                                    By {world.author}
-                                                </p>
+                                                <span css={tw`text-xs`} style={{ color: 'var(--theme-text-muted)' }}>By {world.author}</span>
                                             )}
-                                            <WorldDescription>
-                                                {world.short_description}
-                                            </WorldDescription>
-                                        </WorldInfo>
-                                    </WorldHeader>
-                                    <WorldFooter>
-                                        <WorldStats>
                                             {world.downloads !== undefined && (
-                                                <StatItem>
+                                                <span css={tw`text-xs flex items-center gap-1`} style={{ color: 'var(--theme-text-muted)' }}>
                                                     <FontAwesomeIcon icon={faDownload} />
                                                     {formatNumber(world.downloads)}
-                                                </StatItem>
+                                                </span>
                                             )}
                                             {world.followers !== undefined && (
-                                                <StatItem>
+                                                <span css={tw`text-xs flex items-center gap-1`} style={{ color: 'var(--theme-text-muted)' }}>
                                                     <FontAwesomeIcon icon={faThumbsUp} />
                                                     {formatNumber(world.followers)}
-                                                </StatItem>
+                                                </span>
                                             )}
                                             {world.last_updated && (
-                                                <StatItem>
+                                                <span css={tw`text-xs flex items-center gap-1`} style={{ color: 'var(--theme-text-muted)' }}>
                                                     <FontAwesomeIcon icon={faClock} />
                                                     {formatDate(world.last_updated)}
-                                                </StatItem>
+                                                </span>
                                             )}
-                                        </WorldStats>
-                                    </WorldFooter>
-                                </WorldCard>
-                            )) : (
-                                <div css={tw`col-span-full`}>
-                                    <Alert type="warning">
-                                        No worlds found matching your criteria.
-                                    </Alert>
+                                            <p css={tw`text-xs line-clamp-1 flex-1 min-w-0`} style={{ color: 'var(--theme-text-muted)' }}>{world.short_description}</p>
+                                        </div>
+                                    </div>
+                                    <button
+                                        title='Install'
+                                        css={tw`flex-shrink-0 p-1.5 text-sm transition-colors duration-150`}
+                                        style={{ color: 'var(--theme-text-muted)' }}
+                                        onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--theme-primary)')}
+                                        onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--theme-text-muted)')}
+                                        onClick={(e) => { e.stopPropagation(); handleInstall(world.id, world.name); }}
+                                    >
+                                        <FontAwesomeIcon icon={faDownload} />
+                                    </button>
                                 </div>
+                            )) : (
+                                <p css={tw`text-center text-sm py-8`} style={{ color: 'var(--theme-text-muted)', fontFamily: "'Electrolize', sans-serif" }}>
+                                    No worlds found matching your criteria.
+                                </p>
                             )}
                         </div>
                     )}

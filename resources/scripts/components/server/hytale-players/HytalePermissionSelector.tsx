@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react';
-import tw from 'twin.macro';
 import styled from 'styled-components/macro';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronRight, faSearch } from '@fortawesome/free-solid-svg-icons';
@@ -12,22 +11,49 @@ import {
 } from '@/api/server/hytale-players/HytalePermissions';
 import Switch from '@/components/elements/Switch';
 const Container = styled.div`
-    ${tw`bg-neutral-800 rounded-md border border-neutral-700`};
+    background-color: var(--theme-background-secondary);
+    border-radius: 0.375rem;
+    border: 1px solid var(--theme-border);
     max-height: 400px;
     overflow-y: auto;
 `;
 const CategoryHeader = styled.div<{ isExpanded: boolean }>`
-    ${tw`flex items-center justify-between p-3 cursor-pointer hover:bg-neutral-700 transition-colors`};
-    ${(props) => props.isExpanded && tw`bg-neutral-700/50`};
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.15s;
+    background-color: ${(props) => props.isExpanded ? 'rgba(var(--theme-primary-rgb), 0.08)' : 'transparent'};
+    &:hover {
+        background-color: rgba(var(--theme-primary-rgb), ${(props) => props.isExpanded ? '0.12' : '0.05'});
+    }
 `;
 const PermissionItem = styled.label`
-    ${tw`flex items-center p-2 pl-8 cursor-pointer hover:bg-neutral-700/50 transition-colors border-t border-neutral-700/50`};
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0.5rem 0.5rem 2rem;
+    cursor: pointer;
+    transition: background-color 0.15s;
+    border-top: 1px solid var(--theme-border);
+    &:hover {
+        background-color: rgba(var(--theme-primary-rgb), 0.05);
+    }
     &.disabled {
-        ${tw`opacity-50 cursor-not-allowed`};
+        opacity: 0.5;
+        cursor: not-allowed;
     }
 `;
 const FilterBar = styled.div`
-    ${tw`grid grid-cols-2 gap-3 p-3 border-b border-neutral-700 sticky top-0 bg-neutral-800 z-10`};
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--theme-border);
+    position: sticky;
+    top: 0;
+    background-color: var(--theme-background-secondary);
+    z-index: 10;
 `;
 interface Props {
     selectedPermissions: string[];
@@ -109,7 +135,8 @@ const HytalePermissionSelector: React.FC<Props> = ({
                     <div className={'relative'}>
                         <FontAwesomeIcon
                             icon={faSearch}
-                            className={'absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400'}
+                            className={'absolute left-3 top-1/2 transform -translate-y-1/2'}
+                            style={{ color: 'var(--theme-text-muted)' }}
                         />
                         <Input
                             type={'text'}
@@ -140,7 +167,8 @@ const HytalePermissionSelector: React.FC<Props> = ({
                             <div className={'flex items-center gap-3'}>
                                 <FontAwesomeIcon
                                     icon={expandedCategories.has(category) ? faChevronDown : faChevronRight}
-                                    className={'text-neutral-400 w-3'}
+                                    className={'w-3'}
+                                    style={{ color: 'var(--theme-text-muted)' }}
                                 />
                                 <Input
                                     type={'checkbox'}
@@ -160,10 +188,10 @@ const HytalePermissionSelector: React.FC<Props> = ({
                                     disabled={disabled || grantAllPermission}
                                     className={'!w-4 !h-4'}
                                 />
-                                <span className={'font-medium text-white'}>
+                                <span className={'font-medium'} style={{ color: 'var(--theme-text-base)' }}>
                                     {formatCategoryName(category)}
                                 </span>
-                                <span className={'text-xs text-neutral-400'}>
+                                <span className={'text-xs'} style={{ color: 'var(--theme-text-muted)' }}>
                                     ({perms.filter((p) => selectedPermissions.includes(p)).length}/{perms.length})
                                 </span>
                             </div>
@@ -184,10 +212,10 @@ const HytalePermissionSelector: React.FC<Props> = ({
                                             className={'!w-4 !h-4 mr-3'}
                                         />
                                         <div className={'flex flex-col'}>
-                                            <code className={'text-sm text-neutral-200'}>
+                                            <code className={'text-sm'} style={{ color: 'var(--theme-text-base)' }}>
                                                 {getPermissionCommand(permission)}
                                             </code>
-                                            <code className={'text-xs text-neutral-500'}>
+                                            <code className={'text-xs'} style={{ color: 'var(--theme-text-muted)' }}>
                                                 {permission}
                                             </code>
                                         </div>
@@ -198,12 +226,12 @@ const HytalePermissionSelector: React.FC<Props> = ({
                     </div>
                 ))}
                 {Object.keys(filteredPermissions).length === 0 && (
-                    <div className={'p-4 text-center text-neutral-400'}>
+                    <div className={'p-4 text-center'} style={{ color: 'var(--theme-text-muted)', fontFamily: "'Electrolize', sans-serif" }}>
                         No permissions found matching your search.
                     </div>
                 )}
             </Container>
-            <div css={tw`mt-2 bg-neutral-700 border border-neutral-800 shadow-inner p-4 rounded`}>
+            <div style={{ marginTop: '0.5rem', backgroundColor: 'var(--theme-background-secondary)', border: '1px solid var(--theme-border)', boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.2)', padding: '1rem', borderRadius: '0.25rem' }}>
                 <Switch
                     label={'Grant All Permissions (*)'}
                     description={'Enable this to give all permissions to this group'}

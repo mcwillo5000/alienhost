@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import tw from 'twin.macro';
-import styled, { css } from 'styled-components/macro';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faSpinner, faTimes, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 interface MinecraftItem {
@@ -22,68 +20,29 @@ interface GiveItemProps {
     hasError?: boolean;
     error?: string;
 }
-const AutocompleteContainer = styled.div`
-    ${tw`relative`};
-`;
-const AutocompleteLabel = styled.label<{ isLight?: boolean }>`
-    ${tw`block text-xs uppercase text-neutral-200 mb-1 sm:mb-2`};
-    ${(props) => props.isLight && tw`text-neutral-700`};
-`;
-const AutocompleteInput = styled.input<{ hasError?: boolean }>`
-    resize: none;
-    ${tw`appearance-none outline-none w-full min-w-0`};
-    ${tw`p-3 pr-10 border-2 rounded text-sm transition-all duration-150`};
-    ${tw`bg-neutral-600 border-neutral-500 hover:border-neutral-400 text-neutral-200 shadow-none focus:ring-0`};
-    &:required,
-    &:invalid {
-        ${tw`shadow-none`};
-    }
-    &:not(:disabled):not(:read-only):focus {
-        ${tw`shadow-md border-primary-300 ring-2 ring-primary-400 ring-opacity-50`};
-        ${(props) => props.hasError && tw`border-red-300 ring-red-200`};
-    }
-    &:disabled {
-        ${tw`opacity-75`};
-    }
-    ${(props) => props.hasError && tw`text-red-100 border-red-400 hover:border-red-300`};
-`;
-const ClearButton = styled.button`
-    ${tw`absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-neutral-200 transition-colors duration-200`};
-`;
-const DropdownContainer = styled.div<{ top: number; left: number; width: number }>`
-    ${tw`fixed bg-neutral-600 border-2 border-neutral-500 rounded shadow-lg max-h-64 overflow-y-auto z-[9999]`};
-    ${tw`shadow-none focus:ring-0`};
-    top: ${(props) => props.top}px;
-    left: ${(props) => props.left}px;
-    width: ${(props) => props.width}px;
-    &:hover:not(:disabled),
-    &:focus {
-        ${tw`border-neutral-400`};
-    }
-`;
-const DropdownItem = styled.div<{ selected: boolean }>`
-    ${tw`flex items-center px-3 py-2 cursor-pointer transition-all duration-150 border-b border-neutral-500 last:border-b-0`};
-    ${(props) => (props.selected ? tw`bg-primary-500/20 border-primary-500/50` : tw`hover:bg-neutral-500/50`)};
-`;
-const ItemIcon = styled.img`
-    ${tw`w-6 h-6 rounded-md mr-3 border border-neutral-500`};
-`;
-const ItemInfo = styled.div`
-    ${tw`flex-grow`};
-`;
-const ItemName = styled.div`
-    ${tw`font-medium text-neutral-100 text-sm`};
-`;
-const ItemId = styled.div`
-    ${tw`text-xs text-neutral-400`};
-`;
-const LoadingSpinner = styled.div`
-    ${tw`absolute right-3 top-1/2 transform -translate-y-1/2`};
-`;
-const HelpText = styled.p<{ hasError?: boolean }>`
-    ${tw`mt-1 text-xs`};
-    ${(props) => (props.hasError ? tw`text-red-200` : tw`text-neutral-200`)}
-`;
+
+const inputBaseStyle: React.CSSProperties = {
+    resize: 'none',
+    appearance: 'none',
+    outline: 'none',
+    width: '100%',
+    minWidth: 0,
+    padding: '0.75rem',
+    paddingRight: '2.5rem',
+    border: '1px solid var(--theme-border)',
+    fontSize: '0.875rem',
+    transition: 'all 150ms',
+    backgroundColor: 'var(--theme-background)',
+    color: 'var(--theme-text-base)',
+    fontFamily: "'Electrolize', sans-serif",
+    clipPath: 'polygon(0px 4px, 4px 0px, 100% 0px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0px 100%)',
+};
+
+const inputErrorStyle: React.CSSProperties = {
+    ...inputBaseStyle,
+    color: '#fecaca',
+    borderColor: '#f87171',
+};
 const extractVersionNumber = (serverVersion?: string): string => {
     if (!serverVersion) return '1.20.4';
     const match = serverVersion.match(/(\d+\.\d+(?:\.\d+)?)/);
@@ -259,9 +218,24 @@ const GiveItem: React.FC<GiveItemProps> = ({
         };
     }, []);
     return (
-        <AutocompleteContainer>
-            {label && <AutocompleteLabel htmlFor={nama}>{label}</AutocompleteLabel>}
-            <AutocompleteInput
+        <div style={{ position: 'relative' }}>
+            {label && (
+                <label
+                    htmlFor={nama}
+                    style={{
+                        display: 'block',
+                        fontSize: '0.7rem',
+                        textTransform: 'uppercase',
+                        color: 'var(--theme-text-muted)',
+                        marginBottom: '0.375rem',
+                        fontFamily: "'Orbitron', sans-serif",
+                        letterSpacing: '0.05em',
+                    }}
+                >
+                    {label}
+                </label>
+            )}
+            <input
                 ref={inputRef}
                 type='text'
                 value={value}
@@ -270,52 +244,117 @@ const GiveItem: React.FC<GiveItemProps> = ({
                 onKeyDown={handleKeyDown}
                 placeholder={placeholder}
                 disabled={disabled}
-                hasError={hasError}
+                style={{
+                    ...(hasError ? inputErrorStyle : inputBaseStyle),
+                    ...(disabled ? { opacity: 0.75 } : {}),
+                }}
             />
             {isLoading && (
-                <LoadingSpinner>
+                <div style={{
+                    position: 'absolute',
+                    right: '0.75rem',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    color: 'var(--theme-text-muted)',
+                }}>
                     <FontAwesomeIcon icon={faSpinner} spin />
-                </LoadingSpinner>
+                </div>
             )}
             {value.trim() && !isLoading && (
-                <ClearButton onClick={handleClear}>
+                <button
+                    onClick={handleClear}
+                    style={{
+                        position: 'absolute',
+                        right: '0.75rem',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        color: 'var(--theme-text-muted)',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        padding: 0,
+                    }}
+                >
                     <FontAwesomeIcon icon={faTimes} />
-                </ClearButton>
+                </button>
             )}
             {isOpen && filteredItems.length > 0 && (
-                <DropdownContainer
+                <div
                     ref={dropdownRef}
-                    top={dropdownPosition.top}
-                    left={dropdownPosition.left}
-                    width={dropdownPosition.width}
+                    style={{
+                        position: 'fixed',
+                        backgroundColor: 'var(--theme-background-secondary)',
+                        border: '1px solid var(--theme-border)',
+                        maxHeight: '16rem',
+                        overflowY: 'auto',
+                        zIndex: 9999,
+                        top: dropdownPosition.top,
+                        left: dropdownPosition.left,
+                        width: dropdownPosition.width,
+                        clipPath: 'polygon(0px 5px, 5px 0px, 100% 0px, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0px 100%)',
+                    }}
                 >
                     {filteredItems.map((item, index) => (
-                        <DropdownItem
+                        <div
                             key={item.id}
-                            selected={index === selectedIndex}
                             onClick={() => handleSelectItem(item)}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                padding: '0.5rem 0.75rem',
+                                cursor: 'pointer',
+                                transition: 'all 150ms',
+                                borderBottom: index < filteredItems.length - 1 ? '1px solid var(--theme-border)' : 'none',
+                                backgroundColor: index === selectedIndex
+                                    ? 'color-mix(in srgb, var(--theme-primary) 15%, transparent)'
+                                    : 'transparent',
+                            }}
                         >
-                            <ItemIcon
+                            <img
                                 src={getItemIconUrl(item.id, serverVersion)}
                                 alt={item.displayName}
                                 onError={(e) => {
                                     (e.target as HTMLImageElement).style.display = 'none';
                                 }}
+                                style={{
+                                    width: '1.5rem',
+                                    height: '1.5rem',
+                                    marginRight: '0.75rem',
+                                    border: '1px solid var(--theme-border)',
+                                    clipPath: 'polygon(0px 3px, 3px 0px, 100% 0px, 100% calc(100% - 3px), calc(100% - 3px) 100%, 0px 100%)',
+                                }}
                             />
-                            <ItemInfo>
-                                <ItemName>{item.displayName}</ItemName>
-                                <ItemId>{item.nama}</ItemId>
-                            </ItemInfo>
-                        </DropdownItem>
+                            <div style={{ flexGrow: 1 }}>
+                                <div style={{
+                                    fontWeight: 500,
+                                    color: 'var(--theme-text-base)',
+                                    fontSize: '0.875rem',
+                                    fontFamily: "'Electrolize', sans-serif",
+                                }}>
+                                    {item.displayName}
+                                </div>
+                                <div style={{
+                                    fontSize: '0.75rem',
+                                    color: 'var(--theme-text-muted)',
+                                    fontFamily: "'Electrolize', sans-serif",
+                                }}>
+                                    {item.nama}
+                                </div>
+                            </div>
+                        </div>
                     ))}
-                </DropdownContainer>
+                </div>
             )}
             {hasError && error ? (
-                <HelpText hasError={true}>{error.charAt(0).toUpperCase() + error.slice(1)}</HelpText>
+                <p style={{ marginTop: '0.25rem', fontSize: '0.75rem', color: '#fecaca' }}>
+                    {error.charAt(0).toUpperCase() + error.slice(1)}
+                </p>
             ) : description ? (
-                <HelpText hasError={false}>{description}</HelpText>
+                <p style={{ marginTop: '0.25rem', fontSize: '0.75rem', color: 'var(--theme-text-muted)' }}>
+                    {description}
+                </p>
             ) : null}
-        </AutocompleteContainer>
+        </div>
     );
 };
 export default GiveItem;

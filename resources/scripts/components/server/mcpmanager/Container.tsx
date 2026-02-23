@@ -18,9 +18,8 @@ import {
 import PlayersList from './List';
 import PlayerDetails from './Details';
 import Spinner from '@/components/elements/Spinner';
-import ContentBox from '@/components/elements/ContentBox';
+import FuturisticContentBox from '@/components/elements/rivion/FuturisticContentBox';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
-import tw from 'twin.macro';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGamepad, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 const PlayerManagerContainer = () => {
@@ -173,19 +172,19 @@ const PlayerManagerContainer = () => {
             {loading ? (
                 <Spinner size={'large'} centered />
             ) : error ? (
-                <ContentBox css={tw`relative`}>
-                    <div css={tw`p-6 text-center`}>
-                        <FontAwesomeIcon icon={faExclamationTriangle} css={tw`text-yellow-400 text-3xl mb-3`} />
-                        <p css={tw`text-red-400 text-lg mb-2`}>{error}</p>
-                        <p css={tw`text-neutral-300 mt-2`}>
+                <FuturisticContentBox title='Error'>
+                    <div style={{ padding: '1.5rem', textAlign: 'center' }}>
+                        <FontAwesomeIcon icon={faExclamationTriangle} style={{ color: '#facc15', fontSize: '1.875rem', marginBottom: '0.75rem', filter: 'drop-shadow(0 0 6px rgba(250, 204, 21, 0.4))' }} />
+                        <p style={{ color: '#f87171', fontSize: '1.125rem', marginBottom: '0.5rem', fontFamily: "'Electrolize', sans-serif" }}>{error}</p>
+                        <p style={{ color: 'var(--theme-text-muted)', marginTop: '0.5rem', fontFamily: "'Electrolize', sans-serif" }}>
                             Make sure your Minecraft server is running and properly configured.
                         </p>
                     </div>
-                </ContentBox>
+                </FuturisticContentBox>
             ) : (
-                <div css={tw`grid grid-cols-1 md:grid-cols-3 gap-6 mb-10`}>
-                    <div css={tw`md:col-span-1`}>
-                        <div css={tw`sticky top-6`}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1.5rem', marginBottom: '2.5rem' }}>
+                    <div>
+                        <div style={{ position: 'sticky', top: '1.5rem' }}>
                             <PlayersList
                                 data={data}
                                 selectedCategory={selectedCategory}
@@ -197,7 +196,7 @@ const PlayerManagerContainer = () => {
                             />
                         </div>
                     </div>
-                    <div css={tw`md:col-span-2`}>
+                    <div>
                         {selectedPlayer ? (
                             <PlayerDetails
                                 player={selectedPlayer}
@@ -212,14 +211,14 @@ const PlayerManagerContainer = () => {
                                 onModalStateChange={handleModalStateChange}
                             />
                         ) : (
-                            <ContentBox css={tw`relative`}>
-                                <div css={tw`p-8 text-center`}>
-                                    <FontAwesomeIcon icon={faGamepad} css={tw`text-neutral-500 text-4xl mb-4`} />
-                                    <p css={tw`text-neutral-300 text-lg`}>
+                            <FuturisticContentBox>
+                                <div style={{ padding: '2rem', textAlign: 'center' }}>
+                                    <FontAwesomeIcon icon={faGamepad} style={{ color: 'var(--theme-text-muted)', fontSize: '2.5rem', marginBottom: '1rem', filter: 'drop-shadow(0 0 8px rgba(var(--theme-primary-rgb), 0.3))' }} />
+                                    <p style={{ color: 'var(--theme-text-muted)', fontSize: '1.125rem', fontFamily: "'Electrolize', sans-serif" }}>
                                         Select a player from the list to view details
                                     </p>
                                 </div>
-                            </ContentBox>
+                            </FuturisticContentBox>
                         )}
                     </div>
                 </div>

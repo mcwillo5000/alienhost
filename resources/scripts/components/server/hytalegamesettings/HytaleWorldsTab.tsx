@@ -1,5 +1,5 @@
 import React from 'react';
-import TitledGreyBox from '@/components/elements/TitledGreyBox';
+import FuturisticContentBox from '@/components/elements/rivion/FuturisticContentBox';
 import Label from '@/components/elements/Label';
 import Input from '@/components/elements/Input';
 import Select from '@/components/elements/Select';
@@ -10,7 +10,7 @@ interface Props {
 }
 export default ({ settings, updateSetting }: Props) => {
     return (
-        <TitledGreyBox title={'World Settings'}>
+        <FuturisticContentBox title={'World Settings'}>
             <div className={'grid grid-cols-1 md:grid-cols-2 gap-4'}>
                 <div>
                     <Label>Gamemode</Label>
@@ -46,6 +46,6 @@ export default ({ settings, updateSetting }: Props) => {
                     />
                 </div>
             </div>
-        </TitledGreyBox>
+        </FuturisticContentBox>
     );
 };

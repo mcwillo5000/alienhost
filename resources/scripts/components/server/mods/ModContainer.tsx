@@ -11,7 +11,6 @@ import { PaginatedResult } from '@/api/http';
 import Pagination from '@/components/elements/Pagination';
 import http from '@/api/http';
 import { useLocation } from 'react-router-dom';
-import Alert from '@/components/elements/alert/Alert';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
 import { formatDistanceToNow } from 'date-fns';
 import Select from '@/components/elements/Select';
@@ -30,83 +29,87 @@ const FilterGroup = styled.div`
 `;
 
 const FilterIcon = styled(FontAwesomeIcon)`
-    ${tw`absolute left-3 text-neutral-400 pointer-events-none`};
+    display: none;
 `;
 
 const StyledSelect = styled(Select)`
-    ${tw`pl-10 w-full`};
+    ${tw`pl-3 w-full`};
+    background-color: var(--theme-background);
+    border-color: var(--theme-border);
+    color: var(--theme-text-base);
+    text-align: left;
+    text-align-last: left;
     & > option {
         ${tw`flex items-center`};
+        text-align: left;
     }
 `;
 
 const StyledInput = styled(Input)`
     ${tw`w-full`};
+    background-color: var(--theme-background);
+    border-color: var(--theme-border);
+    color: var(--theme-text-base);
     &::placeholder {
-        ${tw`text-neutral-400`};
+        color: var(--theme-text-muted);
     }
 `;
 
 const ActionButton = styled.button`
     ${tw`text-sm w-full flex items-center justify-center gap-2 p-3 rounded border transition-colors duration-150 whitespace-nowrap cursor-pointer`};
-    ${tw`bg-neutral-600 border-neutral-500 text-neutral-200 hover:border-neutral-400 hover:text-neutral-100`};
+    background-color: var(--theme-background);
+    border-color: var(--theme-border);
+    color: var(--theme-text-base);
+    &:hover {
+        border-color: var(--theme-primary);
+        color: var(--theme-primary);
+    }
 `;
 
-const InstalledBadge = styled.div`
-    ${tw`absolute top-2 right-2 z-10 inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-bold bg-green-500 bg-opacity-90 text-white shadow-lg`};
+const InstalledBadge = styled.span`
+    ${tw`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-bold bg-green-500 bg-opacity-90 text-white flex-shrink-0`};
 `;
 
 const ModCard = styled.div`
-    ${tw`bg-neutral-700 rounded-lg shadow-md transition-all duration-150 hover:shadow-lg border border-neutral-600 hover:border-neutral-500 cursor-pointer relative overflow-hidden`};
+    ${tw`flex items-center gap-3 px-3 py-2.5 rounded cursor-pointer transition-colors duration-150`};
+    background-color: var(--theme-background-secondary);
+    border: 1px solid var(--theme-border);
     &:hover {
-        transform: translateY(-2px);
-        ${tw`shadow-xl`};
-        
-        &::after {
-            opacity: 0.1;
-        }
+        border-color: var(--theme-primary);
     }
-    
-    &::after {
-        content: '';
-        ${tw`absolute inset-0 bg-white opacity-0 transition-opacity duration-150`};
-    }
-`;
-
-const ModHeader = styled.div`
-    ${tw`flex items-start gap-4 p-4 border-b border-neutral-600`};
 `;
 
 const ModIcon = styled.img`
-    ${tw`w-16 h-16 rounded-lg object-cover bg-neutral-600 border-2 border-neutral-500`};
+    ${tw`w-10 h-10 rounded object-contain flex-shrink-0`};
+    background-color: var(--theme-background);
+    border: 1px solid var(--theme-border);
 `;
 
 const PlaceholderIcon = styled.div`
-    ${tw`w-16 h-16 rounded-lg bg-neutral-600 border-2 border-neutral-500 flex items-center justify-center text-neutral-300`};
+    ${tw`w-10 h-10 rounded flex items-center justify-center flex-shrink-0`};
+    background-color: var(--theme-background);
+    border: 1px solid var(--theme-border);
+    color: var(--theme-text-muted);
 `;
 
 const ModInfo = styled.div`
-    ${tw`flex-1 min-w-0`};
+    ${tw`flex flex-col flex-1 min-w-0`};
 `;
 
 const ModDescription = styled.p`
-    ${tw`mt-1 text-sm text-neutral-200 line-clamp-1`};
-`;
-
-
-
-const ModFooter = styled.div`
-    ${tw`p-4 flex items-center justify-between`};
+    ${tw`text-xs line-clamp-1 mt-0.5`};
+    color: var(--theme-text-muted);
 `;
 
 const ModStats = styled.div`
-    ${tw`text-xs text-neutral-300 flex items-center gap-4`};
+    ${tw`flex items-center gap-3 text-xs flex-wrap mt-0.5`};
+    color: var(--theme-text-muted);
 `;
 
 const StatItem = styled.span`
     ${tw`flex items-center gap-1`};
     svg {
-        ${tw`text-neutral-400`};
+        color: var(--theme-text-muted);
     }
 `;
 
@@ -366,7 +369,13 @@ export default () => {
         loadInstalledModIds();
     };
 
-    if (loading && !mods) return <Spinner size={'large'} centered />;
+    if (loading && !mods) return (
+        <ServerContentBlock title={'Minecraft Mods'}>
+            <div css={tw`flex items-center justify-center h-64`}>
+                <Spinner size={'large'} />
+            </div>
+        </ServerContentBlock>
+    );
 
     return (
         <ServerContentBlock
@@ -376,9 +385,17 @@ export default () => {
         >
             <FlashMessageRender byKey={'mods'} css={tw`mb-4`} />
             {message && (
-                <Alert type={message.type === 'success' ? 'warning' : message.type} className={'mb-4'}>
+                <div
+                    css={tw`mb-4 p-3 rounded text-sm`}
+                    style={{
+                        backgroundColor: message.type === 'danger' ? 'rgba(239,68,68,0.1)' : 'rgba(var(--theme-primary-rgb),0.1)',
+                        border: `1px solid ${message.type === 'danger' ? 'rgba(239,68,68,0.3)' : 'var(--theme-border)'}`,
+                        color: message.type === 'danger' ? '#ef4444' : 'var(--theme-text-base)',
+                        fontFamily: "'Electrolize', sans-serif",
+                    }}
+                >
                     {message.text}
-                </Alert>
+                </div>
             )}
 
             {showInstalled ? (
@@ -576,43 +593,38 @@ export default () => {
             )}
 
             {loading ? (
-                <Spinner size={'large'} centered />
+                <div css={tw`flex items-center justify-center py-16`}>
+                    <Spinner size={'large'} />
+                </div>
             ) : (
                 <Pagination data={mods || { items: [], pagination: { total: 0, count: 0, perPage: 10, currentPage: 1, totalPages: 1 } }} onPageSelect={setPage}>
                     {({ items }) => (
-                        <div css={tw`grid gap-4 md:grid-cols-2 lg:grid-cols-3`}>
+                        <div css={tw`flex flex-col gap-2`}>
                             {items.length > 0 ? items.map((mod: Mod) => (
                                 <ModCard key={mod.id} onClick={() => handleInstall(mod.id, mod.name)}>
-                                    {installedModIds.has(mod.id) && (
-                                        <InstalledBadge>
-                                            <FontAwesomeIcon icon={faCheckCircle} />
-                                            Installed
-                                        </InstalledBadge>
+                                    {mod.icon_url ? (
+                                        <ModIcon src={mod.icon_url} alt={mod.name} />
+                                    ) : (
+                                        <PlaceholderIcon>
+                                            <FontAwesomeIcon icon={faPuzzlePiece} />
+                                        </PlaceholderIcon>
                                     )}
-                                    <ModHeader>
-                                        {mod.icon_url ? (
-                                            <ModIcon src={mod.icon_url} alt={mod.name} />
-                                        ) : (
-                                            <PlaceholderIcon>
-                                                <FontAwesomeIcon icon={faPuzzlePiece} size="2x" />
-                                            </PlaceholderIcon>
-                                        )}
-                                        <ModInfo>
-                                            <h3 css={tw`text-sm font-semibold truncate mb-1`}>
+                                    <ModInfo>
+                                        <div css={tw`flex items-center gap-2 min-w-0`}>
+                                            <h3 css={tw`text-sm font-semibold truncate`} style={{ color: 'var(--theme-text-base)' }}>
                                                 {mod.name}
                                             </h3>
-                                            {mod.author && mod.author.trim() !== '' && (
-                                                <p css={tw`text-xs text-neutral-300 mb-1`}>
-                                                    By {mod.author}
-                                                </p>
+                                            {installedModIds.has(mod.id) && (
+                                                <InstalledBadge>
+                                                    <FontAwesomeIcon icon={faCheckCircle} />
+                                                    Installed
+                                                </InstalledBadge>
                                             )}
-                                            <ModDescription>
-                                                {mod.short_description}
-                                            </ModDescription>
-                                        </ModInfo>
-                                    </ModHeader>
-                                    <ModFooter>
+                                        </div>
                                         <ModStats>
+                                            {mod.author && mod.author.trim() !== '' && (
+                                                <StatItem>{mod.author}</StatItem>
+                                            )}
                                             {mod.downloads !== undefined && (
                                                 <StatItem>
                                                     <FontAwesomeIcon icon={faDownload} />
@@ -632,13 +644,19 @@ export default () => {
                                                 </StatItem>
                                             )}
                                         </ModStats>
-                                    </ModFooter>
+                                        <ModDescription>{mod.short_description}</ModDescription>
+                                    </ModInfo>
                                 </ModCard>
                             )) : (
-                                <div css={tw`col-span-full`}>
-                                    <Alert type="warning">
+                                <div css={tw`col-span-full text-center py-10`}>
+                                    <FontAwesomeIcon
+                                        icon={faPuzzlePiece}
+                                        css={tw`w-12 h-12 mx-auto mb-3`}
+                                        style={{ color: 'var(--theme-text-muted)', fontSize: '3rem' }}
+                                    />
+                                    <p css={tw`text-sm`} style={{ color: 'var(--theme-text-muted)', fontFamily: "'Electrolize', sans-serif" }}>
                                         No mods found matching your criteria.
-                                    </Alert>
+                                    </p>
                                 </div>
                             )}
                         </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ServerContext } from '@/state/server';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
-import TitledGreyBox from '@/components/elements/TitledGreyBox';
+import FuturisticContentBox from '@/components/elements/rivion/FuturisticContentBox';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import tw from 'twin.macro';
 import { detectGameType, GameConfigFile } from '@/api/server/game-config';
@@ -63,14 +63,14 @@ export default () => {
         return (
             <ServerContentBlock title={'Game Config Editor'}>
                 <FlashMessageRender byKey={'game-config'} css={tw`mb-4`} />
-                <TitledGreyBox title={'Game Type Not Detected'}>
+                <FuturisticContentBox title={'Game Type Not Detected'}>
                     <div css={tw`text-center py-4`}>
-                        <DocumentTextIcon css={tw`w-16 h-16 mx-auto mb-4 text-neutral-400`} />
-                        <p css={tw`text-neutral-300 mb-2`}>
+                        <DocumentTextIcon css={[tw`w-16 h-16 mx-auto mb-4`, { color: 'var(--theme-text-muted)' }]} />
+                        <p css={[tw`mb-2`, { color: 'var(--theme-text-base)', fontFamily: "'Electrolize', sans-serif" }]}>
                             Make sure your server has configuration files in the correct locations.
                         </p>
                     </div>
-                </TitledGreyBox>
+                </FuturisticContentBox>
             </ServerContentBlock>
         );
     }
@@ -78,10 +78,10 @@ export default () => {
         return (
             <ServerContentBlock title={'Game Config Editor'}>
                 <FlashMessageRender byKey={'game-config'} css={tw`mb-4`} />
-                <TitledGreyBox title={'No Config Files Found'}>
+                <FuturisticContentBox title={'No Config Files Found'}>
                     <div css={tw`text-center py-4`}>
-                        <DocumentTextIcon css={tw`w-16 h-16 mx-auto mb-4 text-neutral-400`} />
-                        <p css={tw`text-neutral-300 mb-4`}>
+                        <DocumentTextIcon css={[tw`w-16 h-16 mx-auto mb-4`, { color: 'var(--theme-text-muted)' }]} />
+                        <p css={[tw`mb-4`, { color: 'var(--theme-text-base)', fontFamily: "'Electrolize', sans-serif" }]}>
                             No configuration files were found for this server.
                         </p>
                         <Button.Text onClick={handleRefresh} variant={Button.Variants.Secondary}>
@@ -89,7 +89,7 @@ export default () => {
                             Refresh
                         </Button.Text>
                     </div>
-                </TitledGreyBox>
+                </FuturisticContentBox>
             </ServerContentBlock>
         );
     }
@@ -100,13 +100,13 @@ export default () => {
                 {/* File Selector Sidebar */}
                 <div css={tw`lg:col-span-1`}>
                     <div css={tw`sticky top-0`}>
-                        <TitledGreyBox title={'Configuration Files'}>
+                        <FuturisticContentBox title={'Configuration Files'}>
                             <ConfigFileSelector
                                 files={configFiles}
                                 selectedFile={selectedFile}
                                 onSelectFile={setSelectedFile}
                             />
-                        </TitledGreyBox>
+                        </FuturisticContentBox>
                     </div>
                 </div>
                 {/* Config Editor */}
@@ -117,12 +117,12 @@ export default () => {
                             key={`${selectedFile.path}-${refreshKey}`}
                         />
                     ) : (
-                        <TitledGreyBox title={'Select a File'}>
+                        <FuturisticContentBox title={'Select a File'}>
                             <div css={tw`text-center py-8`}>
-                                <DocumentTextIcon css={tw`w-12 h-12 mx-auto mb-3 text-neutral-400`} />
-                                <p css={tw`text-neutral-400`}>Select a configuration file from the list to edit</p>
+                                <DocumentTextIcon css={[tw`w-12 h-12 mx-auto mb-3`, { color: 'var(--theme-text-muted)' }]} />
+                                <p css={[tw``, { color: 'var(--theme-text-muted)', fontFamily: "'Electrolize', sans-serif" }]}>Select a configuration file from the list to edit</p>
                             </div>
-                        </TitledGreyBox>
+                        </FuturisticContentBox>
                     )}
                 </div>
             </div>

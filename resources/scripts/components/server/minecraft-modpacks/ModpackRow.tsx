@@ -1,7 +1,6 @@
 import http from '@/api/http';
 import { Modpack, ModpackProvider } from '@/api/swr/getMinecraftModpacks';
 import { Dialog } from '@/components/elements/dialog';
-import GreyRowBox from '@/components/elements/GreyRowBox';
 import Label from '@/components/elements/Label';
 import Select from '@/components/elements/Select';
 import Switch from '@/components/elements/Switch';
@@ -106,7 +105,7 @@ export default ({ provider, modpack, className }: Props) => {
                     Please note that modpack updates can cause world corruption. You are strongly advised to make a
                     backup before updating a modpack.
                 </p>
-                <div css={tw`mt-6 bg-neutral-700 p-4 rounded`}>
+                <div css={tw`mt-6 p-4 rounded`} style={{ backgroundColor: 'var(--theme-background-secondary)', border: '1px solid var(--theme-border)' }}>
                     <Switch
                         defaultChecked={deleteServerFiles}
                         onChange={() => {
@@ -119,30 +118,51 @@ export default ({ provider, modpack, className }: Props) => {
                 </div>
             </Dialog.Confirm>
 
-            <GreyRowBox className={className} css={tw`flex items-center`}>
+            <div
+                css={tw`flex items-center gap-3 px-3 py-2.5 rounded transition-colors duration-150`}
+                style={{
+                    backgroundColor: 'var(--theme-background-secondary)',
+                    border: '1px solid var(--theme-border)',
+                }}
+            >
                 <img
                     src={modpack.iconUrl ?? 'https://placehold.co/32'}
-                    css={tw`rounded-md w-8 h-8 sm:w-12 sm:h-12 object-contain flex items-center justify-center`}
+                    css={tw`rounded w-8 h-8 sm:w-10 sm:h-10 object-contain flex-shrink-0`}
                 />
-                <div css={tw`flex flex-col ml-3 w-9/12`}>
+                <div css={tw`flex flex-col flex-1 min-w-0`}>
                     {modpack.url ? (
-                        <a css={tw`hover:text-gray-400`} href={modpack.url}>
+                        <a
+                            href={modpack.url}
+                            target='_blank'
+                            rel='noreferrer'
+                            css={tw`text-sm font-medium truncate transition-colors duration-150`}
+                            style={{ color: 'var(--theme-text-base)' }}
+                            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--theme-primary)')}
+                            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--theme-text-base)')}
+                        >
                             {modpack.name}
-                            <FontAwesomeIcon icon={faExternalLinkAlt} css={tw`ml-1 h-3 w-3`} />
+                            <FontAwesomeIcon icon={faExternalLinkAlt} css={tw`ml-1 h-2.5 w-2.5`} />
                         </a>
                     ) : (
-                        <p>{modpack.name}</p>
+                        <p css={tw`text-sm font-medium truncate`} style={{ color: 'var(--theme-text-base)' }}>
+                            {modpack.name}
+                        </p>
                     )}
-                    <p css={tw`hidden lg:block text-neutral-300 truncate`}>{modpack.description}</p>
+                    <p css={tw`text-xs line-clamp-1 mt-0.5`} style={{ color: 'var(--theme-text-muted)' }}>
+                        {modpack.description}
+                    </p>
                 </div>
                 <button
                     title='Install'
-                    css={tw`ml-auto text-sm text-neutral-400 hover:text-green-400 transition-colors duration-150`}
+                    css={tw`flex-shrink-0 p-1.5 text-sm transition-colors duration-150`}
+                    style={{ color: 'var(--theme-text-muted)' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--theme-primary)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--theme-text-muted)')}
                     onClick={() => setInstallDialogVisible(true)}
                 >
                     <FontAwesomeIcon icon={faDownload} />
                 </button>
-            </GreyRowBox>
+            </div>
         </>
     );
 };

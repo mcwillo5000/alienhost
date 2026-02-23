@@ -2,7 +2,6 @@ import http from '@/api/http';
 import { Dialog } from '@/components/elements/dialog';
 import Select from '@/components/elements/Select';
 import Label from '@/components/elements/Label';
-import GreyRowBox from '@/components/elements/GreyRowBox';
 import useFlash from '@/plugins/useFlash';
 import { ServerContext } from '@/state/server';
 import { faExternalLinkAlt, faDownload } from '@fortawesome/free-solid-svg-icons';
@@ -113,27 +112,48 @@ export default ({ provider, plugin, pluginLoader, minecraftVersion, className }:
                     ))}
                 </Select>
             </Dialog.Confirm>
-            <GreyRowBox className={className} css={tw`items-center`}>
+            <div
+                css={tw`flex items-center gap-3 px-3 py-2.5 rounded transition-colors duration-150`}
+                style={{
+                    backgroundColor: 'var(--theme-background-secondary)',
+                    border: '1px solid var(--theme-border)',
+                }}
+            >
                 <img
                     src={plugin.icon_url ?? 'https://placehold.co/32'}
-                    css={tw`rounded-md w-8 h-8 sm:w-12 sm:h-12 object-contain flex items-center justify-center`}
+                    css={tw`rounded w-8 h-8 sm:w-10 sm:h-10 object-contain flex-shrink-0`}
                 />
-                <div css={tw`ml-3 flex flex-col`}>
+                <div css={tw`flex flex-col flex-1 min-w-0`}>
                     {plugin.url ? (
-                        <a href={plugin.url} target='_blank' rel='noreferrer' css={tw`hover:text-gray-400`}>
-                            {plugin.name} <FontAwesomeIcon icon={faExternalLinkAlt} css={tw`ml-1 h-3 w-3`} />
+                        <a
+                            href={plugin.url}
+                            target='_blank'
+                            rel='noreferrer'
+                            css={tw`text-sm font-medium truncate transition-colors duration-150`}
+                            style={{ color: 'var(--theme-text-base)' }}
+                            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--theme-primary)')}
+                            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--theme-text-base)')}
+                        >
+                            {plugin.name} <FontAwesomeIcon icon={faExternalLinkAlt} css={tw`ml-1 h-2.5 w-2.5`} />
                         </a>
                     ) : (
-                        <p>{plugin.name}</p>
+                        <p css={tw`text-sm font-medium truncate`} style={{ color: 'var(--theme-text-base)' }}>
+                            {plugin.name}
+                        </p>
                     )}
-                    <p css={tw`text-neutral-300 line-clamp-2`}>{plugin.short_description}</p>
+                    <p css={tw`text-xs line-clamp-2 mt-0.5`} style={{ color: 'var(--theme-text-muted)' }}>
+                        {plugin.short_description}
+                    </p>
                 </div>
                 {plugin.external_url ? (
                     <a
                         title='Go to external URL'
                         target='_blank'
                         rel='noreferrer'
-                        css={tw`ml-auto p-2 text-sm text-neutral-400 hover:text-green-400 transition-colors duration-150`}
+                        css={tw`flex-shrink-0 p-1.5 text-sm transition-colors duration-150`}
+                        style={{ color: 'var(--theme-text-muted)' }}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--theme-primary)')}
+                        onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--theme-text-muted)')}
                         href={plugin.external_url}
                     >
                         <FontAwesomeIcon icon={faExternalLinkAlt} />
@@ -141,13 +161,16 @@ export default ({ provider, plugin, pluginLoader, minecraftVersion, className }:
                 ) : (
                     <button
                         title='Install'
-                        css={tw`ml-auto p-2 text-sm text-neutral-400 hover:text-green-400 transition-colors duration-150`}
+                        css={tw`flex-shrink-0 p-1.5 text-sm transition-colors duration-150`}
+                        style={{ color: 'var(--theme-text-muted)' }}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--theme-primary)')}
+                        onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--theme-text-muted)')}
                         onClick={() => setInstallDialogVisible(true)}
                     >
                         <FontAwesomeIcon icon={faDownload} />
                     </button>
                 )}
-            </GreyRowBox>
+            </div>
         </>
     );
 };

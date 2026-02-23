@@ -62,13 +62,13 @@ export default () => {
             <Pagination data={modpacks} onPageSelect={setPage}>
                 {({ items }) =>
                     items.length > 0 ? (
-                        <div className='grid lg:grid-cols-3 gap-2'>
+                        <div css={tw`flex flex-col gap-2`}>
                             {items.map((modpack) => (
                                 <ModpackRow key={modpack.id} provider={provider} modpack={modpack} />
                             ))}
                         </div>
                     ) : (
-                        <p css={tw`text-center text-sm text-neutral-300`}>
+                        <p css={tw`text-center text-sm`} style={{ color: 'var(--theme-text-muted)', fontFamily: "'Electrolize', sans-serif" }}>
                             There are no modpacks to display for this query.
                         </p>
                     )
@@ -80,7 +80,7 @@ export default () => {
     return (
         <ServerContentBlock title={'Modpacks'} showFlashKey='modpacks'>
             {modpacks?.installed_modpack && (
-                <div className='mb-6'>
+                <div css={tw`mb-6`}>
                     <Label>Most Recently Installed Modpack</Label>
                     <ModpackRow
                         provider={modpacks.installed_modpack.provider as ModpackProvider}

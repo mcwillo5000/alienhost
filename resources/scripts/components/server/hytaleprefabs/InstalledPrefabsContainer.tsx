@@ -5,11 +5,11 @@ import FlashMessageRender from '@/components/FlashMessageRender';
 import { httpErrorToHuman } from '@/api/http';
 import { useFlashKey } from '@/plugins/useFlash';
 import tw from 'twin.macro';
-import Alert from '@/components/elements/alert/Alert';
+import FuturisticContentBox from '@/components/elements/rivion/FuturisticContentBox';
 import Input from '@/components/elements/Input';
 import styled from 'styled-components/macro';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faCube, faClock, faArrowLeft, faSync, faDownload, faFilter } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faCube, faClock, faArrowLeft, faSync, faFilter } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '@/components/elements/button/index';
 import { Dialog } from '@/components/elements/dialog';
 import getInstalledPrefabs, { InstalledPrefab } from '@/api/server/hytaleprefabs/getInstalledPrefabs';
@@ -30,11 +30,13 @@ const FilterGroup = styled.div`
 `;
 
 const FilterIcon = styled(FontAwesomeIcon)`
-    ${tw`absolute left-3 text-neutral-400 pointer-events-none`};
+    display: none;
 `;
 
 const StyledSelect = styled(Select)`
-    ${tw`pl-10 w-full`};
+    ${tw`pl-3 w-full`};
+    text-align: left;
+    text-align-last: left;
     & > option {
         ${tw`flex items-center`};
     }
@@ -42,50 +44,31 @@ const StyledSelect = styled(Select)`
 
 const StyledInput = styled(Input)`
     ${tw`w-full`};
-    &::placeholder {
-        ${tw`text-neutral-400`};
-    }
 `;
 
 const ActionButton = styled.button`
     ${tw`text-sm w-full flex items-center justify-center gap-2 p-3 rounded border transition-colors duration-150 whitespace-nowrap cursor-pointer`};
-    ${tw`bg-neutral-600 border-neutral-500 text-neutral-200 hover:border-neutral-400 hover:text-neutral-100`};
-`;
-
-const PrefabCard = styled.div`
-    ${tw`bg-neutral-700 rounded-lg shadow-md border border-neutral-600 overflow-hidden`};
-`;
-
-const PrefabHeader = styled.div`
-    ${tw`flex items-start gap-4 p-4`};
-`;
-
-const PrefabIcon = styled.img`
-    ${tw`w-14 h-14 rounded-lg object-cover bg-neutral-600 border-2 border-neutral-500`};
-`;
-
-const PlaceholderIcon = styled.div`
-    ${tw`w-14 h-14 rounded-lg bg-neutral-600 border-2 border-neutral-500 flex items-center justify-center text-neutral-300`};
-`;
-
-const PrefabInfo = styled.div`
-    ${tw`flex-1 min-w-0`};
-`;
-
-const PrefabActions = styled.div`
-    ${tw`flex items-center gap-2 p-4 pt-0`};
+    background-color: var(--theme-background-secondary);
+    border-color: var(--theme-border);
+    color: var(--theme-text-muted);
+    &:hover {
+        border-color: var(--theme-primary);
+        color: var(--theme-primary);
+    }
 `;
 
 const UpdateBadge = styled.span`
-    ${tw`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-500 bg-opacity-20 text-yellow-300 border border-yellow-500 border-opacity-30`};
+    ${tw`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium`};
+    background-color: rgba(234,179,8,0.15);
+    color: #fde047;
+    border: 1px solid rgba(234,179,8,0.3);
 `;
 
 const UpToDateBadge = styled.span`
-    ${tw`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-500 bg-opacity-20 text-green-300 border border-green-500 border-opacity-30`};
-`;
-
-const FileName = styled.span`
-    ${tw`text-xs text-neutral-400 block mt-1 truncate`};
+    ${tw`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium`};
+    background-color: rgba(34,197,94,0.15);
+    color: #4ade80;
+    border: 1px solid rgba(34,197,94,0.3);
 `;
 
 const FILTER_OPTIONS = [
@@ -217,12 +200,12 @@ export default ({ onBack }: Props) => {
     if (loading) return <Spinner size={'large'} centered />;
 
     return (
-        <div>
+        <FuturisticContentBox title={'Installed Prefabs'}>
             <FlashMessageRender byKey={'installed-prefabs'} css={tw`mb-4`} />
             {message && (
-                <Alert type={message.type === 'success' ? 'warning' : message.type} className={'mb-4'}>
+                <div css={tw`mb-4 px-4 py-3 rounded text-sm`} style={{ backgroundColor: 'rgba(var(--theme-primary-rgb), 0.1)', border: '1px solid var(--theme-border)', color: 'var(--theme-text-base)', fontFamily: "'Electrolize', sans-serif" }}>
                     {message.text}
-                </Alert>
+                </div>
             )}
 
             <FilterContainer>
@@ -230,7 +213,10 @@ export default ({ onBack }: Props) => {
                     <FilterIcon icon={faFilter} />
                     <StyledSelect
                         value={filter}
-                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFilter(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                            const value = e.target.value;
+                            setFilter(value);
+                        }}
                     >
                         {FILTER_OPTIONS.map(option => (
                             <option key={option.value} value={option.value}>
@@ -255,97 +241,83 @@ export default ({ onBack }: Props) => {
             </FilterContainer>
 
             {filteredPrefabs.length === 0 ? (
-                <Alert type="warning" className="mt-4">
-                    {prefabs.length === 0
-                        ? 'No prefabs installed yet. Browse and install prefabs using the "Browse" button.'
-                        : 'No installed prefabs match your search criteria.'}
-                </Alert>
+                <div css={tw`flex flex-col items-center justify-center py-12`} style={{ color: 'var(--theme-text-muted)' }}>
+                    <FontAwesomeIcon icon={faCube} css={tw`h-10 w-10 mb-3`} />
+                    <p css={tw`text-sm`} style={{ fontFamily: "'Electrolize', sans-serif" }}>
+                        {prefabs.length === 0
+                            ? 'No prefabs installed yet. Browse and install prefabs using the "Browse" button.'
+                            : 'No installed prefabs match your search criteria.'}
+                    </p>
+                </div>
             ) : (
-                <div css={tw`grid gap-4 md:grid-cols-2 lg:grid-cols-3`}>
+                <div css={tw`flex flex-col gap-2`}>
                     {filteredPrefabs.map((prefab) => (
-                        <PrefabCard key={prefab.prefab_id}>
-                            <PrefabHeader>
-                                {prefab.prefab_icon ? (
-                                    <PrefabIcon src={prefab.prefab_icon} alt={prefab.prefab_name} />
-                                ) : (
-                                    <PlaceholderIcon>
-                                        <FontAwesomeIcon icon={faCube} size="lg" />
-                                    </PlaceholderIcon>
-                                )}
-                                <PrefabInfo>
-                                    <h3 css={tw`text-sm font-semibold truncate mb-0.5`}>
+                        <div
+                            key={prefab.prefab_id}
+                            css={tw`flex items-center gap-3 px-3 py-2.5 rounded`}
+                            style={{ backgroundColor: 'var(--theme-background-secondary)', border: '1px solid var(--theme-border)' }}
+                        >
+                            {prefab.prefab_icon ? (
+                                <img src={prefab.prefab_icon} alt={prefab.prefab_name} css={tw`rounded w-10 h-10 object-contain flex-shrink-0`} />
+                            ) : (
+                                <div css={tw`w-10 h-10 rounded flex-shrink-0 flex items-center justify-center`} style={{ backgroundColor: 'var(--theme-background)', border: '1px solid var(--theme-border)' }}>
+                                    <FontAwesomeIcon icon={faCube} style={{ color: 'var(--theme-text-muted)' }} />
+                                </div>
+                            )}
+                            <div css={tw`flex flex-col flex-1 min-w-0`}>
+                                <div css={tw`flex items-center gap-2 flex-wrap`}>
+                                    <span css={tw`text-sm font-medium truncate`} style={{ color: 'var(--theme-text-base)', fontFamily: "'Electrolize', sans-serif" }}>
                                         {prefab.prefab_name || `Prefab ${prefab.prefab_id}`}
-                                    </h3>
+                                    </span>
+                                    {prefab.has_update ? (
+                                        <UpdateBadge>
+                                            <FontAwesomeIcon icon={faSync} />
+                                            Update Available
+                                        </UpdateBadge>
+                                    ) : (
+                                        <UpToDateBadge>Up to Date</UpToDateBadge>
+                                    )}
+                                </div>
+                                <div css={tw`flex items-center gap-3 mt-0.5 flex-wrap`}>
                                     {prefab.prefab_author && (
-                                        <p css={tw`text-xs text-neutral-300 mb-1`}>
-                                            By {prefab.prefab_author}
-                                        </p>
+                                        <span css={tw`text-xs`} style={{ color: 'var(--theme-text-muted)' }}>By {prefab.prefab_author}</span>
                                     )}
-                                    <FileName title={prefab.file_name}>
-                                        {prefab.file_name}
-                                    </FileName>
-                                    <div css={tw`flex items-center gap-2 mt-2 flex-wrap`}>
-                                        {prefab.has_update ? (
-                                            <UpdateBadge>
-                                                <FontAwesomeIcon icon={faSync} css={tw`mr-1`} />
-                                                Update Available
-                                            </UpdateBadge>
-                                        ) : (
-                                            <UpToDateBadge>Up to Date</UpToDateBadge>
-                                        )}
-                                    </div>
+                                    <span css={tw`text-xs truncate max-w-xs`} style={{ color: 'var(--theme-text-muted)' }} title={prefab.file_name}>{prefab.file_name}</span>
                                     {prefab.installed_at && (
-                                        <p css={tw`text-xs text-neutral-400 mt-1 flex items-center gap-1`}>
+                                        <span css={tw`text-xs flex items-center gap-1`} style={{ color: 'var(--theme-text-muted)' }}>
                                             <FontAwesomeIcon icon={faClock} />
-                                            Installed {formatDate(prefab.installed_at)}
-                                        </p>
+                                            {formatDate(prefab.installed_at)}
+                                        </span>
                                     )}
-                                </PrefabInfo>
-                            </PrefabHeader>
-                            <PrefabActions>
-                                {prefab.has_update && prefab.latest_version_id ? (
-                                    <Button
-                                        size={Button.Sizes.Small}
-                                        css={tw`flex-1`}
+                                </div>
+                            </div>
+                            <div css={tw`flex-shrink-0 flex items-center gap-1`}>
+                                {prefab.has_update && prefab.latest_version_id && (
+                                    <button
+                                        title='Update'
+                                        css={tw`p-1.5 text-sm transition-colors duration-150`}
+                                        style={{ color: 'var(--theme-text-muted)' }}
+                                        onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--theme-primary)')}
+                                        onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--theme-text-muted)')}
                                         onClick={() => handleUpdate(prefab)}
                                         disabled={removing === prefab.prefab_id || updating === prefab.prefab_id}
                                     >
-                                        {updating === prefab.prefab_id ? (
-                                            <Spinner size={'small'} />
-                                        ) : (
-                                            <>
-                                                <FontAwesomeIcon icon={faSync} css={tw`mr-1`} />
-                                                Update
-                                            </>
-                                        )}
-                                    </Button>
-                                ) : (
-                                    <Button
-                                        size={Button.Sizes.Small}
-                                        css={tw`flex-1`}
-                                        disabled
-                                    >
-                                        <FontAwesomeIcon icon={faDownload} css={tw`mr-1`} />
-                                        Up to Date
-                                    </Button>
+                                        {updating === prefab.prefab_id ? <Spinner size={'small'} /> : <FontAwesomeIcon icon={faSync} />}
+                                    </button>
                                 )}
-                                <Button.Danger
-                                    size={Button.Sizes.Small}
-                                    css={tw`flex-1`}
+                                <button
+                                    title='Remove'
+                                    css={tw`p-1.5 text-sm transition-colors duration-150`}
+                                    style={{ color: 'var(--theme-text-muted)' }}
+                                    onMouseEnter={(e) => (e.currentTarget.style.color = '#f87171')}
+                                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--theme-text-muted)')}
                                     onClick={() => handleRemove(prefab)}
                                     disabled={removing === prefab.prefab_id || updating === prefab.prefab_id}
                                 >
-                                    {removing === prefab.prefab_id ? (
-                                        <Spinner size={'small'} />
-                                    ) : (
-                                        <>
-                                            <FontAwesomeIcon icon={faTrash} css={tw`mr-1`} />
-                                            Remove
-                                        </>
-                                    )}
-                                </Button.Danger>
-                            </PrefabActions>
-                        </PrefabCard>
+                                    {removing === prefab.prefab_id ? <Spinner size={'small'} /> : <FontAwesomeIcon icon={faTrash} />}
+                                </button>
+                            </div>
+                        </div>
                     ))}
                 </div>
             )}
@@ -379,6 +351,6 @@ export default ({ onBack }: Props) => {
                     </Dialog.Footer>
                 </div>
             </Dialog>
-        </div>
+        </FuturisticContentBox>
     );
 };

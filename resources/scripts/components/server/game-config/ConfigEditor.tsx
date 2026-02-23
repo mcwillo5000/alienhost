@@ -6,7 +6,7 @@ import { GameConfigFile, getConfigContent, updateConfig } from '@/api/server/gam
 import { httpErrorToHuman } from '@/api/http';
 import useFlash from '@/plugins/useFlash';
 import Spinner from '@/components/elements/Spinner';
-import TitledGreyBox from '@/components/elements/TitledGreyBox';
+import FuturisticContentBox from '@/components/elements/rivion/FuturisticContentBox';
 import Input from '@/components/elements/Input';
 import { Button } from '@/components/elements/button/index';
 import { SaveIcon, CodeIcon, TableIcon, SearchIcon } from '@heroicons/react/outline';
@@ -271,42 +271,56 @@ const ConfigEditor: React.FC<Props> = ({ file }) => {
     };
     if (loading) {
         return (
-            <TitledGreyBox title={file.name}>
+            <FuturisticContentBox title={file.name}>
                 <div css={tw`flex items-center justify-center py-8`}>
                     <Spinner size={'large'} />
                 </div>
-            </TitledGreyBox>
+            </FuturisticContentBox>
         );
     }
     return (
-        <div css={tw`bg-neutral-700 rounded shadow-md`}>
+        <FuturisticContentBox>
             {/* Sticky Header */}
-            <div css={tw`sticky top-0 z-50 bg-neutral-900 shadow-md rounded`}>
+            <div css={[tw`sticky top-0 z-50 shadow-md rounded`, { backgroundColor: 'var(--theme-background)' }]}
+            >
                 {/* Title Bar */}
-                <div css={tw`pl-3 pr-2 py-2 border-b border-neutral-800`}>
+                <div css={[tw`pl-3 pr-2 py-2 border-b`, { borderBottomColor: 'var(--theme-border)' }]}>
                     <div css={tw`flex items-center justify-between w-full`}>
                         <div>
-                            <p css={tw`text-sm uppercase flex items-center gap-2`}>
-                                {file.name}
-                                <p css={tw`text-xs text-neutral-400 mt-0.5 normal-case`}>/home/container/{file.path}</p>
+                            <div css={tw`flex items-center gap-2`}>
+                                <p
+                                    css={tw`text-sm uppercase`}
+                                    style={{
+                                        color: 'var(--theme-text-base)',
+                                        fontFamily: "'Orbitron', sans-serif",
+                                    }}
+                                >
+                                    {file.name}
+                                </p>
+                                <p
+                                    css={tw`text-xs mt-0.5 normal-case`}
+                                    style={{ color: 'var(--theme-text-muted)', fontFamily: "'Electrolize', sans-serif" }}
+                                >
+                                    /home/container/{file.path}
+                                </p>
                                 {saving && (
-                                    <div css={tw`flex items-center text-primary-400`}>
+                                    <div css={tw`flex items-center`} style={{ color: 'var(--theme-primary)' }}>
                                         <SaveIcon className='w-4 h-4 mr-2 animate-pulse' />
                                         <span css={tw`text-sm font-medium`}>Saving...</span>
                                     </div>
                                 )}
-                            </p>
+                            </div>
                         </div>
                         <div css={tw`flex items-center gap-2`}>
                             {/* Editor Mode Toggle */}
-                            <div css={tw`flex bg-neutral-800 rounded overflow-hidden`}>
+                            <div css={[tw`flex rounded overflow-hidden`, { backgroundColor: 'var(--theme-background-secondary)' }]}>
                                 <button
                                     onClick={() => setEditorMode('visual')}
                                     css={[
                                         tw`px-3 py-1.5 text-xs font-medium transition-colors`,
                                         editorMode === 'visual'
-                                            ? tw`bg-primary-600 text-white`
-                                            : tw`text-neutral-400 hover:text-neutral-200`,
+                                            ? { backgroundColor: 'rgba(var(--theme-primary-rgb), 0.2)', color: 'var(--theme-primary)' }
+                                            : { color: 'var(--theme-text-muted)' },
                                     ]}
                                 >
                                     <TableIcon className='w-3.5 h-3.5 inline mr-1' />
@@ -317,8 +331,8 @@ const ConfigEditor: React.FC<Props> = ({ file }) => {
                                     css={[
                                         tw`px-3 py-1.5 text-xs font-medium transition-colors`,
                                         editorMode === 'raw'
-                                            ? tw`bg-primary-600 text-white`
-                                            : tw`text-neutral-400 hover:text-neutral-200`,
+                                            ? { backgroundColor: 'rgba(var(--theme-primary-rgb), 0.2)', color: 'var(--theme-primary)' }
+                                            : { color: 'var(--theme-text-muted)' },
                                     ]}
                                 >
                                     <CodeIcon className='w-3.5 h-3.5 inline mr-1' />
@@ -330,10 +344,15 @@ const ConfigEditor: React.FC<Props> = ({ file }) => {
                 </div>
                 {/* Search Bar - Only show in visual mode */}
                 {editorMode === 'visual' && (
-                    <div css={tw`px-3 py-3 bg-neutral-800 border-b border-neutral-700`}>
+                    <div
+                        css={[
+                            tw`px-3 py-3 border-b`,
+                            { backgroundColor: 'var(--theme-background-secondary)', borderBottomColor: 'var(--theme-border)' },
+                        ]}
+                    >
                         <div css={tw`relative`}>
                             <div css={tw`absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10`}>
-                                <SearchIcon css={tw`h-4 w-4 text-neutral-400`} />
+                                <SearchIcon css={[tw`h-4 w-4`, { color: 'var(--theme-text-muted)' }]} />
                             </div>
                             <SearchInput
                                 type='text'
@@ -341,6 +360,11 @@ const ConfigEditor: React.FC<Props> = ({ file }) => {
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 css={tw`w-full`}
+                                style={{
+                                    backgroundColor: 'var(--theme-background)',
+                                    borderColor: 'var(--theme-border)',
+                                    color: 'var(--theme-text-base)',
+                                }}
                             />
                         </div>
                     </div>
@@ -372,7 +396,7 @@ const ConfigEditor: React.FC<Props> = ({ file }) => {
                     )}
                 </div>
             </div>
-        </div>
+        </FuturisticContentBox>
     );
 };
 export default ConfigEditor;

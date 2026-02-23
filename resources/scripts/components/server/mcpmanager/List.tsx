@@ -1,8 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { FastQueryResponse, Player, BannedIp } from '@/api/server/mcpmanager';
-import ContentBox from '@/components/elements/ContentBox';
-import tw from 'twin.macro';
-import styled from 'styled-components/macro';
+import FuturisticContentBox from '@/components/elements/rivion/FuturisticContentBox';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faUsers,
@@ -28,42 +26,30 @@ interface Props {
     onUnbanIp?: (ip: string) => void;
     serverStatus: string | null;
 }
-const CategoryButton = styled.button<{ active: boolean }>`
-    ${tw`flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 border-2`};
-    ${({ active }) =>
-        active
-            ? tw`bg-primary-500/20 text-primary-50 border-primary-500/80 shadow-md`
-            : tw`bg-neutral-800 text-neutral-200 border-neutral-700 hover:border-neutral-600 hover:bg-neutral-700/50 cursor-pointer`}
-`;
-const PlayerItem = styled.div<{ selected: boolean }>`
-    ${tw`relative flex items-center p-3 rounded-lg mb-2 cursor-pointer transition-all duration-150 border-2 overflow-hidden`};
-    ${(props) =>
-        props.selected
-            ? tw`bg-primary-500/20 border-primary-500/80 shadow-md`
-            : tw`bg-neutral-800 border-neutral-700 hover:border-neutral-600 hover:bg-neutral-700/50`};
-`;
-const PlayerAvatar = styled.img`
-    ${tw`w-10 h-10 rounded-md mr-3 border-2 border-neutral-600 shadow-sm`};
-`;
-const StatusBadge = styled.span<{ status: string }>`
-    ${tw`px-3 py-1 rounded-full text-xs font-semibold ml-auto shadow-sm border`};
-    ${(props) => {
-        switch (props.status) {
-            case 'online':
-                return tw`bg-green-600 text-green-50 border-green-500`;
-            case 'banned':
-                return tw`bg-red-600 text-red-50 border-red-500`;
-            case 'whitelisted':
-                return tw`bg-blue-600 text-blue-50 border-blue-500`;
-            case 'op':
-                return tw`bg-yellow-600 text-yellow-50 border-yellow-500`;
-            case 'offline':
-                return tw`bg-neutral-600 text-neutral-200 border-neutral-500`;
-            default:
-                return tw`bg-neutral-600 text-neutral-50 border-neutral-500`;
-        }
-    }}
-`;
+const getStatusBadgeStyle = (status: string): React.CSSProperties => {
+    const base: React.CSSProperties = {
+        padding: '0.125rem 0.75rem',
+        fontSize: '0.7rem',
+        fontWeight: 600,
+        marginLeft: 'auto',
+        fontFamily: "'Orbitron', sans-serif",
+        textTransform: 'uppercase',
+        letterSpacing: '0.05em',
+        clipPath: 'polygon(0px 3px, 3px 0px, 100% 0px, 100% calc(100% - 3px), calc(100% - 3px) 100%, 0px 100%)',
+    };
+    switch (status) {
+        case 'online':
+            return { ...base, backgroundColor: 'rgba(34, 197, 94, 0.15)', color: '#4ade80', border: '1px solid rgba(34, 197, 94, 0.3)' };
+        case 'banned':
+            return { ...base, backgroundColor: 'rgba(239, 68, 68, 0.15)', color: '#f87171', border: '1px solid rgba(239, 68, 68, 0.3)' };
+        case 'whitelisted':
+            return { ...base, backgroundColor: 'rgba(59, 130, 246, 0.15)', color: '#60a5fa', border: '1px solid rgba(59, 130, 246, 0.3)' };
+        case 'op':
+            return { ...base, backgroundColor: 'rgba(234, 179, 8, 0.15)', color: '#facc15', border: '1px solid rgba(234, 179, 8, 0.3)' };
+        default:
+            return { ...base, backgroundColor: 'rgba(115, 115, 115, 0.15)', color: 'var(--theme-text-muted)', border: '1px solid var(--theme-border)' };
+    }
+};
 const PlayersList: React.FC<Props> = ({
     data,
     selectedCategory,
@@ -85,11 +71,17 @@ const PlayersList: React.FC<Props> = ({
         value: string | number;
         children?: React.ReactNode;
     }) => (
-        <div tw='bg-neutral-800 p-3 rounded-lg text-center'>
-            <p tw='text-xs text-neutral-300 uppercase tracking-wider'>{label}</p>
-            <div tw='flex items-center justify-center space-x-2'>
+        <div style={{
+            backgroundColor: 'var(--theme-background)',
+            padding: '0.75rem',
+            textAlign: 'center',
+            border: '1px solid var(--theme-border)',
+            clipPath: 'polygon(0px 5px, 5px 0px, 100% 0px, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0px 100%)',
+        }}>
+            <p style={{ fontSize: '0.7rem', color: 'var(--theme-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: "'Orbitron', sans-serif", margin: 0 }}>{label}</p>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
                 {children}
-                <p tw='text-base font-semibold text-neutral-200'>{value}</p>
+                <p style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--theme-text-base)', fontFamily: "'Electrolize', sans-serif", margin: 0 }}>{value}</p>
             </div>
         </div>
     );
@@ -157,134 +149,236 @@ const PlayersList: React.FC<Props> = ({
         if ('ip' in player && !('name' in player)) {
             const bannedIp = player as BannedIp;
             return (
-                <PlayerItem
+                <div
                     key={`ip-${index}-${bannedIp.ip}`}
-                    selected={false}
-                    css={tw`cursor-pointer hover:bg-red-900/20`}
                     onClick={() => onUnbanIp && onUnbanIp(bannedIp.ip)}
+                    style={{
+                        position: 'relative',
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: '0.75rem',
+                        marginBottom: '0.5rem',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease',
+                        border: '1px solid rgba(239, 68, 68, 0.3)',
+                        backgroundColor: 'rgba(239, 68, 68, 0.05)',
+                        overflow: 'hidden',
+                        clipPath: 'polygon(0px 5px, 5px 0px, 100% 0px, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0px 100%)',
+                    }}
                 >
-                    <div tw='absolute top-0 left-0 h-full w-full bg-red-500/10' />
-                    <div tw='flex items-center z-10'>
-                        <div tw='w-10 h-10 rounded-md mr-3 flex items-center justify-center bg-neutral-800 border-2 border-neutral-600'>
-                            <FontAwesomeIcon icon={faBan} tw='text-red-400' />
+                    <div style={{ display: 'flex', alignItems: 'center', zIndex: 10 }}>
+                        <div style={{
+                            width: '2.5rem',
+                            height: '2.5rem',
+                            marginRight: '0.75rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: 'var(--theme-background)',
+                            border: '1px solid var(--theme-border)',
+                            clipPath: 'polygon(0px 3px, 3px 0px, 100% 0px, 100% calc(100% - 3px), calc(100% - 3px) 100%, 0px 100%)',
+                        }}>
+                            <FontAwesomeIcon icon={faBan} style={{ color: '#f87171' }} />
                         </div>
-                        <div tw='flex-1'>
-                            <p tw='font-semibold text-red-200'>{bannedIp.ip}</p>
-                            <p tw='text-xs text-neutral-400'>{bannedIp.reason || 'No reason provided'}</p>
+                        <div style={{ flex: 1 }}>
+                            <p style={{ fontWeight: 600, color: '#fecaca', fontFamily: "'Electrolize', sans-serif", margin: 0 }}>{bannedIp.ip}</p>
+                            <p style={{ fontSize: '0.75rem', color: 'var(--theme-text-muted)', fontFamily: "'Electrolize', sans-serif", margin: 0 }}>{bannedIp.reason || 'No reason provided'}</p>
                         </div>
                     </div>
-                </PlayerItem>
+                </div>
             );
         } else {
             const playerItem = player as Player;
             const isSelected = !!(selectedPlayer && selectedPlayer.uuid === playerItem.uuid);
             const status = getPlayerStatus(playerItem);
             return (
-                <PlayerItem
+                <div
                     key={`player-${index}-${playerItem.uuid}`}
-                    selected={isSelected}
                     onClick={() => onPlayerSelect(playerItem)}
+                    style={{
+                        position: 'relative',
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: '0.75rem',
+                        marginBottom: '0.5rem',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease',
+                        border: isSelected ? '1px solid var(--theme-primary)' : '1px solid var(--theme-border)',
+                        backgroundColor: isSelected
+                            ? 'color-mix(in srgb, var(--theme-primary) 10%, var(--theme-background))'
+                            : 'var(--theme-background)',
+                        boxShadow: isSelected ? '0 0 10px rgba(var(--theme-primary-rgb), 0.2)' : 'none',
+                        overflow: 'hidden',
+                        clipPath: 'polygon(0px 5px, 5px 0px, 100% 0px, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0px 100%)',
+                    }}
                 >
-                    {isSelected && <div tw='absolute top-0 left-0 h-full w-full bg-primary-500/10' />}
-                    <PlayerAvatar
+                    <img
                         src={
                             playerItem.name.startsWith('.')
                                 ? `https://minotar.net/helm/herobrine`
                                 : `https://minotar.net/helm//${playerItem.uuid}`
                         }
                         alt={playerItem.name}
+                        style={{
+                            width: '2.5rem',
+                            height: '2.5rem',
+                            marginRight: '0.75rem',
+                            border: '2px solid var(--theme-border)',
+                            clipPath: 'polygon(0px 3px, 3px 0px, 100% 0px, 100% calc(100% - 3px), calc(100% - 3px) 100%, 0px 100%)',
+                        }}
                     />
-                    <div tw='flex-1'>
-                        <div tw='flex items-center'>
-                            <p tw='font-semibold text-base text-neutral-100'>{playerItem.name}</p>
+                    <div style={{ flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <p style={{ fontWeight: 600, fontSize: '1rem', color: 'var(--theme-text-base)', fontFamily: "'Electrolize', sans-serif", margin: 0 }}>{playerItem.name}</p>
                             {status === 'online' && playerItem.gamemode !== undefined && (
-                                <div tw='flex items-center ml-2 px-2 py-0.5 rounded-full bg-neutral-600/50 border border-neutral-500/50'>
-                                    <FontAwesomeIcon icon={faGamepad} tw='text-xs text-neutral-300 mr-1.5' />
-                                    <span tw='text-xs font-bold text-neutral-200'>
+                                <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    marginLeft: '0.5rem',
+                                    padding: '0.125rem 0.5rem',
+                                    backgroundColor: 'color-mix(in srgb, var(--theme-primary) 10%, transparent)',
+                                    border: '1px solid color-mix(in srgb, var(--theme-primary) 20%, transparent)',
+                                    clipPath: 'polygon(0px 3px, 3px 0px, 100% 0px, 100% calc(100% - 3px), calc(100% - 3px) 100%, 0px 100%)',
+                                }}>
+                                    <FontAwesomeIcon icon={faGamepad} style={{ fontSize: '0.65rem', color: 'var(--theme-text-muted)', marginRight: '0.375rem' }} />
+                                    <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--theme-text-base)', fontFamily: "'Orbitron', sans-serif" }}>
                                         {formatGameModeShort(playerItem.gamemode)}
                                     </span>
                                 </div>
                             )}
                         </div>
-                        {playerItem.uuid && <p tw='text-xs text-neutral-400 font-mono'>{playerItem.uuid}</p>}
+                        {playerItem.uuid && <p style={{ fontSize: '0.7rem', color: 'var(--theme-text-muted)', fontFamily: 'monospace', margin: 0 }}>{playerItem.uuid}</p>}
                     </div>
-                    {status && <StatusBadge status={status}>{status}</StatusBadge>}
-                </PlayerItem>
+                    {status && <span style={getStatusBadgeStyle(status)}>{status}</span>}
+                </div>
             );
         }
     };
     return (
-        <ContentBox css={tw`relative`}>
-            <div css={tw`p-4 border-b border-neutral-700`}>
-                <div css={tw`grid grid-cols-2 gap-4 mb-4`}>
-                    <Stat label='Players' value={`${players?.online?.length || 0} / ${players?.max || 'N/A'}`}>
-                        <FontAwesomeIcon
-                            icon={faCircle}
-                            css={[tw`text-xs`, isOnline ? tw`text-green-500 animate-pulse` : tw`text-red-500`]}
-                        />
-                    </Stat>
-                    <Stat label='Version' value={info?.version?.name || 'N/A'} />
-                </div>
-                <div css={tw`grid grid-cols-2 gap-3 mb-4`}>
-                    {categories.map((category) => (
-                        <CategoryButton
-                            key={category.id}
-                            active={selectedCategory === category.id}
-                            onClick={() => onCategoryChange(category.id)}
-                        >
-                            <FontAwesomeIcon icon={category.icon} />
-                            <span>
-                                {category.name} <span css={tw`text-neutral-400`}>({category.count})</span>
-                            </span>
-                        </CategoryButton>
-                    ))}
-                </div>
-                <div css={tw`flex items-center gap-3`}>
-                    <div
-                        css={tw`
-                        flex-1 flex items-center gap-3 px-4 py-2.5 rounded-lg
-                        border-2 border-neutral-700 bg-neutral-800 
-                        transition-colors duration-150
-                        focus-within:border-primary-500
-                        hover:border-neutral-600
-                    `}
-                    >
-                        <FontAwesomeIcon icon={faSearch} css={tw`text-neutral-400`} />
-                        <input
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            placeholder='Search players...'
-                            css={tw`w-full bg-transparent border-none focus:ring-0 p-0 text-sm text-neutral-100 placeholder-neutral-400`}
-                        />
-                    </div>
-                    <button
-                        css={tw`p-2.5 bg-neutral-700 hover:bg-neutral-600 rounded-lg border border-neutral-600 hover:border-neutral-500 transition-colors duration-150 shadow-sm`}
-                        onClick={toggleSortOrder}
-                        title={sortOrder === 'asc' ? 'Sort Descending' : 'Sort Ascending'}
-                    >
-                        <FontAwesomeIcon
-                            icon={sortOrder === 'asc' ? faSortAlphaDown : faSortAlphaUp}
-                            css={tw`text-neutral-200`}
-                        />
-                    </button>
-                </div>
+        <FuturisticContentBox title='Players'>
+            {/* Stats */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                <Stat label='Players' value={`${players?.online?.length || 0} / ${players?.max || 'N/A'}`}>
+                    <FontAwesomeIcon
+                        icon={faCircle}
+                        style={{
+                            fontSize: '0.65rem',
+                            color: isOnline ? '#22c55e' : '#ef4444',
+                            filter: isOnline ? 'drop-shadow(0 0 4px rgba(34, 197, 94, 0.6))' : 'none',
+                        }}
+                    />
+                </Stat>
+                <Stat label='Version' value={info?.version?.name || 'N/A'} />
             </div>
-            <div css={tw`px-4 max-h-[600px] overflow-y-auto`}>
+
+            {/* Category Filters */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
+                {categories.map((category) => (
+                    <button
+                        key={category.id}
+                        onClick={() => onCategoryChange(category.id)}
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '0.5rem',
+                            padding: '0.5rem 0.75rem',
+                            fontSize: '0.8rem',
+                            fontWeight: 500,
+                            transition: 'all 0.2s ease',
+                            fontFamily: "'Electrolize', sans-serif",
+                            cursor: 'pointer',
+                            clipPath: 'polygon(0px 4px, 4px 0px, 100% 0px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0px 100%)',
+                            backgroundColor: selectedCategory === category.id
+                                ? 'color-mix(in srgb, var(--theme-primary) 15%, var(--theme-background))'
+                                : 'var(--theme-background)',
+                            color: selectedCategory === category.id
+                                ? 'var(--theme-primary)'
+                                : 'var(--theme-text-base)',
+                            border: selectedCategory === category.id
+                                ? '1px solid var(--theme-primary)'
+                                : '1px solid var(--theme-border)',
+                            boxShadow: selectedCategory === category.id
+                                ? '0 0 8px rgba(var(--theme-primary-rgb), 0.2)'
+                                : 'none',
+                        }}
+                    >
+                        <FontAwesomeIcon icon={category.icon} />
+                        <span>
+                            {category.name} <span style={{ color: 'var(--theme-text-muted)' }}>({category.count})</span>
+                        </span>
+                    </button>
+                ))}
+            </div>
+
+            {/* Search & Sort */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem', paddingBottom: '1rem', borderBottom: '1px solid var(--theme-border)' }}>
+                <div
+                    style={{
+                        flex: 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem',
+                        padding: '0.5rem 1rem',
+                        border: '1px solid var(--theme-border)',
+                        backgroundColor: 'var(--theme-background)',
+                        transition: 'border-color 0.15s ease',
+                        clipPath: 'polygon(0px 4px, 4px 0px, 100% 0px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0px 100%)',
+                    }}
+                >
+                    <FontAwesomeIcon icon={faSearch} style={{ color: 'var(--theme-text-muted)' }} />
+                    <input
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        placeholder='Search players...'
+                        style={{
+                            width: '100%',
+                            backgroundColor: 'transparent',
+                            border: 'none',
+                            outline: 'none',
+                            padding: 0,
+                            fontSize: '0.875rem',
+                            color: 'var(--theme-text-base)',
+                            fontFamily: "'Electrolize', sans-serif",
+                        }}
+                    />
+                </div>
+                <button
+                    onClick={toggleSortOrder}
+                    title={sortOrder === 'asc' ? 'Sort Descending' : 'Sort Ascending'}
+                    style={{
+                        padding: '0.625rem',
+                        backgroundColor: 'var(--theme-background)',
+                        border: '1px solid var(--theme-border)',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease',
+                        clipPath: 'polygon(0px 4px, 4px 0px, 100% 0px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0px 100%)',
+                    }}
+                >
+                    <FontAwesomeIcon
+                        icon={sortOrder === 'asc' ? faSortAlphaDown : faSortAlphaUp}
+                        style={{ color: 'var(--theme-text-base)' }}
+                    />
+                </button>
+            </div>
+
+            {/* Player List */}
+            <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
                 {!data ? (
-                    <div css={tw`flex flex-col items-center justify-center py-8`}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem 0' }}>
                         <Spinner size='large' />
-                        <p css={tw`mt-4 text-neutral-300`}>Loading player data...</p>
+                        <p style={{ marginTop: '1rem', color: 'var(--theme-text-muted)', fontFamily: "'Electrolize', sans-serif" }}>Loading player data...</p>
                     </div>
                 ) : filteredPlayers.length === 0 ? (
-                    <div css={tw`flex flex-col items-center justify-center py-8 text-center`}>
-                        <FontAwesomeIcon icon={faExclamationCircle} css={tw`text-yellow-400 text-3xl mb-3`} />
-                        <p css={tw`text-neutral-300`}>No players found in this category</p>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem 0', textAlign: 'center' }}>
+                        <FontAwesomeIcon icon={faExclamationCircle} style={{ color: '#facc15', fontSize: '1.875rem', marginBottom: '0.75rem', filter: 'drop-shadow(0 0 6px rgba(250, 204, 21, 0.4))' }} />
+                        <p style={{ color: 'var(--theme-text-muted)', fontFamily: "'Electrolize', sans-serif" }}>No players found in this category</p>
                     </div>
                 ) : (
                     filteredPlayers.map((player, index) => renderPlayerItem(player, index))
                 )}
             </div>
-        </ContentBox>
+        </FuturisticContentBox>
     );
 };
 export default PlayersList;

@@ -23,6 +23,8 @@ import testCredentials from './api/testCredentials';
 import importServer from './api/importServer';
 import Switch from '@/components/elements/Switch';
 import classNames from 'classnames';
+import tw from 'twin.macro';
+import FuturisticContentBox from '@/components/elements/rivion/FuturisticContentBox';
 
 export default function ServerImporterContainer() {
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
@@ -194,7 +196,7 @@ export default function ServerImporterContainer() {
             >
                 Are you sure you want to import server files using the selected settings? This will kill the server
                 before starting the process.
-                <div className={'bg-neutral-700 border border-neutral-800 shadow-inner p-4 rounded mt-4'}>
+                <div css={tw`p-4 rounded mt-4`} style={{ backgroundColor: 'var(--theme-background-secondary)', border: '1px solid var(--theme-border)' }}>
                     <Switch
                         name={'delete_server_files'}
                         label={'Wipe Server Files'}
@@ -272,8 +274,7 @@ export default function ServerImporterContainer() {
             <FlashMessageRender byKey={'importer:main'} className={'mb-4'} />
 
             <div className={'md:grid md:grid-cols-3 md:gap-2 md:space-y-0 flex flex-col space-y-2'}>
-                <div className={'serverimporter-import-profile-box bg-gray-700 p-3 rounded-md'}>
-                    <Label>Profiles</Label>
+                <FuturisticContentBox title={'Profiles'} className={'serverimporter-import-profile-box'}>
 
                     <div className={'flex flex-row space-x-2'}>
                         <Select value={view} onChange={(e) => setView(e.target.value as 'credentials' | 'servers')}>
@@ -285,22 +286,40 @@ export default function ServerImporterContainer() {
                         </Button.Text>
                     </div>
 
-                    <div className={'flex-1 my-4 border border-gray-500 border-b'} />
+                    <div css={tw`my-4`} style={{ borderTop: '1px solid var(--theme-border)' }} />
 
                     {view === 'credentials' ? (
                         data.credentials.length === 0 ? (
-                            <p className={'text-neutral-400 text-center mt-2'}>
+                            <p css={tw`text-center text-sm mt-2`} style={{ color: 'var(--theme-text-muted)', fontFamily: "'Electrolize', sans-serif" }}>
                                 No credential profiles have been created.
                             </p>
                         ) : (
                             data.credentials.map((profile, i) => (
                                 <div
                                     className={classNames(
-                                        'serverimporter-credential-profile-row mt-2 cursor-pointer border-transparent border transition-all bg-gray-800 p-3 rounded-md flex flex-col',
+                                        'serverimporter-credential-profile-row mt-2 cursor-pointer border transition-all p-3 rounded-md flex flex-col',
                                         viewCredentialProfile?.attributes.id === profile.attributes.id
-                                            ? 'border-l-4 border-l-gray-500 cursor-not-allowed'
-                                            : 'hover:border-gray-500'
+                                            ? 'border-l-4 cursor-not-allowed'
+                                            : ''
                                     )}
+                                    style={{
+                                        backgroundColor: 'var(--theme-background-secondary)',
+                                        borderColor: viewCredentialProfile?.attributes.id === profile.attributes.id
+                                            ? 'var(--theme-primary)'
+                                            : 'var(--theme-border)',
+                                        color: 'var(--theme-text-base)',
+                                        fontFamily: "'Electrolize', sans-serif",
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        if (viewCredentialProfile?.attributes.id !== profile.attributes.id) {
+                                            e.currentTarget.style.borderColor = 'var(--theme-primary)';
+                                        }
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        if (viewCredentialProfile?.attributes.id !== profile.attributes.id) {
+                                            e.currentTarget.style.borderColor = 'var(--theme-border)';
+                                        }
+                                    }}
                                     onClick={() => {
                                         setViewCredentialProfile(profile);
                                         setViewServerProfile(undefined);
@@ -313,16 +332,34 @@ export default function ServerImporterContainer() {
                             ))
                         )
                     ) : data.servers.length === 0 ? (
-                        <p className={'text-neutral-400 text-center mt-2'}>No server profiles have been created.</p>
+                        <p css={tw`text-center text-sm mt-2`} style={{ color: 'var(--theme-text-muted)', fontFamily: "'Electrolize', sans-serif" }}>No server profiles have been created.</p>
                     ) : (
                         data.servers.map((profile, i) => (
                             <div
                                 className={classNames(
-                                    'serverimporter-server-profile-row mt-2 cursor-pointer border-transparent border transition-all bg-gray-800 p-3 rounded-md flex flex-col',
+                                    'serverimporter-server-profile-row mt-2 cursor-pointer border transition-all p-3 rounded-md flex flex-col',
                                     viewServerProfile?.attributes.id === profile.attributes.id
-                                        ? 'hover:border-transparent hover:border-l-gray-500 border-l-4 border-l-gray-500 cursor-not-allowed'
-                                        : 'hover:border-gray-500'
+                                        ? 'border-l-4 cursor-not-allowed'
+                                        : ''
                                 )}
+                                style={{
+                                    backgroundColor: 'var(--theme-background-secondary)',
+                                    borderColor: viewServerProfile?.attributes.id === profile.attributes.id
+                                        ? 'var(--theme-primary)'
+                                        : 'var(--theme-border)',
+                                    color: 'var(--theme-text-base)',
+                                    fontFamily: "'Electrolize', sans-serif",
+                                }}
+                                onMouseEnter={(e) => {
+                                    if (viewServerProfile?.attributes.id !== profile.attributes.id) {
+                                        e.currentTarget.style.borderColor = 'var(--theme-primary)';
+                                    }
+                                }}
+                                onMouseLeave={(e) => {
+                                    if (viewServerProfile?.attributes.id !== profile.attributes.id) {
+                                        e.currentTarget.style.borderColor = 'var(--theme-border)';
+                                    }
+                                }}
                                 onClick={() => {
                                     setViewServerProfile(profile);
                                     setViewCredentialProfile(undefined);
@@ -334,10 +371,10 @@ export default function ServerImporterContainer() {
                             </div>
                         ))
                     )}
-                </div>
+                </FuturisticContentBox>
 
-                <div
-                    className={'serverimporter-import-main-box md:col-span-2 md:row-span-1 bg-gray-700 p-3 rounded-md'}
+                <FuturisticContentBox
+                    className={'serverimporter-import-main-box md:col-span-2 md:row-span-1'}
                 >
                     {create ? (
                         view === 'credentials' ? (
@@ -920,7 +957,7 @@ export default function ServerImporterContainer() {
                             </form>
                         </>
                     )}
-                </div>
+                </FuturisticContentBox>
             </div>
         </ServerContentBlock>
     );

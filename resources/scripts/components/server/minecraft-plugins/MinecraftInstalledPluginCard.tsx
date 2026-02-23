@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import GreyRowBox from '@/components/elements/GreyRowBox';
+import tw from 'twin.macro';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowAltCircleUp, faTrash } from '@fortawesome/free-solid-svg-icons';
 import deleteFiles from '@/api/server/files/deleteFiles';
@@ -91,14 +91,19 @@ export default ({
                     <Code>{plugin.path}</Code> will be deleted.
                 </p>
             </Dialog.Confirm>
-            <GreyRowBox>
-                <div className='flex flex-col w-full'>
-                    <div className='flex flex-row items-center'>
+            <div
+                css={tw`flex flex-col w-full p-3 rounded`}
+                style={{
+                    backgroundColor: 'var(--theme-background-secondary)',
+                    border: '1px solid var(--theme-border)',
+                }}
+            >
+                <div css={tw`flex flex-row items-center`}>
                         {plugin.icon_url ? (
-                            <img className='h-8 w-8' src={plugin.icon_url} />
+                            <img css={tw`h-8 w-8 rounded`} src={plugin.icon_url} />
                         ) : (
                             <svg
-                                className='h-8 w-8'
+                                css={tw`h-8 w-8`}
                                 xmlSpace='preserve'
                                 fillRule='evenodd'
                                 strokeLinecap='round'
@@ -111,41 +116,46 @@ export default ({
                                 <path fill='none' d='M0 0h103.4v103.4H0z' />
                                 <path
                                     fill='none'
-                                    stroke='#9a9a9a'
+                                    stroke='var(--theme-border)'
                                     strokeWidth='5'
                                     d='M51.7 92.5V51.7L16.4 31.3l35.3 20.4L87 31.3 51.7 11 16.4 31.3v40.8l35.3 20.4L87 72V31.3L51.7 11'
                                 />
                             </svg>
                         )}
-                        <div className='flex flex-col ml-3'>
-                            <span>{plugin.project_name ?? plugin.path}</span>
-                            <span className='text-neutral-300 text-sm break-all'>{plugin.version_name}</span>
+                        <div css={tw`flex flex-col ml-3`}>
+                            <span style={{ color: 'var(--theme-text-base)', fontSize: '0.875rem', fontWeight: 500 }}>
+                                {plugin.project_name ?? plugin.path}
+                            </span>
+                            <span css={tw`text-sm break-all`} style={{ color: 'var(--theme-text-muted)' }}>
+                                {plugin.version_name}
+                            </span>
                         </div>
-                        <div className='shrink-0 ml-auto'>
+                        <div css={tw`flex-shrink-0 ml-auto flex`}>
                             {plugin.update && (
                                 <button
                                     title='Update'
-                                    className='p-2 text-sm text-neutral-400 hover:text-blue-400 transition-colors duration-150'
-                                    onClick={() => {
-                                        setUpdateDialogOpen(true);
-                                    }}
+                                    css={tw`p-2 text-sm transition-colors duration-150`}
+                                    style={{ color: 'var(--theme-text-muted)' }}
+                                    onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--theme-primary)')}
+                                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--theme-text-muted)')}
+                                    onClick={() => setUpdateDialogOpen(true)}
                                 >
                                     <FontAwesomeIcon icon={faArrowAltCircleUp} />
                                 </button>
                             )}
                             <button
                                 title='Remove'
-                                className='ml-3 p-2 text-sm text-neutral-400 hover:text-red-400 transition-colors duration-150'
-                                onClick={() => {
-                                    setDeleteDialogOpen(true);
-                                }}
+                                css={tw`ml-2 p-2 text-sm transition-colors duration-150`}
+                                style={{ color: 'var(--theme-text-muted)' }}
+                                onMouseEnter={(e) => (e.currentTarget.style.color = '#ef4444')}
+                                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--theme-text-muted)')}
+                                onClick={() => setDeleteDialogOpen(true)}
                             >
                                 <FontAwesomeIcon icon={faTrash} />
                             </button>
                         </div>
                     </div>
-                </div>
-            </GreyRowBox>
+            </div>
         </>
     );
 };

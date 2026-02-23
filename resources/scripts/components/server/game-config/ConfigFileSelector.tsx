@@ -1,5 +1,5 @@
 import React from 'react';
-import tw from 'twin.macro';
+import tw, { css } from 'twin.macro';
 import { GameConfigFile } from '@/api/server/game-config';
 import { DocumentIcon, DocumentTextIcon, CodeIcon, CogIcon, DatabaseIcon } from '@heroicons/react/outline';
 interface Props {
@@ -45,24 +45,37 @@ const ConfigFileSelector: React.FC<Props> = ({ files, selectedFile, onSelectFile
     };
     return (
         <div css={tw`-m-3 max-h-[calc(100vh-12rem)] overflow-y-auto`}>
-            <div css={tw`divide-y divide-neutral-600`}>
+            <div css={[tw`divide-y`, { borderColor: 'var(--theme-border)' }]}>
                 {files.map((file) => (
                     <button
                         key={file.path}
                         onClick={() => onSelectFile(file)}
                         css={[
-                            tw`w-full px-4 py-3 text-left transition-colors duration-150`,
-                            tw`hover:bg-neutral-600 focus:outline-none`,
+                            tw`w-full px-4 py-3 text-left transition-colors duration-150 focus:outline-none`,
+                            css`
+                                &:hover {
+                                    background-color: var(--theme-background-secondary);
+                                }
+                            `,
                             selectedFile?.path === file.path
-                                ? tw`bg-primary-600 hover:bg-primary-700`
-                                : tw`bg-transparent`,
+                                ? css`
+                                      background-color: rgba(var(--theme-primary-rgb), 0.18);
+                                      &:hover {
+                                          background-color: rgba(var(--theme-primary-rgb), 0.24);
+                                      }
+                                  `
+                                : css`
+                                      background-color: transparent;
+                                  `,
                         ]}
                     >
                         <div css={tw`flex items-start`}>
                             <div
                                 css={[
                                     tw`flex-shrink-0 mr-3 mt-0.5`,
-                                    selectedFile?.path === file.path ? tw`text-white` : tw`text-neutral-400`,
+                                    selectedFile?.path === file.path
+                                        ? { color: 'var(--theme-text-base)' }
+                                        : { color: 'var(--theme-text-muted)' },
                                 ]}
                             >
                                 {getFileIcon(file.type)}
@@ -71,7 +84,9 @@ const ConfigFileSelector: React.FC<Props> = ({ files, selectedFile, onSelectFile
                                 <div
                                     css={[
                                         tw`text-sm font-medium truncate`,
-                                        selectedFile?.path === file.path ? tw`text-white` : tw`text-neutral-200`,
+                                        selectedFile?.path === file.path
+                                            ? { color: 'var(--theme-text-base)' }
+                                            : { color: 'var(--theme-text-base)' },
                                     ]}
                                 >
                                     {file.name}
@@ -79,15 +94,25 @@ const ConfigFileSelector: React.FC<Props> = ({ files, selectedFile, onSelectFile
                                 <div
                                     css={[
                                         tw`text-xs mt-1 flex items-center gap-2`,
-                                        selectedFile?.path === file.path ? tw`text-neutral-200` : tw`text-neutral-400`,
+                                        selectedFile?.path === file.path
+                                            ? { color: 'var(--theme-text-muted)' }
+                                            : { color: 'var(--theme-text-muted)' },
                                     ]}
                                 >
                                     <span
                                         css={[
                                             tw`px-2 py-0.5 rounded text-xs font-medium`,
                                             selectedFile?.path === file.path
-                                                ? tw`bg-primary-700 text-white`
-                                                : tw`bg-neutral-700 text-neutral-300`,
+                                                ? {
+                                                      backgroundColor: 'rgba(var(--theme-primary-rgb), 0.24)',
+                                                      color: 'var(--theme-primary)',
+                                                      border: '1px solid var(--theme-border)',
+                                                  }
+                                                : {
+                                                      backgroundColor: 'var(--theme-background-secondary)',
+                                                      color: 'var(--theme-text-muted)',
+                                                      border: '1px solid var(--theme-border)',
+                                                  },
                                         ]}
                                     >
                                         {getFileTypeLabel(file.type)}

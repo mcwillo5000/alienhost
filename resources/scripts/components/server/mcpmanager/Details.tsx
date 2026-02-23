@@ -1,8 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Player, PlayerItemsResponse, WorldInfo, FastQueryResponse } from '@/api/server/mcpmanager';
-import ContentBox from '@/components/elements/ContentBox';
-import tw from 'twin.macro';
-import styled from 'styled-components/macro';
+import FuturisticContentBox from '@/components/elements/rivion/FuturisticContentBox';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Dialog, DialogWrapperContext } from '@/components/elements/dialog';
 import asDialog from '@/hoc/asDialog';
@@ -73,23 +71,27 @@ interface Props {
     fastQueryData: FastQueryResponse | null;
     onModalStateChange?: (isModalOpen: boolean) => void;
 }
-const StatusBadge = styled.span<{ status: string }>`
-    ${tw`px-2 py-1 rounded-full text-xs font-semibold mr-2 shadow-sm border flex items-center`};
-    ${(props) => {
-        switch (props.status) {
-            case 'online':
-                return tw`bg-green-600 text-green-50 border-green-500`;
-            case 'banned':
-                return tw`bg-red-600 text-red-50 border-red-500`;
-            case 'whitelisted':
-                return tw`bg-blue-600 text-blue-50 border-blue-500`;
-            case 'op':
-                return tw`bg-yellow-600 text-yellow-50 border-yellow-500`;
-            default:
-                return tw`bg-neutral-600 text-neutral-50 border-neutral-500`;
-        }
-    }}
-`;
+const getStatusStyle = (status: string): React.CSSProperties => {
+    const base: React.CSSProperties = {
+        padding: '0.125rem 0.625rem',
+        fontSize: '0.7rem',
+        fontWeight: 600,
+        marginRight: '0.5rem',
+        display: 'inline-flex',
+        alignItems: 'center',
+        fontFamily: "'Orbitron', sans-serif",
+        textTransform: 'uppercase',
+        letterSpacing: '0.05em',
+        clipPath: 'polygon(0px 3px, 3px 0px, 100% 0px, 100% calc(100% - 3px), calc(100% - 3px) 100%, 0px 100%)',
+    };
+    switch (status) {
+        case 'online': return { ...base, backgroundColor: 'rgba(34, 197, 94, 0.15)', color: '#4ade80', border: '1px solid rgba(34, 197, 94, 0.3)' };
+        case 'banned': return { ...base, backgroundColor: 'rgba(239, 68, 68, 0.15)', color: '#f87171', border: '1px solid rgba(239, 68, 68, 0.3)' };
+        case 'whitelisted': return { ...base, backgroundColor: 'rgba(59, 130, 246, 0.15)', color: '#60a5fa', border: '1px solid rgba(59, 130, 246, 0.3)' };
+        case 'op': return { ...base, backgroundColor: 'rgba(234, 179, 8, 0.15)', color: '#facc15', border: '1px solid rgba(234, 179, 8, 0.3)' };
+        default: return { ...base, backgroundColor: 'rgba(115, 115, 115, 0.15)', color: 'var(--theme-text-muted)', border: '1px solid var(--theme-border)' };
+    }
+};
 const PlayerDetails: React.FC<Props> = ({
     player,
     serverUuid,
@@ -271,7 +273,7 @@ const PlayerDetails: React.FC<Props> = ({
             <Formik onSubmit={submit} initialValues={{ reason: '' }}>
                 {({ submitForm, isSubmitting }) => (
                     <>
-                        <Form css={tw`m-0`}>
+                        <Form style={{ margin: 0 }}>
                             <Field autoFocus id='reason' name='reason' label='Ban IP Reason' />
                         </Form>
                         <Dialog.Footer>
@@ -305,7 +307,7 @@ const PlayerDetails: React.FC<Props> = ({
             <Formik onSubmit={submit} initialValues={{ reason: '' }}>
                 {({ submitForm, isSubmitting }) => (
                     <>
-                        <Form css={tw`m-0`}>
+                        <Form style={{ margin: 0 }}>
                             <Field autoFocus id='reason' name='reason' label='Ban Reason' />
                         </Form>
                         <Dialog.Footer>
@@ -338,7 +340,7 @@ const PlayerDetails: React.FC<Props> = ({
             <Formik onSubmit={submit} initialValues={{ reason: '' }}>
                 {({ submitForm, isSubmitting }) => (
                     <>
-                        <Form css={tw`m-0`}>
+                        <Form style={{ margin: 0 }}>
                             <Field autoFocus id='reason' name='reason' label='Kick Reason' />
                         </Form>
                         <Dialog.Footer>
@@ -371,7 +373,7 @@ const PlayerDetails: React.FC<Props> = ({
             <Formik onSubmit={submit} initialValues={{ message: '' }}>
                 {({ submitForm, isSubmitting }) => (
                     <>
-                        <Form css={tw`m-0`}>
+                        <Form style={{ margin: 0 }}>
                             <Field autoFocus id='message' name='message' label='Message' />
                         </Form>
                         <Dialog.Footer>
@@ -436,8 +438,8 @@ const PlayerDetails: React.FC<Props> = ({
             >
                 {({ submitForm, isSubmitting, values, setFieldValue }) => (
                     <>
-                        <Form css={tw`m-0`}>
-                            <div css={tw`mb-4`}>
+                        <Form style={{ margin: 0 }}>
+                            <div style={{ marginBottom: '1rem' }}>
                                 <Switch
                                     name='teleportMode'
                                     label='Teleport to coordinates'
@@ -470,8 +472,8 @@ const PlayerDetails: React.FC<Props> = ({
                                     )}
                                 </FormikField>
                             ) : (
-                                <div css={tw`space-y-4`}>
-                                    <div css={tw`grid grid-cols-3 gap-4`}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
                                         <Field
                                             id='x'
                                             name='x'
@@ -509,7 +511,7 @@ const PlayerDetails: React.FC<Props> = ({
                                             }}
                                         />
                                     </div>
-                                    <p css={tw`text-neutral-400 text-xs`}>
+                                    <p style={{ color: 'var(--theme-text-muted)', fontSize: '0.75rem', fontFamily: "'Electrolize', sans-serif" }}>
                                         Enter coordinates where you want to teleport the player. Only numbers and
                                         negative signs are allowed.
                                     </p>
@@ -549,7 +551,7 @@ const PlayerDetails: React.FC<Props> = ({
             <Formik onSubmit={submit} initialValues={{ gamemode: player.gamemode?.toString() || '0' }}>
                 {({ submitForm, isSubmitting }) => (
                     <>
-                        <Form css={tw`m-0`}>
+                        <Form style={{ margin: 0 }}>
                             <FormikField name='gamemode'>
                                 {({ field, form }: any) => (
                                     <Select
@@ -624,13 +626,13 @@ const PlayerDetails: React.FC<Props> = ({
             >
                 {({ submitForm, isSubmitting, values, setFieldValue, errors }) => (
                     <>
-                        <Form css={tw`m-0`}>
+                        <Form style={{ margin: 0 }}>
                             <FormikField as={Select} name='target' label='Target'>
                                 <option value={player.name}>Selected Player ({player.name})</option>
                                 <option value='@a'>All Players</option>
                             </FormikField>
-                            <div css={tw`flex space-x-4`}>
-                                <div css={tw`flex-grow`}>
+                            <div style={{ display: 'flex', gap: '1rem' }}>
+                                <div style={{ flexGrow: 1 }}>
                                     <GiveItem
                                         nama='item'
                                         value={values.item}
@@ -644,7 +646,7 @@ const PlayerDetails: React.FC<Props> = ({
                                         error={errors.item}
                                     />
                                 </div>
-                                <div css={tw`w-1/4`}>
+                                <div style={{ width: '25%' }}>
                                     <Field id='quantity' name='quantity' label='Quantity' type='number' />
                                 </div>
                             </div>
@@ -746,7 +748,7 @@ const PlayerDetails: React.FC<Props> = ({
             >
                 {({ submitForm, isSubmitting, values }) => (
                     <>
-                        <Form css={tw`m-0`}>
+                        <Form style={{ margin: 0 }}>
                             <FormikField as={Select} name='target' label='Target'>
                                 <option value={player.name}>Selected Player ({player.name})</option>
                                 <option value='@a'>All Players</option>
@@ -815,8 +817,8 @@ const PlayerDetails: React.FC<Props> = ({
         },
     ];
     return (
-        <ContentBox css={tw`relative`}>
-            <FlashMessageRender byKey={flashKey} css={tw`mb-4`} />
+        <FuturisticContentBox>
+            <FlashMessageRender byKey={flashKey} style={{ marginBottom: '1rem' }} />
             {showBanModal && <BanPlayerDialog open={showBanModal} onClose={() => setShowBanModal(false)} />}
             {showBanIpModal && <BanIpDialog open={showBanIpModal} onClose={() => setShowBanIpModal(false)} />}
             {showKickModal && <KickPlayerDialog open={showKickModal} onClose={() => setShowKickModal(false)} />}
@@ -855,7 +857,14 @@ const PlayerDetails: React.FC<Props> = ({
             {showWipeDataModal && (
                 <WipeDataDialog open={showWipeDataModal} onClose={() => setShowWipeDataModal(false)} />
             )}
-            <div tw='flex items-start p-4 bg-neutral-800 rounded-t-lg border-b-2 border-neutral-700'>
+            <div style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                padding: '1rem',
+                backgroundColor: 'var(--theme-background)',
+                borderBottom: '1px solid var(--theme-border)',
+                clipPath: 'polygon(0px 6px, 6px 0px, 100% 0px, 100% 100%, 0px 100%)',
+            }}>
                 <img
                     src={
                         player.name.startsWith('.')
@@ -863,105 +872,111 @@ const PlayerDetails: React.FC<Props> = ({
                             : `https://minotar.net/helm/${player.uuid}`
                     }
                     alt={player.uuid}
-                    tw='w-16 h-16 rounded-md mr-4 border-2 border-neutral-600'
+                    style={{
+                        width: '4rem',
+                        height: '4rem',
+                        marginRight: '1rem',
+                        border: '2px solid var(--theme-border)',
+                        clipPath: 'polygon(0px 5px, 5px 0px, 100% 0px, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0px 100%)',
+                    }}
                 />
-                <div tw='flex-grow'>
-                    <h2 tw='text-2xl font-bold text-white'>{player.name}</h2>
+                <div style={{ flexGrow: 1 }}>
+                    <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--theme-text-base)', fontFamily: "'Orbitron', sans-serif", margin: 0 }}>{player.name}</h2>
                     {player.uuid && (
                         <CopyOnClick text={player.uuid}>
-                            <div tw='flex items-center cursor-pointer'>
-                                <code tw='text-sm text-neutral-400 font-mono'>{player.uuid}</code>
-                                <FontAwesomeIcon icon={faCopy} tw='ml-2 text-neutral-500' />
+                            <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                                <code style={{ fontSize: '0.8rem', color: 'var(--theme-text-muted)', fontFamily: 'monospace' }}>{player.uuid}</code>
+                                <FontAwesomeIcon icon={faCopy} style={{ marginLeft: '0.5rem', color: 'var(--theme-text-muted)' }} />
                             </div>
                         </CopyOnClick>
                     )}
-                    <div tw='flex items-center mt-2 flex-wrap'>
-                        {isOnline && <StatusBadge status='online'>Online</StatusBadge>}
-                        {isBanned && <StatusBadge status='banned'>Banned</StatusBadge>}
-                        {isIpBanned && <StatusBadge status='banned'>IP Banned</StatusBadge>}
-                        {isOp && <StatusBadge status='op'>Operator</StatusBadge>}
-                        {isWhitelisted && <StatusBadge status='whitelisted'>Whitelisted</StatusBadge>}
+                    <div style={{ display: 'flex', alignItems: 'center', marginTop: '0.5rem', flexWrap: 'wrap' }}>
+                        {isOnline && <span style={getStatusStyle('online')}>Online</span>}
+                        {isBanned && <span style={getStatusStyle('banned')}>Banned</span>}
+                        {isIpBanned && <span style={getStatusStyle('banned')}>IP Banned</span>}
+                        {isOp && <span style={getStatusStyle('op')}>Operator</span>}
+                        {isWhitelisted && <span style={getStatusStyle('whitelisted')}>Whitelisted</span>}
                     </div>
                 </div>
             </div>
-            <div tw='p-4'>
-                <div tw='grid grid-cols-1 md:grid-cols-3 gap-4'>
+            <div style={{ padding: '1rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
                     <div>
-                        <h3 tw='text-sm font-semibold text-neutral-300 mb-2 uppercase'>General</h3>
-                        <div tw='flex flex-col space-y-2'>
+                        <h3 style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--theme-primary)', marginBottom: '0.5rem', textTransform: 'uppercase', fontFamily: "'Orbitron', sans-serif", letterSpacing: '0.05em' }}>General</h3>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                             <Button
                                 size={Button.Sizes.Small}
                                 onClick={() => setShowWhisperModal(true)}
                                 disabled={!isOnline}
                             >
-                                <FontAwesomeIcon icon={faCommentDots} tw='mr-2' /> Message
+                                <FontAwesomeIcon icon={faCommentDots} style={{ marginRight: '0.5rem' }} /> Message
                             </Button>
                             <Button
                                 size={Button.Sizes.Small}
                                 onClick={() => setShowTeleportModal(true)}
                                 disabled={!isOnline}
                             >
-                                <FontAwesomeIcon icon={faMapMarkerAlt} tw='mr-2' /> Teleport
+                                <FontAwesomeIcon icon={faMapMarkerAlt} style={{ marginRight: '0.5rem' }} /> Teleport
                             </Button>
                             <Button.Text
                                 size={Button.Sizes.Small}
                                 onClick={() => setShowGamemodeModal(true)}
                                 disabled={!isOnline}
                             >
-                                <FontAwesomeIcon icon={faGamepad} tw='mr-2' /> Gamemode
+                                <FontAwesomeIcon icon={faGamepad} style={{ marginRight: '0.5rem' }} /> Gamemode
                             </Button.Text>
                             <Button.Danger
                                 size={Button.Sizes.Small}
                                 onClick={() => setShowKillModal(true)}
                                 disabled={!isOnline || loading === 'kill'}
                             >
-                                <FontAwesomeIcon icon={faSkull} tw='mr-2' /> Kill
+                                <FontAwesomeIcon icon={faSkull} style={{ marginRight: '0.5rem' }} /> Kill
                             </Button.Danger>
                         </div>
                     </div>
                     <div>
-                        <h3 tw='text-sm font-semibold text-neutral-300 mb-2 uppercase'>Inventory & Effects</h3>
-                        <div tw='flex flex-col space-y-2'>
+                        <h3 style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--theme-primary)', marginBottom: '0.5rem', textTransform: 'uppercase', fontFamily: "'Orbitron', sans-serif", letterSpacing: '0.05em' }}>Inventory & Effects</h3>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                             <Button
                                 size={Button.Sizes.Small}
                                 onClick={() => setShowGiveItemModal(true)}
                                 disabled={!isOnline}
                             >
-                                <FontAwesomeIcon icon={faHandRock} tw='mr-2' /> Give Item
+                                <FontAwesomeIcon icon={faHandRock} style={{ marginRight: '0.5rem' }} /> Give Item
                             </Button>
                             <Button.Text
                                 size={Button.Sizes.Small}
                                 onClick={() => setShowAddEffectModal(true)}
                                 disabled={!isOnline}
                             >
-                                <FontAwesomeIcon icon={faBolt} tw='mr-2' /> Add Effect
+                                <FontAwesomeIcon icon={faBolt} style={{ marginRight: '0.5rem' }} /> Add Effect
                             </Button.Text>
                             <Button.Text
                                 size={Button.Sizes.Small}
                                 onClick={() => handlePlayerAction('clearEffect')}
                                 disabled={!isOnline || loading === 'clearEffect'}
                             >
-                                <FontAwesomeIcon icon={faBroom} tw='mr-2' /> Clear Effects
+                                <FontAwesomeIcon icon={faBroom} style={{ marginRight: '0.5rem' }} /> Clear Effects
                             </Button.Text>
                             <Button.Danger
                                 size={Button.Sizes.Small}
                                 onClick={() => setShowClearInventoryModal(true)}
                                 disabled={!isOnline || loading === 'clearInventory'}
                             >
-                                <FontAwesomeIcon icon={faBoxOpen} tw='mr-2' /> Clear Inventory
+                                <FontAwesomeIcon icon={faBoxOpen} style={{ marginRight: '0.5rem' }} /> Clear Inventory
                             </Button.Danger>
                         </div>
                     </div>
                     <div>
-                        <h3 tw='text-sm font-semibold text-neutral-300 mb-2 uppercase'>Moderation</h3>
-                        <div tw='flex flex-col space-y-2'>
+                        <h3 style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--theme-primary)', marginBottom: '0.5rem', textTransform: 'uppercase', fontFamily: "'Orbitron', sans-serif", letterSpacing: '0.05em' }}>Moderation</h3>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                             {isBanned ? (
                                 <Button.Text
                                     size={Button.Sizes.Small}
                                     onClick={() => handlePlayerAction('unban')}
                                     disabled={loading === 'unban'}
                                 >
-                                    <FontAwesomeIcon icon={faUserCheck} tw='mr-2' /> Unban
+                                    <FontAwesomeIcon icon={faUserCheck} style={{ marginRight: '0.5rem' }} /> Unban
                                 </Button.Text>
                             ) : (
                                 <Button.Danger
@@ -969,7 +984,7 @@ const PlayerDetails: React.FC<Props> = ({
                                     onClick={() => setShowBanModal(true)}
                                     disabled={loading === 'ban'}
                                 >
-                                    <FontAwesomeIcon icon={faBan} tw='mr-2' /> Ban
+                                    <FontAwesomeIcon icon={faBan} style={{ marginRight: '0.5rem' }} /> Ban
                                 </Button.Danger>
                             )}
                             {isIpBanned ? (
@@ -978,7 +993,7 @@ const PlayerDetails: React.FC<Props> = ({
                                     onClick={() => handlePlayerAction('unbanIp')}
                                     disabled={loading === 'unbanIp'}
                                 >
-                                    <FontAwesomeIcon icon={faUserCheck} tw='mr-2' /> Unban IP
+                                    <FontAwesomeIcon icon={faUserCheck} style={{ marginRight: '0.5rem' }} /> Unban IP
                                 </Button.Text>
                             ) : (
                                 <Button.Danger
@@ -986,7 +1001,7 @@ const PlayerDetails: React.FC<Props> = ({
                                     onClick={() => setShowBanIpModal(true)}
                                     disabled={loading === 'banIp'}
                                 >
-                                    <FontAwesomeIcon icon={faBan} tw='mr-2' /> Ban IP
+                                    <FontAwesomeIcon icon={faBan} style={{ marginRight: '0.5rem' }} /> Ban IP
                                 </Button.Danger>
                             )}
                             <Button.Text
@@ -994,7 +1009,7 @@ const PlayerDetails: React.FC<Props> = ({
                                 onClick={() => setShowKickModal(true)}
                                 disabled={!isOnline || loading === 'kick'}
                             >
-                                <FontAwesomeIcon icon={faSignOutAlt} tw='mr-2' /> Kick
+                                <FontAwesomeIcon icon={faSignOutAlt} style={{ marginRight: '0.5rem' }} /> Kick
                             </Button.Text>
                             {isWhitelisted ? (
                                 <Button
@@ -1002,7 +1017,7 @@ const PlayerDetails: React.FC<Props> = ({
                                     onClick={() => handlePlayerAction('unwhitelist')}
                                     disabled={loading === 'unwhitelist'}
                                 >
-                                    <FontAwesomeIcon icon={faMinus} tw='mr-2' /> Unwhitelist
+                                    <FontAwesomeIcon icon={faMinus} style={{ marginRight: '0.5rem' }} /> Unwhitelist
                                 </Button>
                             ) : (
                                 <Button
@@ -1010,7 +1025,7 @@ const PlayerDetails: React.FC<Props> = ({
                                     onClick={() => handlePlayerAction('whitelist')}
                                     disabled={loading === 'whitelist'}
                                 >
-                                    <FontAwesomeIcon icon={faPlus} tw='mr-2' /> Whitelist
+                                    <FontAwesomeIcon icon={faPlus} style={{ marginRight: '0.5rem' }} /> Whitelist
                                 </Button>
                             )}
                             {isOp ? (
@@ -1019,7 +1034,7 @@ const PlayerDetails: React.FC<Props> = ({
                                     onClick={() => handlePlayerAction('deop')}
                                     disabled={loading === 'deop'}
                                 >
-                                    <FontAwesomeIcon icon={faUserShield} tw='mr-2' /> De-Op
+                                    <FontAwesomeIcon icon={faUserShield} style={{ marginRight: '0.5rem' }} /> De-Op
                                 </Button.Text>
                             ) : (
                                 <Button.Text
@@ -1027,7 +1042,7 @@ const PlayerDetails: React.FC<Props> = ({
                                     onClick={() => setShowOpModal(true)}
                                     disabled={loading === 'op'}
                                 >
-                                    <FontAwesomeIcon icon={faUserShield} tw='mr-2' /> Op
+                                    <FontAwesomeIcon icon={faUserShield} style={{ marginRight: '0.5rem' }} /> Op
                                 </Button.Text>
                             )}
                             <Button.Danger
@@ -1035,16 +1050,16 @@ const PlayerDetails: React.FC<Props> = ({
                                 onClick={() => setShowWipeDataModal(true)}
                                 disabled={loading === 'wipeData'}
                             >
-                                <FontAwesomeIcon icon={faTrash} tw='mr-2' /> Wipe Data
+                                <FontAwesomeIcon icon={faTrash} style={{ marginRight: '0.5rem' }} /> Wipe Data
                             </Button.Danger>
                         </div>
                     </div>
                 </div>
             </div>
-            <div tw='px-4 pb-4'>
+            <div style={{ padding: '0 1rem 1rem' }}>
                 <PlayerDetailsTabs tabs={tabs} />
             </div>
-        </ContentBox>
+        </FuturisticContentBox>
     );
 };
 export default PlayerDetails;

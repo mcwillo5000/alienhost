@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import tw from 'twin.macro';
+import tw, { css } from 'twin.macro';
 import styled from 'styled-components/macro';
 import { v4 as uuidv4 } from 'uuid';
 import Input from '@/components/elements/Input';
@@ -21,10 +21,14 @@ const ToggleContainer = styled.div`
         }
     }
     & > label {
-        ${tw`mb-0 block overflow-hidden cursor-pointer bg-neutral-400 border border-neutral-700 rounded-full h-6 shadow-inner`};
+        ${tw`mb-0 block overflow-hidden cursor-pointer rounded-full h-6 shadow-inner`};
+        background-color: var(--theme-background-secondary);
+        border: 1px solid var(--theme-border);
         transition: all 75ms linear;
         &::before {
-            ${tw`absolute block bg-white border h-5 w-5 rounded-full`};
+            ${tw`absolute block h-5 w-5 rounded-full`};
+            background-color: var(--theme-text-base);
+            border: 1px solid var(--theme-border);
             top: 0.125rem;
             right: calc(50% + 0.125rem);
             content: '';
@@ -235,7 +239,11 @@ const ConfigVisualEditor: React.FC<Props> = ({ config, type, onChange, searchTer
             const fieldId = `field-${section || 'root'}-${key}-${uuidv4()}`;
             return (
                 <div>
-                    <Label htmlFor={fieldId} css={tw`mb-2 text-xs uppercase text-neutral-300`}>
+                    <Label
+                        htmlFor={fieldId}
+                        css={tw`mb-2 text-xs uppercase`}
+                        style={{ color: 'var(--theme-text-muted)', fontFamily: "'Orbitron', sans-serif" }}
+                    >
                         {getDisplayName(key)} (Multiple Values)
                     </Label>
                     <div css={tw`space-y-2`}>
@@ -256,7 +264,12 @@ const ConfigVisualEditor: React.FC<Props> = ({ config, type, onChange, searchTer
                                         const newArray = value.filter((_: any, i: number) => i !== index) as any[];
                                         handleValueChange(key, newArray, section);
                                     }}
-                                    css={tw`px-2 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700`}
+                                    css={tw`px-2 py-1 text-xs rounded transition-colors`}
+                                    style={{
+                                        backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                                        color: '#f87171',
+                                        border: '1px solid rgba(239, 68, 68, 0.35)',
+                                    }}
                                 >
                                     Remove
                                 </button>
@@ -267,7 +280,12 @@ const ConfigVisualEditor: React.FC<Props> = ({ config, type, onChange, searchTer
                                 const newArray = [...value, ''] as any[];
                                 handleValueChange(key, newArray, section);
                             }}
-                            css={tw`px-2 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700`}
+                            css={tw`px-2 py-1 text-xs rounded transition-colors`}
+                            style={{
+                                backgroundColor: 'rgba(var(--theme-primary-rgb), 0.2)',
+                                color: 'var(--theme-primary)',
+                                border: '1px solid var(--theme-border)',
+                            }}
                         >
                             Add Item
                         </button>
@@ -279,7 +297,11 @@ const ConfigVisualEditor: React.FC<Props> = ({ config, type, onChange, searchTer
             const fieldId = `field-${section || 'root'}-${key}-${uuidv4()}`;
             return (
                 <div>
-                    <Label htmlFor={fieldId} css={tw`mb-2 text-xs uppercase text-neutral-300`}>
+                    <Label
+                        htmlFor={fieldId}
+                        css={tw`mb-2 text-xs uppercase`}
+                        style={{ color: 'var(--theme-text-muted)', fontFamily: "'Orbitron', sans-serif" }}
+                    >
                         {getDisplayName(key)}
                     </Label>
                     <Input
@@ -301,7 +323,11 @@ const ConfigVisualEditor: React.FC<Props> = ({ config, type, onChange, searchTer
             const boolValue = getBooleanValue(value);
             return (
                 <div css={tw`flex items-center justify-between`}>
-                    <Label htmlFor={fieldId} css={tw`mb-0 text-xs uppercase text-neutral-300 cursor-pointer`}>
+                    <Label
+                        htmlFor={fieldId}
+                        css={tw`mb-0 text-xs uppercase cursor-pointer`}
+                        style={{ color: 'var(--theme-text-muted)', fontFamily: "'Orbitron', sans-serif" }}
+                    >
                         {getDisplayName(key)}
                     </Label>
                     <ToggleContainer>
@@ -321,7 +347,11 @@ const ConfigVisualEditor: React.FC<Props> = ({ config, type, onChange, searchTer
         }
         return (
             <div>
-                <Label htmlFor={fieldId} css={tw`mb-2 text-xs uppercase text-neutral-300`}>
+                <Label
+                    htmlFor={fieldId}
+                    css={tw`mb-2 text-xs uppercase`}
+                    style={{ color: 'var(--theme-text-muted)', fontFamily: "'Orbitron', sans-serif" }}
+                >
                     {getDisplayName(key)}
                 </Label>
                 <Input
@@ -338,12 +368,16 @@ const ConfigVisualEditor: React.FC<Props> = ({ config, type, onChange, searchTer
         const entries = Object.entries(filtered).filter(([key]) => !shouldSkipField(key));
         if (entries.length === 0) {
             return (
-                <div css={tw`flex flex-col items-center justify-center py-12 text-neutral-400`}>
-                    <SearchIcon css={tw`h-12 w-12 mb-3 text-neutral-500`} />
-                    <p css={tw`text-sm`}>
+                <div css={tw`flex flex-col items-center justify-center py-12`} style={{ color: 'var(--theme-text-muted)' }}>
+                    <SearchIcon css={tw`h-12 w-12 mb-3`} style={{ color: 'var(--theme-text-muted)' }} />
+                    <p css={tw`text-sm`} style={{ fontFamily: "'Electrolize', sans-serif" }}>
                         {searchTerm ? 'No matching configuration found' : 'No configuration available'}
                     </p>
-                    {searchTerm && <p css={tw`text-xs text-neutral-500 mt-1`}>Try a different search term</p>}
+                    {searchTerm && (
+                        <p css={tw`text-xs mt-1`} style={{ color: 'var(--theme-text-muted)' }}>
+                            Try a different search term
+                        </p>
+                    )}
                 </div>
             );
         }
@@ -353,17 +387,37 @@ const ConfigVisualEditor: React.FC<Props> = ({ config, type, onChange, searchTer
         return (
             <div css={tw`grid grid-cols-1 md:grid-cols-2 gap-x-6`}>
                 {/* Left Column */}
-                <div css={tw`divide-y divide-neutral-600`}>
+                <div css={[tw`divide-y`, { borderColor: 'var(--theme-border)' }]}>
                     {leftColumn.map(([key, value]) => (
-                        <div key={key} css={tw`px-3 py-3 hover:bg-neutral-800 transition-colors`}>
+                        <div
+                            key={key}
+                            css={[
+                                tw`px-3 py-3 transition-colors`,
+                                css`
+                                    &:hover {
+                                        background-color: var(--theme-background-secondary);
+                                    }
+                                `,
+                            ]}
+                        >
                             {renderField(key, value)}
                         </div>
                     ))}
                 </div>
                 {/* Right Column */}
-                <div css={tw`divide-y divide-neutral-600`}>
+                <div css={[tw`divide-y`, { borderColor: 'var(--theme-border)' }]}>
                     {rightColumn.map(([key, value]) => (
-                        <div key={key} css={tw`px-3 py-3 hover:bg-neutral-800 transition-colors`}>
+                        <div
+                            key={key}
+                            css={[
+                                tw`px-3 py-3 transition-colors`,
+                                css`
+                                    &:hover {
+                                        background-color: var(--theme-background-secondary);
+                                    }
+                                `,
+                            ]}
+                        >
                             {renderField(key, value)}
                         </div>
                     ))}
@@ -434,17 +488,21 @@ const ConfigVisualEditor: React.FC<Props> = ({ config, type, onChange, searchTer
         const flattenedSections = flattenSections(filtered);
         if (flattenedSections.length === 0) {
             return (
-                <div css={tw`flex flex-col items-center justify-center py-12 text-neutral-400`}>
-                    <SearchIcon css={tw`h-12 w-12 mb-3 text-neutral-500`} />
-                    <p css={tw`text-sm`}>
+                <div css={tw`flex flex-col items-center justify-center py-12`} style={{ color: 'var(--theme-text-muted)' }}>
+                    <SearchIcon css={tw`h-12 w-12 mb-3`} style={{ color: 'var(--theme-text-muted)' }} />
+                    <p css={tw`text-sm`} style={{ fontFamily: "'Electrolize', sans-serif" }}>
                         {searchTerm ? 'No matching configuration found' : 'No configuration available'}
                     </p>
-                    {searchTerm && <p css={tw`text-xs text-neutral-500 mt-1`}>Try a different search term</p>}
+                    {searchTerm && (
+                        <p css={tw`text-xs mt-1`} style={{ color: 'var(--theme-text-muted)' }}>
+                            Try a different search term
+                        </p>
+                    )}
                 </div>
             );
         }
         return (
-            <div css={tw`divide-y divide-neutral-600`}>
+            <div css={[tw`divide-y`, { borderColor: 'var(--theme-border)' }]}>
                 {flattenedSections.map((section) => {
                     const isExpanded = expandedSections.has(section.path);
                     const entries = section.fields;
@@ -453,25 +511,43 @@ const ConfigVisualEditor: React.FC<Props> = ({ config, type, onChange, searchTer
                             {/* Section Header */}
                             <button
                                 onClick={() => toggleSection(section.path)}
-                                css={tw`w-full px-3 py-3 flex items-center justify-between bg-neutral-900 hover:bg-neutral-800 transition-colors`}
+                                css={[
+                                    tw`w-full px-3 py-3 flex items-center justify-between transition-colors`,
+                                    css`
+                                        background-color: var(--theme-background);
+                                        &:hover {
+                                            background-color: var(--theme-background-secondary);
+                                        }
+                                    `,
+                                ]}
                             >
                                 <div css={tw`flex items-center`}>
                                     {isExpanded ? (
-                                        <ChevronDownIcon css={tw`w-4 h-4 mr-2 text-neutral-400`} />
+                                        <ChevronDownIcon css={tw`w-4 h-4 mr-2`} style={{ color: 'var(--theme-text-muted)' }} />
                                     ) : (
-                                        <ChevronRightIcon css={tw`w-4 h-4 mr-2 text-neutral-400`} />
+                                        <ChevronRightIcon css={tw`w-4 h-4 mr-2`} style={{ color: 'var(--theme-text-muted)' }} />
                                     )}
-                                    <span css={tw`font-semibold text-sm text-neutral-200`}>
+                                    <span
+                                        css={tw`font-semibold text-sm`}
+                                        style={{ color: 'var(--theme-text-base)', fontFamily: "'Orbitron', sans-serif" }}
+                                    >
                                         {formatSectionName(section.name)}
                                     </span>
-                                    <span css={tw`ml-2 px-2 py-0.5 text-xs bg-neutral-800 text-neutral-400 rounded`}>
+                                    <span
+                                        css={tw`ml-2 px-2 py-0.5 text-xs rounded`}
+                                        style={{
+                                            backgroundColor: 'var(--theme-background-secondary)',
+                                            color: 'var(--theme-text-muted)',
+                                            border: '1px solid var(--theme-border)',
+                                        }}
+                                    >
                                         {entries.length}
                                     </span>
                                 </div>
                             </button>
                             {/* Section Content */}
                             {isExpanded && (
-                                <div css={tw`bg-neutral-800/30`}>
+                                <div css={tw``} style={{ backgroundColor: 'rgba(var(--theme-primary-rgb), 0.04)' }}>
                                     {(() => {
                                         const midPoint = Math.ceil(entries.length / 2);
                                         const leftColumn = entries.slice(0, midPoint);
@@ -479,22 +555,36 @@ const ConfigVisualEditor: React.FC<Props> = ({ config, type, onChange, searchTer
                                         return (
                                             <div css={tw`grid grid-cols-1 md:grid-cols-2 gap-x-6`}>
                                                 {/* Left Column */}
-                                                <div css={tw`divide-y divide-neutral-600`}>
+                                                <div css={[tw`divide-y`, { borderColor: 'var(--theme-border)' }]}>
                                                     {leftColumn.map(([key, value]) => (
                                                         <div
                                                             key={key}
-                                                            css={tw`px-3 py-3 hover:bg-neutral-800 transition-colors`}
+                                                            css={[
+                                                                tw`px-3 py-3 transition-colors`,
+                                                                css`
+                                                                    &:hover {
+                                                                        background-color: var(--theme-background-secondary);
+                                                                    }
+                                                                `,
+                                                            ]}
                                                         >
                                                             {renderField(key, value, section.path)}
                                                         </div>
                                                     ))}
                                                 </div>
                                                 {/* Right Column */}
-                                                <div css={tw`divide-y divide-neutral-600`}>
+                                                <div css={[tw`divide-y`, { borderColor: 'var(--theme-border)' }]}>
                                                     {rightColumn.map(([key, value]) => (
                                                         <div
                                                             key={key}
-                                                            css={tw`px-3 py-3 hover:bg-neutral-800 transition-colors`}
+                                                            css={[
+                                                                tw`px-3 py-3 transition-colors`,
+                                                                css`
+                                                                    &:hover {
+                                                                        background-color: var(--theme-background-secondary);
+                                                                    }
+                                                                `,
+                                                            ]}
                                                         >
                                                             {renderField(key, value, section.path)}
                                                         </div>

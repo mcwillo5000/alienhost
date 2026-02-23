@@ -19,7 +19,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { PlayerStats as PlayerStatsType } from '@/api/server/mcpmanager';
 import Spinner from '@/components/elements/Spinner';
-import ContentBox from '@/components/elements/ContentBox';
+import FuturisticContentBox from '@/components/elements/rivion/FuturisticContentBox';
 import PlayerStatsBoards from './StatsBoards';
 import CopyOnClick from '@/components/elements/CopyOnClick';
 interface PlayerStatsProps {
@@ -87,7 +87,7 @@ const AttributeBar: React.FC<{
 }> = ({ icon, label, value, maxValue, barColor, onModify, isOnline }) => {
     const progress = (value / maxValue) * 100;
     return (
-        <div tw='bg-neutral-800 rounded-lg p-3 border border-neutral-700 shadow-inner'>
+        <div tw='rounded-lg p-3 border border-neutral-700 shadow-inner' style={{ backgroundColor: 'var(--theme-background)' }}>
             <div tw='flex items-center justify-between mb-2'>
                 <div tw='flex items-center'>
                     <FontAwesomeIcon icon={icon} css={[tw`mr-2`, `color: ${barColor}`]} />
@@ -117,7 +117,7 @@ const AttributeBar: React.FC<{
                     </span>
                 </div>
             </div>
-            <div tw='w-full bg-neutral-900 rounded-full h-2.5'>
+            <div tw='w-full rounded-full h-2.5' style={{ backgroundColor: 'var(--theme-background-secondary)' }}>
                 <div
                     style={{ width: `${progress}%`, backgroundColor: barColor }}
                     tw='h-2.5 rounded-full transition-all duration-300'
@@ -136,7 +136,8 @@ const StatItem: React.FC<{
         <CopyOnClick text={String(value)}>
             <div
                 className='group'
-                tw='bg-neutral-800 rounded-lg p-3 flex items-center border border-neutral-700 cursor-pointer transition-colors duration-200 hover:bg-neutral-700'
+                tw='rounded-lg p-3 flex items-center border border-neutral-700 cursor-pointer transition-colors duration-200 hover:bg-neutral-700'
+                style={{ backgroundColor: 'var(--theme-background)' }}
             >
                 <div
                     tw='flex items-center justify-center w-8 h-8 rounded-md mr-3'
@@ -159,21 +160,21 @@ const StatItem: React.FC<{
 export const PlayerStats: React.FC<PlayerStatsProps> = ({ stats, isLoading, error, onModifyStat, isOnline }) => {
     if (isLoading) {
         return (
-            <ContentBox css={tw`relative`}>
-                <div tw='flex items-center justify-center py-8'>
+            <FuturisticContentBox>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingY: '2rem' }}>
                     <Spinner size='large' />
                 </div>
-            </ContentBox>
+            </FuturisticContentBox>
         );
     }
     if (error || !stats) {
         return (
-            <ContentBox css={tw`relative`}>
-                <div tw='bg-neutral-800 rounded-lg p-4 text-center'>
-                    <FontAwesomeIcon icon={faExclamationTriangle} tw='text-yellow-400 text-2xl mb-2' />
-                    <p tw='text-neutral-300'>{error || 'No player statistics available.'}</p>
+            <FuturisticContentBox>
+                <div style={{ backgroundColor: 'var(--theme-background)', padding: '1rem', textAlign: 'center', borderRadius: '0.5rem' }}>
+                    <FontAwesomeIcon icon={faExclamationTriangle} style={{ color: '#facc15', fontSize: '1.5rem', marginBottom: '0.5rem', display: 'block' }} />
+                    <p style={{ color: 'var(--theme-text-base)' }}>{error || 'No player statistics available.'}</p>
                 </div>
-            </ContentBox>
+            </FuturisticContentBox>
         );
     }
     const mobKills = stats.raw_stats_data?.stats?.['minecraft:custom']?.['minecraft:mob_kills'] || 0;
@@ -184,8 +185,8 @@ export const PlayerStats: React.FC<PlayerStatsProps> = ({ stats, isLoading, erro
     const damageTaken = stats.raw_stats_data?.stats?.['minecraft:custom']?.['minecraft:damage_taken'] || 0;
     const fishCaught = stats.raw_stats_data?.stats?.['minecraft:custom']?.['minecraft:fish_caught'] || 0;
     return (
-        <div tw='relative'>
-            <div tw='grid grid-cols-1 md:grid-cols-2 gap-4'>
+        <FuturisticContentBox>
+            <div style={{ padding: '1rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
                 <AttributeBar
                     icon={faHeart}
                     label='Health'
@@ -251,10 +252,10 @@ export const PlayerStats: React.FC<PlayerStatsProps> = ({ stats, isLoading, erro
                 />
                 <StatItem icon={faFish} label='Fish Caught' value={fishCaught.toLocaleString()} color='text-blue-400' />
             </div>
-            <div tw='pt-4 border-t border-neutral-700'>
+            <div style={{ paddingTop: '1rem', borderTop: '1px solid var(--theme-border)' }}>
                 <PlayerStatsBoards stats={stats} isLoading={isLoading} />
             </div>
-        </div>
+        </FuturisticContentBox>
     );
 };
 export default PlayerStats;

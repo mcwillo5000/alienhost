@@ -5,10 +5,10 @@ import FlashMessageRender from '@/components/FlashMessageRender';
 import { httpErrorToHuman } from '@/api/http';
 import { useFlashKey } from '@/plugins/useFlash';
 import tw from 'twin.macro';
-import Alert from '@/components/elements/alert/Alert';
 import Select from '@/components/elements/Select';
 import Input from '@/components/elements/Input';
 import styled from 'styled-components/macro';
+import FuturisticContentBox from '@/components/elements/rivion/FuturisticContentBox';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faSyncAlt, faPuzzlePiece, faClock, faCheckCircle, faExclamationTriangle, faArrowLeft, faFilter } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '@/components/elements/button/index';
@@ -31,11 +31,14 @@ const FilterGroup = styled.div`
 `;
 
 const FilterIcon = styled(FontAwesomeIcon)`
-    ${tw`absolute left-3 text-neutral-400 pointer-events-none`};
+    display: none;
 `;
 
 const StyledSelect = styled(Select)`
-    ${tw`pl-10 w-full`};
+    ${tw`pl-3 w-full`};
+    background-color: var(--theme-background);
+    border-color: var(--theme-border);
+    color: var(--theme-text-base);
     & > option {
         ${tw`flex items-center`};
     }
@@ -43,18 +46,33 @@ const StyledSelect = styled(Select)`
 
 const StyledInput = styled(Input)`
     ${tw`w-full`};
+    background-color: var(--theme-background);
+    border-color: var(--theme-border);
+    color: var(--theme-text-base);
     &::placeholder {
-        ${tw`text-neutral-400`};
+        color: var(--theme-text-muted);
     }
 `;
 
 const ActionButton = styled.button`
     ${tw`text-sm w-full flex items-center justify-center gap-2 p-3 rounded border transition-colors duration-150 whitespace-nowrap cursor-pointer`};
-    ${tw`bg-neutral-600 border-neutral-500 text-neutral-200 hover:border-neutral-400 hover:text-neutral-100`};
+    background-color: var(--theme-background);
+    border-color: var(--theme-border);
+    color: var(--theme-text-base);
+    &:hover {
+        border-color: var(--theme-primary);
+        color: var(--theme-primary);
+    }
 `;
 
 const ModCard = styled.div`
-    ${tw`bg-neutral-700 rounded-lg shadow-md border border-neutral-600 overflow-hidden`};
+    ${tw`rounded-lg shadow-md overflow-hidden`};
+    background-color: var(--theme-background-secondary);
+    border: 1px solid var(--theme-border);
+    transition: border-color 150ms;
+    &:hover {
+        border-color: var(--theme-primary);
+    }
 `;
 
 const ModHeader = styled.div`
@@ -62,11 +80,16 @@ const ModHeader = styled.div`
 `;
 
 const ModIcon = styled.img`
-    ${tw`w-14 h-14 rounded-lg object-cover bg-neutral-600 border-2 border-neutral-500`};
+    ${tw`w-14 h-14 rounded-lg object-cover border-2`};
+    background-color: var(--theme-background);
+    border-color: var(--theme-border);
 `;
 
 const PlaceholderIcon = styled.div`
-    ${tw`w-14 h-14 rounded-lg bg-neutral-600 border-2 border-neutral-500 flex items-center justify-center text-neutral-300`};
+    ${tw`w-14 h-14 rounded-lg border-2 flex items-center justify-center`};
+    background-color: var(--theme-background);
+    border-color: var(--theme-border);
+    color: var(--theme-text-muted);
 `;
 
 const ModInfo = styled.div`
@@ -86,11 +109,15 @@ const UpToDateBadge = styled.span`
 `;
 
 const ProviderBadge = styled.span`
-    ${tw`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500 bg-opacity-20 text-blue-300 border border-blue-500 border-opacity-30`};
+    ${tw`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium`};
+    background-color: rgba(var(--theme-primary-rgb), 0.15);
+    color: var(--theme-primary);
+    border: 1px solid var(--theme-border);
 `;
 
 const FileName = styled.span`
-    ${tw`text-xs text-neutral-400 block mt-1 truncate`};
+    ${tw`text-xs block mt-1 truncate`};
+    color: var(--theme-text-muted);
 `;
 
 const FILTER_OPTIONS = [
@@ -205,15 +232,29 @@ export default ({ onBack }: Props) => {
         loadInstalledMods();
     };
 
-    if (loading) return <Spinner size={'large'} centered />;
+    if (loading) return (
+        <FuturisticContentBox title={'Installed Mods'}>
+            <div css={tw`flex items-center justify-center py-16`}>
+                <Spinner size={'large'} />
+            </div>
+        </FuturisticContentBox>
+    );
 
     return (
-        <div>
+        <FuturisticContentBox title={'Installed Mods'}>
             <FlashMessageRender byKey={'installed-mods'} css={tw`mb-4`} />
             {message && (
-                <Alert type={message.type === 'success' ? 'warning' : message.type} className={'mb-4'}>
+                <div
+                    css={tw`mb-4 p-3 rounded text-sm`}
+                    style={{
+                        backgroundColor: message.type === 'danger' ? 'rgba(239,68,68,0.1)' : 'rgba(var(--theme-primary-rgb),0.1)',
+                        border: `1px solid ${message.type === 'danger' ? 'rgba(239,68,68,0.3)' : 'var(--theme-border)'}`,
+                        color: message.type === 'danger' ? '#ef4444' : 'var(--theme-text-base)',
+                        fontFamily: "'Electrolize', sans-serif",
+                    }}
+                >
                     {message.text}
-                </Alert>
+                </div>
             )}
 
             <FilterContainer>
@@ -244,11 +285,18 @@ export default ({ onBack }: Props) => {
             </FilterContainer>
 
             {filteredMods.length === 0 ? (
-                <Alert type="warning" className="mt-4">
-                    {mods.length === 0
-                        ? 'No mods installed yet. Browse and install mods using the "Browse" button.'
-                        : 'No installed mods match your filter criteria.'}
-                </Alert>
+                <div css={tw`text-center py-10`}>
+                    <FontAwesomeIcon
+                        icon={faPuzzlePiece}
+                        css={tw`mx-auto mb-3`}
+                        style={{ color: 'var(--theme-text-muted)', fontSize: '3rem' }}
+                    />
+                    <p css={tw`text-sm`} style={{ color: 'var(--theme-text-muted)', fontFamily: "'Electrolize', sans-serif" }}>
+                        {mods.length === 0
+                            ? 'No mods installed yet. Browse and install mods using the "Browse" button.'
+                            : 'No installed mods match your filter criteria.'}
+                    </p>
+                </div>
             ) : (
                 <div css={tw`grid gap-4 md:grid-cols-2 lg:grid-cols-3`}>
                     {filteredMods.map((mod) => (
@@ -262,11 +310,11 @@ export default ({ onBack }: Props) => {
                                     </PlaceholderIcon>
                                 )}
                                 <ModInfo>
-                                    <h3 css={tw`text-sm font-semibold truncate mb-0.5`}>
+                                    <h3 css={tw`text-sm font-semibold truncate mb-0.5`} style={{ color: 'var(--theme-text-base)' }}>
                                         {mod.mod_name || `Mod ${mod.mod_id}`}
                                     </h3>
                                     {mod.mod_author && (
-                                        <p css={tw`text-xs text-neutral-300 mb-1`}>
+                                        <p css={tw`text-xs mb-1`} style={{ color: 'var(--theme-text-muted)' }}>
                                             By {mod.mod_author}
                                         </p>
                                     )}
@@ -288,7 +336,7 @@ export default ({ onBack }: Props) => {
                                         )}
                                     </div>
                                     {mod.installed_at && (
-                                        <p css={tw`text-xs text-neutral-400 mt-1 flex items-center gap-1`}>
+                                        <p css={tw`text-xs mt-1 flex items-center gap-1`} style={{ color: 'var(--theme-text-muted)' }}>
                                             <FontAwesomeIcon icon={faClock} />
                                             Installed {formatDate(mod.installed_at)}
                                         </p>
@@ -336,7 +384,7 @@ export default ({ onBack }: Props) => {
                 hideCloseIcon={false}
             >
                 <div css={tw`py-4`}>
-                    <p css={tw`text-neutral-200`}>
+                    <p css={tw`text-sm`} style={{ color: 'var(--theme-text-base)', fontFamily: "'Electrolize', sans-serif" }}>
                         Are you sure you want to remove <strong>{confirmRemove?.mod_name || 'this mod'}</strong>?
                         This will delete the mod file from the server.
                     </p>
@@ -369,6 +417,6 @@ export default ({ onBack }: Props) => {
                     onClose={() => setUpdateMod(null)}
                 />
             )}
-        </div>
+        </FuturisticContentBox>
     );
 };

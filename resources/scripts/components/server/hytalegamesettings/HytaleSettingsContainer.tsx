@@ -11,7 +11,7 @@ import updateHytaleSettings from '@/api/server/hytalegamesettings/updateHytaleSe
 import HytaleBasicTab from '@/components/server/hytalegamesettings/HytaleBasicTab';
 import HytaleWorldsTab from '@/components/server/hytalegamesettings/HytaleWorldsTab';
 import HytaleAdvancedTab from '@/components/server/hytalegamesettings/HytaleAdvancedTab';
-import TitledGreyBox from '@/components/elements/TitledGreyBox';
+import FuturisticContentBox from '@/components/elements/rivion/FuturisticContentBox';
 import { Button } from '@/components/elements/button/index';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCog, faGlobe, faSlidersH, faStar, faEdit, faPencilAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -152,53 +152,44 @@ export default () => {
                 <div className={'flex gap-4' + (status === 'starting' ? ' opacity-50 pointer-events-none' : '')}>
                     <div className={'w-64 flex-shrink-0'}>
                         <div className={'sticky top-4'}>
-                            <TitledGreyBox title={'Navigation'}>
+                            <FuturisticContentBox title={'Navigation'}>
                                 <nav className={'flex flex-col gap-1'}>
-                                    <button
-                                        onClick={() => setActiveTab('basic')}
-                                        className={`flex items-center gap-3 px-4 py-3 rounded text-sm font-medium transition-all ${activeTab === 'basic'
-                                            ? 'bg-neutral-500 text-white'
-                                            : 'text-neutral-400 hover:bg-neutral-700 hover:text-neutral-200'
-                                            }`}
-                                    >
-                                        <FontAwesomeIcon icon={faCog} className={'w-4'} />
-                                        Basic
-                                    </button>
-                                    <button
-                                        onClick={() => setActiveTab('worlds')}
-                                        className={`flex items-center gap-3 px-4 py-3 rounded text-sm font-medium transition-all ${activeTab === 'worlds'
-                                            ? 'bg-neutral-500 text-white'
-                                            : 'text-neutral-400 hover:bg-neutral-700 hover:text-neutral-200'
-                                            }`}
-                                    >
-                                        <FontAwesomeIcon icon={faGlobe} className={'w-4'} />
-                                        Worlds
-                                    </button>
-                                    <button
-                                        onClick={() => setActiveTab('advanced')}
-                                        className={`flex items-center gap-3 px-4 py-3 rounded text-sm font-medium transition-all ${activeTab === 'advanced'
-                                            ? 'bg-neutral-500 text-white'
-                                            : 'text-neutral-400 hover:bg-neutral-700 hover:text-neutral-200'
-                                            }`}
-                                    >
-                                        <FontAwesomeIcon icon={faSlidersH} className={'w-4'} />
-                                        Advanced
-                                    </button>
+                                    {(['basic', 'worlds', 'advanced'] as const).map((tab) => ({
+                                        tab,
+                                        icon: tab === 'basic' ? faCog : tab === 'worlds' ? faGlobe : faSlidersH,
+                                        label: tab === 'basic' ? 'Basic' : tab === 'worlds' ? 'Worlds' : 'Advanced',
+                                    })).map(({ tab, icon, label }) => (
+                                        <button
+                                            key={tab}
+                                            onClick={() => setActiveTab(tab)}
+                                            className={'flex items-center gap-3 px-4 py-3 rounded text-sm font-medium transition-all'}
+                                            style={activeTab === tab
+                                                ? { backgroundColor: 'rgba(var(--theme-primary-rgb), 0.15)', color: 'var(--theme-primary)', border: '1px solid rgba(var(--theme-primary-rgb), 0.3)' }
+                                                : { backgroundColor: 'transparent', color: 'var(--theme-text-muted)', border: '1px solid transparent' }
+                                            }
+                                            onMouseEnter={(e) => { if (activeTab !== tab) { e.currentTarget.style.color = 'var(--theme-primary)'; } }}
+                                            onMouseLeave={(e) => { if (activeTab !== tab) { e.currentTarget.style.color = 'var(--theme-text-muted)'; } }}
+                                        >
+                                            <FontAwesomeIcon icon={icon} className={'w-4'} />
+                                            {label}
+                                        </button>
+                                    ))}
                                 </nav>
-                            </TitledGreyBox>
-                            <TitledGreyBox title={'Worlds Manager'} className={'mt-4'}>
+                            </FuturisticContentBox>
+                            <div className={'mt-4'}>
+                            <FuturisticContentBox title={'Worlds Manager'}>
                                 <div className={'relative'}>
                                     {!loadingWorlds && worlds.length === 0 && (
-                                        <p className={'text-center text-xs text-neutral-400 py-4'}>
+                                        <p className={'text-center text-xs py-4'} style={{ color: 'var(--theme-text-muted)', fontFamily: "'Electrolize', sans-serif" }}>
                                             No worlds found
                                         </p>
                                     )}
                                     {!loadingWorlds && worlds.length > 0 && (
                                         <div className={'space-y-2'}>
                                             {worlds.map((world) => (
-                                                <div key={world.name} className={'bg-neutral-500 rounded px-4 py-3'}>
+                                                <div key={world.name} className={'rounded px-3 py-2.5'} style={{ backgroundColor: 'var(--theme-background-secondary)', border: '1px solid var(--theme-border)' }}>
                                                     <div className={'flex items-center justify-between w-full'}>
-                                                        <p className={'text-sm font-medium truncate mr-4'}>{world.name}</p>
+                                                        <p className={'text-sm font-medium truncate mr-4'} style={{ color: 'var(--theme-text-base)', fontFamily: "'Electrolize', sans-serif" }}>{world.name}</p>
                                                         <div className={'flex items-center gap-3 flex-shrink-0'}>
                                                             <button
                                                                 onClick={() => handleSetDefault(world.name)}
@@ -207,13 +198,15 @@ export default () => {
                                                             >
                                                                 <FontAwesomeIcon
                                                                     icon={faStar}
-                                                                    className={settings.worldName === world.name ? 'text-yellow-500 cursor-default' : 'text-neutral-200 hover:text-yellow-400 opacity-40 hover:opacity-100'}
+                                                                    style={{ color: settings.worldName === world.name ? '#facc15' : 'var(--theme-text-muted)', opacity: settings.worldName === world.name ? 1 : 0.5 }}
                                                                 />
                                                             </button>
                                                             <button
                                                                 onClick={() => setSelectedWorld(world.name)}
-                                                                className={'text-neutral-200 transition-colors'}
+                                                                style={{ color: 'var(--theme-text-muted)', transition: 'color 150ms' }}
                                                                 title={'Edit World Settings'}
+                                                                onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--theme-primary)')}
+                                                                onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--theme-text-muted)')}
                                                             >
                                                                 <FontAwesomeIcon icon={faPencilAlt} />
                                                             </button>
@@ -223,21 +216,20 @@ export default () => {
                                             ))}
                                         </div>
                                     )}
-                                    <div className={'mt-2'} onClick={handleCreateWorld}>
-                                        <div className={'border border-neutral-500 rounded px-4 py-3 group hover:cursor-pointer'}>
-                                            <div className={'flex items-center justify-between w-full'}>
-                                                <p className={'text-sm font-medium truncate mr-4'}>Create New World</p>
-                                                <div className={'flex items-center gap-3 flex-shrink-0'}>
-                                                    <FontAwesomeIcon
-                                                        icon={faPlus}
-                                                        className={'text-neutral-200 group-hover:text-green-400 opacity-40 group-hover:opacity-100'}
-                                                    />
-                                                </div>
-                                            </div>
+                                    <div className={'mt-2 cursor-pointer'}
+                                        onClick={handleCreateWorld}
+                                        style={{ borderRadius: '0.25rem', border: '1px solid var(--theme-border)', padding: '0.625rem 0.75rem', transition: 'border-color 150ms' }}
+                                        onMouseEnter={(e) => ((e.currentTarget as HTMLDivElement).style.borderColor = 'var(--theme-primary)')}
+                                        onMouseLeave={(e) => ((e.currentTarget as HTMLDivElement).style.borderColor = 'var(--theme-border)')}
+                                    >
+                                        <div className={'flex items-center justify-between w-full'}>
+                                            <p className={'text-sm font-medium truncate mr-4'} style={{ color: 'var(--theme-text-muted)', fontFamily: "'Electrolize', sans-serif" }}>Create New World</p>
+                                            <FontAwesomeIcon icon={faPlus} style={{ color: 'var(--theme-text-muted)' }} />
                                         </div>
                                     </div>
                                 </div>
-                            </TitledGreyBox>
+                            </FuturisticContentBox>
+                            </div>
                         </div>
                     </div>
                     <div className={'flex-1 min-w-0'}>

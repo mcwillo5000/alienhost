@@ -6,7 +6,9 @@ import { faTrash, faSync, faGlobeAmericas } from '@fortawesome/free-solid-svg-ic
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
 import { ServerContext } from '@/state/server';
 import useFlash from '@/plugins/useFlash';
-import { Alert } from '@/components/elements/alert/index';
+import FlashMessageRender from '@/components/FlashMessageRender';
+import FuturisticContentBox from '@/components/elements/rivion/FuturisticContentBox';
+import Spinner from '@/components/elements/Spinner';
 import getServerSubdomains from '@/api/server/subdomain/getServerSubdomains';
 import createServerSubdomain from '@/api/server/subdomain/createServerSubdomain';
 import deleteServerSubdomain from '@/api/server/subdomain/deleteServerSubdomain';
@@ -14,7 +16,6 @@ import syncServerSubdomain from '@/api/server/subdomain/syncServerSubdomain';
 import { Button } from '@/components/elements/button/index';
 import Input from '@/components/elements/Input';
 import Select from '@/components/elements/Select';
-import GreyRowBox from '@/components/elements/GreyRowBox';
 import CopyOnClick from '@/components/elements/CopyOnClick';
 import Code from '@/components/elements/Code';
 import { Dialog } from '@/components/elements/dialog/index';
@@ -39,7 +40,13 @@ const SubdomainManager = () => {
         return () => clearTimeout(timer);
     }, [errorMessage]);
 
-    if (!data) return <ServerContentBlock title="Subdomain Management">Loading...</ServerContentBlock>;
+    if (!data) return (
+        <ServerContentBlock title="Subdomain Management">
+            <div css={tw`flex items-center justify-center h-64`}>
+                <Spinner size={'large'} />
+            </div>
+        </ServerContentBlock>
+    );
 
     const handleCreateSubdomain = async () => {
         setErrorMessage(null);
@@ -93,56 +100,144 @@ const SubdomainManager = () => {
 
     return (
         <ServerContentBlock title="Subdomain Management">
-            <div tw="flex flex-col gap-4 p-4">
-                {errorMessage && <Alert type="danger">{errorMessage}</Alert>}
-                <div tw="flex flex-col md:flex-row md:flex-nowrap gap-4 items-center">
-                    <Input type="text" placeholder="Enter subdomain" value={subdomain} onChange={(e) => setSubdomain(e.target.value)} tw="w-full md:w-64" />
-                    <Select value={selectedDomain} onChange={(e) => setSelectedDomain(e.target.value)} tw="w-full md:w-48">
-                        <option value="">Select Domain</option>
-                        {data.domains.map((domain) => (
-                            <option key={domain.id} value={domain.id}>{domain.domain}</option>
-                        ))}
-                    </Select>
-                    <Button onClick={handleCreateSubdomain} disabled={isCreating} tw="w-auto md:w-40 whitespace-nowrap">
-                        {isCreating ? 'Creating...' : 'Create Subdomain'}
-                    </Button>
-                </div>
-                {data.subdomains.length > 0 ? (
-                    <div>
-                        {data.subdomains.map((sub) => (
-                            <GreyRowBox key={sub.id} tw="flex items-center justify-between p-4 mt-2 gap-4">
-                                <div tw="flex items-center text-neutral-400 pl-4 pr-6">
-                                    <FontAwesomeIcon icon={faGlobeAmericas} size="lg" tw="w-8 h-8" />
-                                </div>
-                                <div tw="flex-1 flex space-x-8">
-                                    <div tw="flex flex-col">
-                                        <CopyOnClick text={sub.fullSubdomain}><Code dark>{sub.fullSubdomain}</Code></CopyOnClick>
-                                        <span tw="text-sm text-neutral-400">Subdomain</span>
-                                    </div>
-                                    <div tw="flex flex-col">
-                                        <Code dark>{sub.ip}:{sub.port}</Code>
-                                        <span tw="text-sm text-neutral-400">IP Address</span>
-                                    </div>
-                                </div>
-                                <div tw="flex space-x-2">
-                                    <Button.Text tw="flex items-center gap-2" onClick={() => openDialog('sync', sub.id)}>
-                                        <FontAwesomeIcon icon={faSync} /> Sync
-                                    </Button.Text>
-                                    <Button.Danger onClick={() => openDialog('delete', sub.id)}>
-                                        <FontAwesomeIcon icon={faTrash} />
-                                    </Button.Danger>
-                                </div>
-                            </GreyRowBox>
-                        ))}
+            <FlashMessageRender byKey={'subdomain'} css={tw`mb-4`} />
+            <div css={tw`flex flex-col gap-6`}>
+                {/* Create Subdomain */}
+                <FuturisticContentBox title={'Create Subdomain'}>
+                    {errorMessage && (
+                        <div
+                            css={tw`mb-4 px-4 py-3 rounded text-sm`}
+                            style={{
+                                backgroundColor: 'rgba(239,68,68,0.1)',
+                                border: '1px solid rgba(239,68,68,0.3)',
+                                color: '#ef4444',
+                            }}
+                        >
+                            {errorMessage}
+                        </div>
+                    )}
+                    <div css={tw`flex flex-col md:flex-row md:flex-nowrap gap-3`}>
+                        <Input
+                            type="text"
+                            placeholder="Enter subdomain"
+                            value={subdomain}
+                            onChange={(e) => setSubdomain(e.target.value)}
+                            css={tw`w-full md:w-64`}
+                            style={{
+                                backgroundColor: 'var(--theme-background)',
+                                borderColor: 'var(--theme-border)',
+                                color: 'var(--theme-text-base)',
+                            }}
+                        />
+                        <Select
+                            value={selectedDomain}
+                            onChange={(e) => setSelectedDomain(e.target.value)}
+                            css={tw`w-full md:w-48`}
+                            style={{
+                                backgroundColor: 'var(--theme-background)',
+                                borderColor: 'var(--theme-border)',
+                                color: 'var(--theme-text-base)',
+                            }}
+                        >
+                            <option value="">Select Domain</option>
+                            {data.domains.map((domain) => (
+                                <option key={domain.id} value={domain.id}>{domain.domain}</option>
+                            ))}
+                        </Select>
+                        <Button
+                            onClick={handleCreateSubdomain}
+                            disabled={isCreating}
+                            css={tw`w-auto md:w-40 whitespace-nowrap`}
+                        >
+                            {isCreating ? 'Creating...' : 'Create Subdomain'}
+                        </Button>
                     </div>
-                ) : (
-                    <div>No subdomains found.</div>
-                )}
+                </FuturisticContentBox>
+
+                {/* Subdomain List */}
+                <FuturisticContentBox title={'Active Subdomains'}>
+                    {data.subdomains.length > 0 ? (
+                        <div css={tw`flex flex-col gap-3`}>
+                            {data.subdomains.map((sub) => (
+                                <div
+                                    key={sub.id}
+                                    css={tw`flex items-center justify-between gap-4 px-4 py-3 rounded`}
+                                    style={{
+                                        backgroundColor: 'var(--theme-background)',
+                                        border: '1px solid var(--theme-border)',
+                                    }}
+                                >
+                                    <div
+                                        css={tw`flex-shrink-0`}
+                                        style={{ color: 'var(--theme-primary)' }}
+                                    >
+                                        <FontAwesomeIcon icon={faGlobeAmericas} size="lg" />
+                                    </div>
+                                    <div css={tw`flex-1 flex flex-wrap gap-6`}>
+                                        <div css={tw`flex flex-col`}>
+                                            <CopyOnClick text={sub.fullSubdomain}>
+                                                <Code dark>{sub.fullSubdomain}</Code>
+                                            </CopyOnClick>
+                                            <span
+                                                css={tw`text-xs mt-1`}
+                                                style={{ color: 'var(--theme-text-muted)' }}
+                                            >
+                                                Subdomain
+                                            </span>
+                                        </div>
+                                        <div css={tw`flex flex-col`}>
+                                            <Code dark>{sub.ip}:{sub.port}</Code>
+                                            <span
+                                                css={tw`text-xs mt-1`}
+                                                style={{ color: 'var(--theme-text-muted)' }}
+                                            >
+                                                IP Address
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div css={tw`flex gap-2`}>
+                                        <Button.Text
+                                            css={tw`flex items-center gap-2`}
+                                            onClick={() => openDialog('sync', sub.id)}
+                                        >
+                                            <FontAwesomeIcon icon={faSync} /> Sync
+                                        </Button.Text>
+                                        <Button.Danger onClick={() => openDialog('delete', sub.id)}>
+                                            <FontAwesomeIcon icon={faTrash} />
+                                        </Button.Danger>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div
+                            css={tw`flex flex-col items-center justify-center py-12`}
+                            style={{ color: 'var(--theme-text-muted)' }}
+                        >
+                            <FontAwesomeIcon
+                                icon={faGlobeAmericas}
+                                css={tw`mb-3`}
+                                style={{ fontSize: '3rem', color: 'var(--theme-text-muted)' }}
+                            />
+                            <p
+                                css={tw`text-sm`}
+                                style={{ fontFamily: "'Electrolize', sans-serif" }}
+                            >
+                                No subdomains have been created yet.
+                            </p>
+                        </div>
+                    )}
+                </FuturisticContentBox>
             </div>
+
             <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
-                <h1 tw="text-lg font-semibold mb-2">Confirm Action</h1>
-                <p>Are you sure you want to {dialogAction} this subdomain?</p>
-                <div tw="flex justify-end gap-2 mt-4">
+                <h1 css={tw`text-lg font-semibold mb-2`} style={{ color: 'var(--theme-text-base)' }}>
+                    Confirm Action
+                </h1>
+                <p style={{ color: 'var(--theme-text-muted)' }}>
+                    Are you sure you want to {dialogAction} this subdomain?
+                </p>
+                <div css={tw`flex justify-end gap-2 mt-4`}>
                     <Button.Text onClick={() => setDialogOpen(false)}>Cancel</Button.Text>
                     <Button.Danger onClick={confirmDialogAction}>Confirm</Button.Danger>
                 </div>

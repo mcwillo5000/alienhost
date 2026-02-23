@@ -81,12 +81,12 @@ function PlayerDisplay({ playerUuid, playerInfo, size = 32, showUuid = true }: P
         return (
             <div className={'flex items-center gap-2'}>
                 <div
-                    className={'rounded bg-neutral-700 flex items-center justify-center text-neutral-400'}
-                    style={{ width: size, height: size }}
+                    className={'rounded flex items-center justify-center'}
+                    style={{ width: size, height: size, backgroundColor: 'var(--theme-background-secondary)', color: 'var(--theme-text-muted)' }}
                 >
                     <FontAwesomeIcon icon={faUserShield} />
                 </div>
-                <span className={'font-medium text-neutral-300'}>Console</span>
+                <span className={'font-medium'} style={{ color: 'var(--theme-text-base)' }}>Console</span>
             </div>
         );
     }
@@ -102,9 +102,9 @@ function PlayerDisplay({ playerUuid, playerInfo, size = 32, showUuid = true }: P
                 }}
             />
             <div className={'flex flex-col'}>
-                <span className={'font-medium text-white'}>{displayName}</span>
+                <span className={'font-medium'} style={{ color: 'var(--theme-text-base)' }}>{displayName}</span>
                 {showUuid && displayUuid !== displayName && (
-                    <code className={'font-mono text-xs text-neutral-400 break-all'}>
+                    <code className={'font-mono text-xs break-all'} style={{ color: 'var(--theme-text-muted)' }}>
                         {displayUuid}
                     </code>
                 )}
@@ -569,14 +569,14 @@ export default function HytalePlayerManagerContainer() {
                                 className={'w-8 h-8 rounded'}
                             />
                             <div className={'flex-1'}>
-                                <span className={'text-xl text-white'}>{selectedPlayerDetail.username}</span>
-                                <p>{selectedPlayerDetail.uuid}</p>
+                                <span className={'text-xl'} style={{ color: 'var(--theme-text-base)' }}>{selectedPlayerDetail.username}</span>
+                                <p style={{ color: 'var(--theme-text-muted)' }}>{selectedPlayerDetail.uuid}</p>
                             </div>
                         </div>
                         {/* Main Layout: Body Left, Details Right */}
                         <div className={'flex gap-3'}>
                             {/* Left: Player Body */}
-                            <div className={'flex items-center justify-center bg-gray-800 rounded-lg px-8 py-4 self-stretch min-w-[140px]'}>
+                            <div className={'flex items-center justify-center rounded-lg px-8 py-4 self-stretch min-w-[140px]'} style={{ backgroundColor: 'var(--theme-background-secondary)' }}>
                                 <img
                                     src={`https://crafthead.net/hytale/body/${selectedPlayerDetail.uuid}`}
                                     alt={selectedPlayerDetail.username}
@@ -589,13 +589,13 @@ export default function HytalePlayerManagerContainer() {
                             {/* Right: Details Grid */}
                             <div className={'flex-1 grid grid-cols-2 gap-3'}>
                                 {/* UUID */}
-                                <div className={'col-span-2 bg-gray-800 rounded-lg p-3'}>
-                                    <div className={'flex items-center gap-2 text-neutral-400 text-sm mb-1'}>
+                                <div className={'col-span-2 rounded-lg p-3'} style={{ backgroundColor: 'var(--theme-background-secondary)' }}>
+                                    <div className={'flex items-center gap-2 text-sm mb-1'} style={{ color: 'var(--theme-text-muted)' }}>
                                         <FontAwesomeIcon icon={faInfoCircle} className={'text-xs'} />
                                         <span>UUID</span>
                                     </div>
                                     <div className={'flex items-center justify-between'}>
-                                        <code className={'text-white text-xs font-mono truncate mr-2'}>{selectedPlayerDetail.uuid}</code>
+                                        <code className={'text-xs font-mono truncate mr-2'} style={{ color: 'var(--theme-text-base)' }}>{selectedPlayerDetail.uuid}</code>
                                         <Button.Text
                                             className={'!p-1'}
                                             onClick={() => copyToClipboard(selectedPlayerDetail.uuid)}
@@ -606,28 +606,29 @@ export default function HytalePlayerManagerContainer() {
                                     </div>
                                 </div>
                                 {/* Gamemode */}
-                                <div className={'bg-gray-800 rounded-lg p-3'}>
-                                    <div className={'flex items-center gap-2 text-neutral-400 text-sm mb-1'}>
+                                <div className={'rounded-lg p-3'} style={{ backgroundColor: 'var(--theme-background-secondary)' }}>
+                                    <div className={'flex items-center gap-2 text-sm mb-1'} style={{ color: 'var(--theme-text-muted)' }}>
                                         <FontAwesomeIcon icon={faUsers} className={'text-xs'} />
                                         <span>Gamemode</span>
                                     </div>
                                     <Select
                                         value={editingGamemode}
                                         onChange={(e) => setEditingGamemode(e.target.value)}
-                                        className={'!py-1 !px-2 !text-sm !bg-gray-700 !border-gray-600'}
+                                        className={'!py-1 !px-2 !text-sm'}
+                                        style={{ backgroundColor: 'var(--theme-background-secondary)', borderColor: 'var(--theme-border)' }}
                                     >
                                         <option value={'Adventure'}>Adventure</option>
                                         <option value={'Creative'}>Creative</option>
                                     </Select>
                                 </div>
                                 {/* World */}
-                                <div className={'bg-gray-800 rounded-lg p-3'}>
-                                    <div className={'flex items-center gap-2 text-neutral-400 text-sm mb-1'}>
+                                <div className={'rounded-lg p-3'} style={{ backgroundColor: 'var(--theme-background-secondary)' }}>
+                                    <div className={'flex items-center gap-2 text-sm mb-1'} style={{ color: 'var(--theme-text-muted)' }}>
                                         <FontAwesomeIcon icon={faSearch} className={'text-xs'} />
                                         <span>World</span>
                                     </div>
                                     <div className={'flex items-center justify-between'}>
-                                        <span className={'text-white text-sm'}>{selectedPlayerDetail.world || '—'}</span>
+                                        <span className={'text-sm'} style={{ color: 'var(--theme-text-base)' }}>{selectedPlayerDetail.world || '—'}</span>
                                         {selectedPlayerDetail.world && (
                                             <Button.Text
                                                 className={'!p-1'}
@@ -640,13 +641,13 @@ export default function HytalePlayerManagerContainer() {
                                     </div>
                                 </div>
                                 {/* Username */}
-                                <div className={'bg-gray-800 rounded-lg p-3'}>
-                                    <div className={'flex items-center gap-2 text-neutral-400 text-sm mb-1'}>
+                                <div className={'rounded-lg p-3'} style={{ backgroundColor: 'var(--theme-background-secondary)' }}>
+                                    <div className={'flex items-center gap-2 text-sm mb-1'} style={{ color: 'var(--theme-text-muted)' }}>
                                         <FontAwesomeIcon icon={faUsers} className={'text-xs'} />
                                         <span>Username</span>
                                     </div>
                                     <div className={'flex items-center justify-between'}>
-                                        <span className={'text-white text-sm'}>{selectedPlayerDetail.username}</span>
+                                        <span className={'text-sm'} style={{ color: 'var(--theme-text-base)' }}>{selectedPlayerDetail.username}</span>
                                         <Button.Text
                                             className={'!p-1'}
                                             onClick={() => copyToClipboard(selectedPlayerDetail.username)}
@@ -657,13 +658,13 @@ export default function HytalePlayerManagerContainer() {
                                     </div>
                                 </div>
                                 {/* Position */}
-                                <div className={'bg-gray-800 rounded-lg p-3'}>
-                                    <div className={'flex items-center gap-2 text-neutral-400 text-sm mb-1'}>
+                                <div className={'rounded-lg p-3'} style={{ backgroundColor: 'var(--theme-background-secondary)' }}>
+                                    <div className={'flex items-center gap-2 text-sm mb-1'} style={{ color: 'var(--theme-text-muted)' }}>
                                         <FontAwesomeIcon icon={faSearch} className={'text-xs'} />
                                         <span>Position</span>
                                     </div>
                                     <div className={'flex items-center justify-between'}>
-                                        <code className={'text-white font-mono text-sm'}>
+                                        <code className={'font-mono text-sm'} style={{ color: 'var(--theme-text-base)' }}>
                                             {selectedPlayerDetail.position
                                                 ? `${Math.round(selectedPlayerDetail.position.x)} ${Math.round(selectedPlayerDetail.position.y)} ${Math.round(selectedPlayerDetail.position.z)}`
                                                 : '0 0 0'
@@ -684,32 +685,32 @@ export default function HytalePlayerManagerContainer() {
                                 {/* Stats Row */}
                                 <div className={'col-span-2 grid grid-cols-4 gap-2'}>
                                     {/* Health */}
-                                    <div className={'bg-gray-800 rounded-lg p-2 text-center'}>
+                                    <div className={'rounded-lg p-2 text-center'} style={{ backgroundColor: 'var(--theme-background-secondary)' }}>
                                         <div className={'text-red-400 text-base font-bold'}>
                                             {selectedPlayerDetail.stats?.health ?? 100}
                                         </div>
-                                        <div className={'text-neutral-500 text-[10px]'}>Health</div>
+                                        <div className={'text-[10px]'} style={{ color: 'var(--theme-text-muted)' }}>Health</div>
                                     </div>
                                     {/* Oxygen */}
-                                    <div className={'bg-gray-800 rounded-lg p-2 text-center'}>
+                                    <div className={'rounded-lg p-2 text-center'} style={{ backgroundColor: 'var(--theme-background-secondary)' }}>
                                         <div className={'text-cyan-400 text-base font-bold'}>
                                             {selectedPlayerDetail.stats?.oxygen ?? 100}
                                         </div>
-                                        <div className={'text-neutral-500 text-[10px]'}>Oxygen</div>
+                                        <div className={'text-[10px]'} style={{ color: 'var(--theme-text-muted)' }}>Oxygen</div>
                                     </div>
                                     {/* Mana */}
-                                    <div className={'bg-gray-800 rounded-lg p-2 text-center'}>
+                                    <div className={'rounded-lg p-2 text-center'} style={{ backgroundColor: 'var(--theme-background-secondary)' }}>
                                         <div className={'text-blue-400 text-base font-bold'}>
                                             {selectedPlayerDetail.stats?.mana ?? 0}
                                         </div>
-                                        <div className={'text-neutral-500 text-[10px]'}>Mana</div>
+                                        <div className={'text-[10px]'} style={{ color: 'var(--theme-text-muted)' }}>Mana</div>
                                     </div>
                                     {/* Stamina */}
-                                    <div className={'bg-gray-800 rounded-lg p-2 text-center'}>
+                                    <div className={'rounded-lg p-2 text-center'} style={{ backgroundColor: 'var(--theme-background-secondary)' }}>
                                         <div className={'text-yellow-400 text-base font-bold'}>
                                             {selectedPlayerDetail.stats?.stamina ?? 10}
                                         </div>
-                                        <div className={'text-neutral-500 text-[10px]'}>Stamina</div>
+                                        <div className={'text-[10px]'} style={{ color: 'var(--theme-text-muted)' }}>Stamina</div>
                                     </div>
                                 </div>
                             </div>
@@ -810,7 +811,7 @@ export default function HytalePlayerManagerContainer() {
                         </Button.Text>
                     </div>
                     {lookupResult && (
-                        <div className={'mt-3 p-3 bg-gray-800 rounded-md'}>
+                        <div className={'mt-3 p-3 rounded-md'} style={{ backgroundColor: 'var(--theme-background-secondary)', border: '1px solid var(--theme-border)' }}>
                             <div className={'flex items-center gap-3'}>
                                 <img
                                     src={getHytaleAvatarUrl(lookupResult.id, 48)}
@@ -819,8 +820,8 @@ export default function HytalePlayerManagerContainer() {
                                     style={{ width: 48, height: 48 }}
                                 />
                                 <div>
-                                    <div className={'font-semibold text-white'}>{lookupResult.username}</div>
-                                    <code className={'text-xs text-neutral-400'}>{lookupResult.id}</code>
+                                    <div className={'font-semibold'} style={{ color: 'var(--theme-text-base)' }}>{lookupResult.username}</div>
+                                    <code className={'text-xs'} style={{ color: 'var(--theme-text-muted)' }}>{lookupResult.id}</code>
                                 </div>
                             </div>
                             <Button.Text
@@ -877,7 +878,7 @@ export default function HytalePlayerManagerContainer() {
                         </Button.Text>
                     </div>
                     {lookupResult && (
-                        <div className={'mt-3 p-3 bg-gray-800 rounded-md'}>
+                        <div className={'mt-3 p-3 rounded-md'} style={{ backgroundColor: 'var(--theme-background-secondary)', border: '1px solid var(--theme-border)' }}>
                             <div className={'flex items-center gap-3'}>
                                 <img
                                     src={getHytaleAvatarUrl(lookupResult.id, 48)}
@@ -886,8 +887,8 @@ export default function HytalePlayerManagerContainer() {
                                     style={{ width: 48, height: 48 }}
                                 />
                                 <div>
-                                    <div className={'font-semibold text-white'}>{lookupResult.username}</div>
-                                    <code className={'text-xs text-neutral-400'}>{lookupResult.id}</code>
+                                    <div className={'font-semibold'} style={{ color: 'var(--theme-text-base)' }}>{lookupResult.username}</div>
+                                    <code className={'text-xs'} style={{ color: 'var(--theme-text-muted)' }}>{lookupResult.id}</code>
                                 </div>
                             </div>
                             <Button.Text
@@ -944,7 +945,7 @@ export default function HytalePlayerManagerContainer() {
                         </Button.Text>
                     </div>
                     {lookupResult && (
-                        <div className={'mb-4 p-3 bg-gray-800 rounded-md'}>
+                        <div className={'mb-4 p-3 rounded-md'} style={{ backgroundColor: 'var(--theme-background-secondary)', border: '1px solid var(--theme-border)' }}>
                             <div className={'flex items-center gap-3'}>
                                 <img
                                     src={getHytaleAvatarUrl(lookupResult.id, 48)}
@@ -953,8 +954,8 @@ export default function HytalePlayerManagerContainer() {
                                     style={{ width: 48, height: 48 }}
                                 />
                                 <div>
-                                    <div className={'font-semibold text-white'}>{lookupResult.username}</div>
-                                    <code className={'text-xs text-neutral-400'}>{lookupResult.id}</code>
+                                    <div className={'font-semibold'} style={{ color: 'var(--theme-text-base)' }}>{lookupResult.username}</div>
+                                    <code className={'text-xs'} style={{ color: 'var(--theme-text-muted)' }}>{lookupResult.id}</code>
                                 </div>
                             </div>
                             <Button.Text
@@ -1023,44 +1024,46 @@ export default function HytalePlayerManagerContainer() {
                 {activeTab === 'players' && (
                     <div>
                         {/* Players Table */}
-                        <div className={'bg-gray-700 rounded-lg overflow-hidden shadow-lg'}>
+                        <div className={'rounded-lg overflow-hidden shadow-lg'} style={{ backgroundColor: 'var(--theme-background-secondary)', border: '1px solid var(--theme-border)' }}>
                             {/* Header with Search */}
-                            <div className={'p-4 border-b border-gray-600 flex items-center gap-4'}>
+                            <div className={'p-4 flex items-center gap-4'} style={{ borderBottom: '1px solid var(--theme-border)' }}>
                                 <div className={'flex items-center flex-shrink-0'}>
-                                    <FontAwesomeIcon icon={faUsers} className={'mr-2 text-neutral-300'} />
-                                    <span className={'font-semibold text-white'}>Players</span>
+                                    <FontAwesomeIcon icon={faUsers} className={'mr-2'} style={{ color: 'var(--theme-text-base)' }} />
+                                    <span className={'font-semibold'} style={{ color: 'var(--theme-text-base)' }}>Players</span>
                                 </div>
                                 {/* Search Input - Center */}
                                 <div className={'flex-1 relative max-w-md mx-auto'}>
                                     <FontAwesomeIcon
                                         icon={faSearch}
-                                        className={'absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400'}
+                                        className={'absolute left-3 top-1/2 transform -translate-y-1/2'}
+                                        style={{ color: 'var(--theme-text-muted)' }}
                                     />
                                     <input
                                         type={'text'}
                                         placeholder={'Search players...'}
                                         value={playersSearchQuery}
                                         onChange={(e) => setPlayersSearchQuery(e.target.value)}
-                                        className={'w-full py-2 px-3 pl-9 bg-gray-800 border border-gray-600 rounded-md text-sm text-neutral-200 placeholder-neutral-500 focus:outline-none focus:border-gray-500 transition-colors'}
+                                        className={'w-full py-2 px-3 pl-9 rounded-md text-sm focus:outline-none transition-colors'}
+                                        style={{ backgroundColor: 'var(--theme-background-primary)', border: '1px solid var(--theme-border)', color: 'var(--theme-text-base)' }}
                                     />
                                 </div>
-                                <span className={'text-sm text-neutral-400 flex-shrink-0'}>
+                                <span className={'text-sm flex-shrink-0'} style={{ color: 'var(--theme-text-muted)' }}>
                                     {filteredRegisteredPlayers.length} players
                                 </span>
                             </div>
                             {playersLoading ? (
-                                <div className={'p-8'}>
+                                <div className={'p-8'} style={{ color: 'var(--theme-text-muted)', fontFamily: "'Electrolize', sans-serif" }}>
                                     <Spinner size={'large'} centered />
                                 </div>
                             ) : filteredRegisteredPlayers.length === 0 ? (
-                                <div className={'p-8 text-center text-neutral-400'}>
+                                <div className={'p-8 text-center'} style={{ color: 'var(--theme-text-muted)', fontFamily: "'Electrolize', sans-serif" }}>
                                     {playersSearchQuery ? 'No players found matching your search.' : 'No registered players found.'}
                                 </div>
                             ) : (
                                 <div className={'overflow-x-auto'}>
                                     <table className={'w-full table-fixed'}>
                                         <thead>
-                                            <tr className={'bg-gray-800/50 text-left text-xs uppercase tracking-wider text-neutral-500'}>
+                                            <tr className={'text-left text-xs uppercase tracking-wider'} style={{ backgroundColor: 'rgba(var(--theme-primary-rgb), 0.05)', color: 'var(--theme-text-muted)' }}>
                                                 <th className={'py-3 px-4 font-medium w-[280px]'}>Player</th>
                                                 <th className={'py-3 px-4 font-medium w-[140px]'}>Position</th>
                                                 <th className={'py-3 px-4 font-medium w-[100px]'}>World</th>
@@ -1068,25 +1071,29 @@ export default function HytalePlayerManagerContainer() {
                                                 <th className={'py-3 px-4 font-medium text-right w-[80px]'}>Actions</th>
                                             </tr>
                                         </thead>
-                                        <tbody className={'divide-y divide-gray-600/50'}>
+                                        <tbody>
                                             {filteredRegisteredPlayers.map((player, index) => (
                                                 <tr
                                                     key={player.uuid}
-                                                    className={`hover:bg-gray-600/30 transition-colors ${index % 2 === 0 ? 'bg-gray-700/30' : ''}`}
+                                                    className={'transition-colors'}
+                                                    style={{ borderTop: '1px solid var(--theme-border)', backgroundColor: index % 2 === 0 ? 'rgba(var(--theme-primary-rgb), 0.02)' : 'transparent' }}
+                                                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(var(--theme-primary-rgb), 0.06)')}
+                                                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = index % 2 === 0 ? 'rgba(var(--theme-primary-rgb), 0.02)' : 'transparent')}
                                                 >
                                                     <td className={'py-3 px-4'}>
                                                         <div className={'flex items-center gap-3'}>
                                                             <img
                                                                 src={getHytaleAvatarUrl(player.uuid, 32)}
                                                                 alt={player.username}
-                                                                className={'rounded-md w-8 h-8 bg-gray-800'}
+                                                                className={'rounded-md w-8 h-8'}
+                                                style={{ backgroundColor: 'var(--theme-background-secondary)' }}
                                                                 onError={(e) => {
                                                                     (e.target as HTMLImageElement).style.display = 'none';
                                                                 }}
                                                             />
                                                             <div className={'flex flex-col min-w-0'}>
                                                                 <div className={'flex items-center gap-1.5 flex-wrap'}>
-                                                                    <span className={'font-medium text-white truncate'}>
+                                                                    <span className={'font-medium truncate'} style={{ color: 'var(--theme-text-base)' }}>
                                                                         {player.username}
                                                                     </span>
                                                                     {/* OP Badge */}
@@ -1116,7 +1123,7 @@ export default function HytalePlayerManagerContainer() {
                                                                         </span>
                                                                     )}
                                                                 </div>
-                                                                <code className={'text-[11px] text-neutral-500 truncate'}>
+                                                                <code className={'text-[11px] truncate'} style={{ color: 'var(--theme-text-muted)' }}>
                                                                     {player.uuid}
                                                                 </code>
                                                             </div>
@@ -1124,22 +1131,22 @@ export default function HytalePlayerManagerContainer() {
                                                     </td>
                                                     <td className={'py-3 px-4'}>
                                                         {player.position ? (
-                                                            <code className={'text-xs text-neutral-400 font-mono'}>
+                                                            <code className={'text-xs font-mono'} style={{ color: 'var(--theme-text-muted)' }}>
                                                                 {Math.round(player.position.x)}, {Math.round(player.position.y)}, {Math.round(player.position.z)}
                                                             </code>
                                                         ) : (
-                                                            <span className={'text-neutral-600'}>—</span>
+                                                            <span style={{ color: 'var(--theme-text-muted)' }}>—</span>
                                                         )}
                                                     </td>
                                                     <td className={'py-3 px-4'}>
-                                                        <span className={'text-sm text-neutral-300'}>
+                                                        <span className={'text-sm'} style={{ color: 'var(--theme-text-base)' }}>
                                                             {player.world || '—'}
                                                         </span>
                                                     </td>
                                                     <td className={'py-3 px-4'}>
                                                         <span className={`px-2 py-0.5 rounded text-xs font-medium ${player.gamemode === 'Adventure' ? 'bg-emerald-500/15 text-emerald-400' :
                                                             player.gamemode === 'Creative' ? 'bg-sky-500/15 text-sky-400' :
-                                                                'bg-neutral-600/30 text-neutral-400'
+                                                                'bg-neutral-500/20 text-neutral-300'
                                                             }`}>
                                                             {player.gamemode}
                                                         </span>
@@ -1183,7 +1190,7 @@ export default function HytalePlayerManagerContainer() {
                     <div className={'grid grid-cols-1 lg:grid-cols-2 gap-6'}>
                         {/* Left Side - Groups */}
                         <div>
-                            <div className={'p-4 rounded-md bg-gray-700 mb-4'}>
+                            <div className={'p-4 rounded-md mb-4'} style={{ backgroundColor: 'var(--theme-background-secondary)', border: '1px solid var(--theme-border)' }}>
                                 <div className={'flex items-center justify-between'}>
                                     <div className={'flex items-center'}>
                                         <FontAwesomeIcon icon={faUserShield} className={'mr-2'} />
@@ -1207,7 +1214,10 @@ export default function HytalePlayerManagerContainer() {
                                 {Object.entries(groups).map(([name, perms]) => (
                                     <div
                                         key={name}
-                                        className={'bg-gray-700 rounded-md p-4 hover:bg-gray-600 transition-all'}
+                                        className={'rounded-md p-4 transition-all'}
+                                        style={{ backgroundColor: 'var(--theme-background-secondary)', border: '1px solid var(--theme-border)' }}
+                                        onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--theme-primary)')}
+                                        onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--theme-border)')}
                                     >
                                         <div className={'flex justify-between items-center'}>
                                             <div className={'flex items-center'}>
@@ -1216,7 +1226,7 @@ export default function HytalePlayerManagerContainer() {
                                                     className={`mr-2 ${name === 'OP' ? 'text-yellow-400' : name === 'Default' ? 'text-neutral-400' : 'text-blue-400'}`}
                                                 />
                                                 <span className={'font-semibold text-lg'}>{name}</span>
-                                                <span className={'ml-2 text-sm text-neutral-400'}>
+                                                <span className={'ml-2 text-sm'} style={{ color: 'var(--theme-text-muted)' }}>
                                                     ({(perms || []).length} permission{(perms || []).length !== 1 ? 's' : ''})
                                                 </span>
                                             </div>
@@ -1251,13 +1261,13 @@ export default function HytalePlayerManagerContainer() {
                                     </div>
                                 ))}
                                 {Object.keys(groups).length === 0 && (
-                                    <p className={'text-neutral-400 text-sm'}>No permission groups created yet.</p>
+                                    <p className={'text-sm'} style={{ color: 'var(--theme-text-muted)' }}>No permission groups created yet.</p>
                                 )}
                             </div>
                         </div>
                         {/* Right Side - Players */}
                         <div>
-                            <div className={'p-4 rounded-md bg-gray-700 mb-4'}>
+                            <div className={'p-4 rounded-md mb-4'} style={{ backgroundColor: 'var(--theme-background-secondary)', border: '1px solid var(--theme-border)' }}>
                                 <div className={'flex items-center justify-between'}>
                                     <div className={'flex items-center'}>
                                         <FontAwesomeIcon icon={faUsers} className={'mr-2'} />
@@ -1279,7 +1289,7 @@ export default function HytalePlayerManagerContainer() {
                                 </div>
                             </div>
                             {Object.keys(users).length === 0 ? (
-                                <p className={'text-neutral-400 text-sm'}>No players have been assigned to any groups yet.</p>
+                                <p className={'text-sm'} style={{ color: 'var(--theme-text-muted)' }}>No players have been assigned to any groups yet.</p>
                             ) : (
                                 <div className={'space-y-2'}>
                                     {Object.entries(users).map(([pUuid, playerData]) => {
@@ -1289,7 +1299,10 @@ export default function HytalePlayerManagerContainer() {
                                         return (
                                             <div
                                                 key={pUuid}
-                                                className={'bg-gray-700 rounded-md p-3 hover:bg-gray-600 transition-all flex items-center justify-between gap-3'}
+                                                className={'rounded-md p-3 transition-all flex items-center justify-between gap-3'}
+                                                style={{ backgroundColor: 'var(--theme-background-secondary)', border: '1px solid var(--theme-border)' }}
+                                                onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--theme-primary)')}
+                                                onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--theme-border)')}
                                             >
                                                 <div className={'flex-shrink-0'}>
                                                     <PlayerDisplay
@@ -1335,19 +1348,20 @@ export default function HytalePlayerManagerContainer() {
                 {/* Whitelist Tab */}
                 {activeTab === 'whitelist' && (
                     <>
-                        <div className={'p-4 rounded-md bg-gray-700 mb-4'}>
+                        <div className={'p-4 rounded-md mb-4'} style={{ backgroundColor: 'var(--theme-background-secondary)', border: '1px solid var(--theme-border)' }}>
                             <div className={'flex items-center'}>
                                 <FontAwesomeIcon icon={faUserCheck} className={'mr-2'} />
                                 <span className={'font-semibold text-lg'}>Allowlist</span>
                             </div>
-                            <p className={'mt-2 text-neutral-300'}>
+                            <p className={'mt-2'} style={{ color: 'var(--theme-text-base)' }}>
                                 When enabled, only players on the allowlist can join the server.
                             </p>
                         </div>
                         <div className={'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3'}>
                             {/* Enable/Disable Toggle - First Row */}
                             <div
-                                className={`bg-gray-700 cursor-pointer hover:bg-gray-600 transition-all p-4 rounded-md flex justify-center items-center min-h-[60px] border-r-4 ${whitelist.enabled ? 'border-r-green-500' : 'border-r-red-500'}`}
+                                className={`cursor-pointer transition-all p-4 rounded-md flex justify-center items-center min-h-[60px] border-r-4 ${whitelist.enabled ? 'border-r-green-500' : 'border-r-red-500'}`}
+                                style={{ backgroundColor: 'var(--theme-background-secondary)', border: '1px solid var(--theme-border)' }}
                                 onClick={handleToggleWhitelist}
                             >
                                 <FontAwesomeIcon
@@ -1360,7 +1374,10 @@ export default function HytalePlayerManagerContainer() {
                             {(whitelist.list || []).map((pUuid) => (
                                 <div
                                     key={pUuid}
-                                    className={'bg-gray-700 hover:bg-gray-600 transition-all p-4 rounded-md flex justify-between items-center'}
+                                    className={'transition-all p-4 rounded-md flex justify-between items-center'}
+                                    style={{ backgroundColor: 'var(--theme-background-secondary)', border: '1px solid var(--theme-border)' }}
+                                    onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--theme-primary)')}
+                                    onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--theme-border)')}
                                 >
                                     <PlayerDisplay
                                         playerUuid={pUuid}
@@ -1378,7 +1395,10 @@ export default function HytalePlayerManagerContainer() {
                             ))}
                             {/* Add Player Button */}
                             <div
-                                className={'bg-gray-700 cursor-pointer hover:bg-gray-600 transition-all p-4 rounded-md flex justify-center items-center min-h-[60px]'}
+                                className={'cursor-pointer transition-all p-4 rounded-md flex justify-center items-center min-h-[60px]'}
+                                style={{ backgroundColor: 'var(--theme-background-secondary)', border: '1px solid var(--theme-border)' }}
+                                onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--theme-primary)')}
+                                onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--theme-border)')}
                                 onClick={() => {
                                     setPlayerUuid('');
                                     setLookupResult(null);
@@ -1390,29 +1410,29 @@ export default function HytalePlayerManagerContainer() {
                             </div>
                         </div>
                         {(whitelist.list || []).length === 0 && (
-                            <p className={'text-neutral-400 text-sm mt-4'}>No players on the allowlist yet. Add players above.</p>
+                            <p className={'text-sm mt-4'} style={{ color: 'var(--theme-text-muted)' }}>No players on the allowlist yet. Add players above.</p>
                         )}
                     </>
                 )}
                 {/* Bans Tab */}
                 {activeTab === 'bans' && (
                     <>
-                        <div className={'p-4 rounded-md bg-gray-700 mb-4'}>
+                        <div className={'p-4 rounded-md mb-4'} style={{ backgroundColor: 'var(--theme-background-secondary)', border: '1px solid var(--theme-border)' }}>
                             <div className={'flex items-center'}>
                                 <FontAwesomeIcon icon={faBan} className={'mr-2'} />
                                 <span className={'font-semibold text-lg'}>Banned Players</span>
                             </div>
-                            <p className={'mt-2 text-neutral-300'}>
+                            <p className={'mt-2'} style={{ color: 'var(--theme-text-base)' }}>
                                 Banned players cannot join the server until they are unbanned.
                             </p>
                         </div>
                         {bans.length === 0 ? (
-                            <p className={'text-neutral-400 text-sm'}>No players are currently banned.</p>
+                            <p className={'text-sm'} style={{ color: 'var(--theme-text-muted)' }}>No players are currently banned.</p>
                         ) : (
                             <div className={'overflow-x-auto'}>
                                 <table className={'w-full'}>
                                     <thead>
-                                        <tr className={'bg-gray-700'}>
+                                        <tr style={{ backgroundColor: 'var(--theme-background-secondary)', borderBottom: '1px solid var(--theme-border)' }}>
                                             <th className={'text-left p-3 rounded-tl-md'}>Player</th>
                                             <th className={'text-left p-3'}>Reason</th>
                                             <th className={'text-left p-3'}>Type</th>
@@ -1423,7 +1443,10 @@ export default function HytalePlayerManagerContainer() {
                                     </thead>
                                     <tbody>
                                         {bans.map((ban: BanEntry) => (
-                                            <tr key={ban.target} className={'border-b border-gray-700 hover:bg-gray-700/50'}>
+                                            <tr key={ban.target} className={'transition-colors'} style={{ borderBottom: '1px solid var(--theme-border)' }}
+                                                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(var(--theme-primary-rgb), 0.05)')}
+                                                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                                            >
                                                 <td className={'p-3'}>
                                                     <PlayerDisplay
                                                         playerUuid={ban.target}
@@ -1448,7 +1471,7 @@ export default function HytalePlayerManagerContainer() {
                                                     />
                                                 </td>
                                                 <td className={'p-3'}>
-                                                    <span className={'text-sm text-neutral-400'}>
+                                                    <span className={'text-sm'} style={{ color: 'var(--theme-text-muted)' }}>
                                                         {formatTimestamp(ban.timestamp)}
                                                     </span>
                                                 </td>

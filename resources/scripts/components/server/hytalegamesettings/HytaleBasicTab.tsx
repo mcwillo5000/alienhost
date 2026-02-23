@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import TitledGreyBox from '@/components/elements/TitledGreyBox';
+import FuturisticContentBox from '@/components/elements/rivion/FuturisticContentBox';
 import Label from '@/components/elements/Label';
 import Input, { Textarea } from '@/components/elements/Input';
 import { HytaleSettings } from '@/api/server/hytalegamesettings/getHytaleSettings';
@@ -12,7 +12,7 @@ interface Props {
 export default ({ settings, updateSetting }: Props) => {
     const [showPassword, setShowPassword] = useState(false);
     return (
-        <TitledGreyBox title={'Basic Settings'}>
+        <FuturisticContentBox title={'Basic Settings'}>
             <div className={'grid grid-cols-1 md:grid-cols-2 gap-4'}>
                 <div>
                     <Label>Server Name</Label>
@@ -44,7 +44,10 @@ export default ({ settings, updateSetting }: Props) => {
                         <button
                             type={'button'}
                             onClick={() => setShowPassword(!showPassword)}
-                            className={'absolute right-0 top-0 h-full px-3 text-neutral-400 hover:text-neutral-200 transition-colors'}
+                            className={'absolute right-0 top-0 h-full px-3 transition-colors'}
+                        style={{ color: 'var(--theme-text-muted)' }}
+                        onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--theme-primary)')}
+                        onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--theme-text-muted)')}
                             title={showPassword ? 'Hide Password' : 'Show Password'}
                         >
                             <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
@@ -65,6 +68,6 @@ export default ({ settings, updateSetting }: Props) => {
                     />
                 </div>
             </div>
-        </TitledGreyBox>
+        </FuturisticContentBox>
     );
 };

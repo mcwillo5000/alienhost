@@ -56,14 +56,14 @@ const StatItem: React.FC<{ name: string; value: string | number; type: 'item' | 
                 onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
             />
         )}
-        <p tw="flex-1 text-neutral-300 text-sm truncate">{formatStatName(name)}</p>
-        <p tw="font-mono text-sm text-neutral-200">{value}</p>
+        <p tw="flex-1 text-sm truncate" style={{ color: 'var(--theme-text-muted)' }}>{formatStatName(name)}</p>
+        <p tw="font-mono text-sm" style={{ color: 'var(--theme-text-base)' }}>{value}</p>
     </div>
 );
 const StatBoard: React.FC<{ title: string; icon: any; stats: StatEntry[]; type: 'item' | 'mob' | 'custom' }> = ({ title, icon, stats, type }) => (
-    <div tw="bg-neutral-800 p-4 rounded-lg border border-neutral-700">
-        <h3 tw="text-sm font-semibold text-neutral-200 mb-3 flex items-center">
-            <FontAwesomeIcon icon={icon} tw="mr-2 text-neutral-400" />
+    <div tw="p-4 rounded-lg" style={{ backgroundColor: 'var(--theme-background)', border: '1px solid var(--theme-border)' }}>
+        <h3 tw="text-sm font-semibold mb-3 flex items-center" style={{ color: 'var(--theme-text-base)' }}>
+            <FontAwesomeIcon icon={icon} tw="mr-2" style={{ color: 'var(--theme-text-muted)' }} />
             <span>{title}</span>
         </h3>
         <div tw="space-y-1 max-h-64 overflow-y-auto pr-2">
@@ -72,7 +72,7 @@ const StatBoard: React.FC<{ title: string; icon: any; stats: StatEntry[]; type: 
             ))}
             {stats.length === 0 && (
                 <div tw="text-center py-10">
-                    <p tw="text-neutral-400 text-sm">No data</p>
+                    <p tw="text-sm" style={{ color: 'var(--theme-text-muted)' }}>No data</p>
                 </div>
             )}
         </div>
@@ -85,9 +85,9 @@ export const PlayerStatsBoards: React.FC<PlayerStatsBoardsProps> = ({ stats, isL
     if (!stats?.raw_stats_data?.stats) {
         return (
             <ContentBox>
-                <div tw="bg-neutral-800 rounded-lg p-4 text-center">
-                    <FontAwesomeIcon icon={faEyeSlash} tw="text-yellow-400 text-2xl mb-2" />
-                    <p tw="text-neutral-300">No detailed statistics available</p>
+                <div tw="rounded-lg p-4 text-center" style={{ backgroundColor: 'var(--theme-background)' }}>
+                    <FontAwesomeIcon icon={faEyeSlash} tw="text-2xl mb-2" style={{ color: '#facc15' }} />
+                    <p style={{ color: 'var(--theme-text-muted)' }}>No detailed statistics available</p>
                 </div>
             </ContentBox>
         );

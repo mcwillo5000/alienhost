@@ -23,6 +23,7 @@ import asDialog from '@/hoc/asDialog';
 import { Button } from '@/components/elements/button';
 import { Options as ButtonOptions } from '@/components/elements/button/types';
 import Spinner from '@/components/elements/Spinner';
+import FuturisticContentBox from '@/components/elements/rivion/FuturisticContentBox';
 interface PlayerInventoryProps {
     playerItems: PlayerItemsResponse | null;
     isLoading: boolean;
@@ -263,7 +264,8 @@ const ShulkerSlot: React.FC<{
     const [showTooltip, setShowTooltip] = useState(false);
     return (
         <div
-            css={tw`w-8 h-8 bg-neutral-800 rounded border border-neutral-700 flex items-center justify-center relative`}
+            css={tw`w-8 h-8 rounded border border-neutral-700 flex items-center justify-center relative`}
+            style={{ backgroundColor: 'var(--theme-background)' }}
             onMouseEnter={() => setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}
         >
@@ -277,8 +279,8 @@ const ShulkerSlot: React.FC<{
                     />
                     {item.count > 1 && (
                         <div
-                            css={tw`absolute bottom-0 right-0 text-xs bg-black bg-opacity-80 px-0.5 rounded-tl text-white font-medium`}
-                            style={{ fontSize: '9px' }}
+                            css={tw`absolute bottom-0 right-0 text-xs bg-opacity-80 px-0.5 rounded-tl text-white font-medium`}
+                            style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)', fontSize: '9px' }}
                         >
                             {item.count}
                         </div>
@@ -354,9 +356,10 @@ const InventorySlot: React.FC<{
         <div
             css={
                 isSelected
-                    ? tw`w-8 h-8 md:w-10 md:h-10 bg-neutral-900 rounded border border-neutral-700 shadow-sm flex items-center justify-center relative cursor-pointer hover:bg-neutral-800 hover:border-neutral-600 transition-all ring-2 ring-primary-500 border-primary-500`
-                    : tw`w-8 h-8 md:w-10 md:h-10 bg-neutral-900 rounded border border-neutral-700 shadow-sm flex items-center justify-center relative cursor-pointer hover:bg-neutral-800 hover:border-neutral-600 transition-all`
+                    ? tw`w-8 h-8 md:w-10 md:h-10 rounded border border-neutral-700 shadow-sm flex items-center justify-center relative cursor-pointer hover:border-neutral-600 transition-all ring-2 ring-primary-500 border-primary-500`
+                    : tw`w-8 h-8 md:w-10 md:h-10 rounded border border-neutral-700 shadow-sm flex items-center justify-center relative cursor-pointer hover:border-neutral-600 transition-all`
             }
+            style={{ backgroundColor: 'var(--theme-background)' }}
             onClick={onClick}
             onMouseEnter={() => setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}
@@ -372,7 +375,8 @@ const InventorySlot: React.FC<{
                     <ItemIcon itemId={item.id} itemName={getFormattedItemName()} serverVersion={serverVersion} />
                     {item.count > 1 && (
                         <div
-                            css={tw`absolute bottom-0 right-0 text-xs bg-black bg-opacity-80 px-1 rounded-tl shadow-sm text-white font-medium`}
+                            css={tw`absolute bottom-0 right-0 text-xs bg-opacity-80 px-1 rounded-tl shadow-sm text-white font-medium`}
+                            style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)' }}
                         >
                             {item.count}
                         </div>
@@ -441,59 +445,40 @@ export default function PlayerInventory({
     }, [isAnyModalOpen, onModalStateChange]);
     if (isLoading) {
         return (
-            <div css={tw`bg-neutral-800 rounded-lg border border-neutral-700 shadow-md`}>
-                <div css={tw`p-4 border-b border-neutral-700`}>
-                    <div css={tw`flex items-center justify-between`}>
-                        <h4 css={tw`text-base md:text-lg font-semibold text-neutral-100 flex items-center`}>
-                            <img
-                                src='https://mc.nerothe.com/img/1.21.8/minecraft_chest.png'
-                                alt='Chest Icon'
-                                css={tw`w-6 h-6 mr-2`}
-                            />
-                            Player Inventory
-                        </h4>
-                        <Spinner size='small' />
-                    </div>
-                </div>
-                <div css={tw`p-6 flex flex-col items-center justify-center`}>
+            <FuturisticContentBox>
+                <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                     <Spinner size='large' />
-                    <p css={tw`mt-4 text-neutral-300`}>Loading inventory data...</p>
+                    <p style={{ marginTop: '1rem', color: 'var(--theme-text-muted)' }}>Loading inventory data...</p>
                 </div>
-            </div>
+            </FuturisticContentBox>
         );
     }
     if (!playerItems || playerItems.error) {
         return (
-            <div css={tw`bg-neutral-800 rounded-lg border border-neutral-700 shadow-md`}>
-                <div css={tw`p-4 border-b border-neutral-700`}>
-                    <div css={tw`flex items-center justify-between`}>
-                        <h4 css={tw`text-base md:text-lg font-semibold text-neutral-100 flex items-center`}>
-                            <img
-                                src='https://mc.nerothe.com/img/1.21.8/minecraft_chest.png'
-                                alt='Chest Icon'
-                                css={tw`w-6 h-6 mr-2`}
-                            />
-                            Player Inventory
-                        </h4>
-                    </div>
-                </div>
-                <div css={tw`p-6 text-center`}>
-                    <div css={tw`bg-neutral-900 bg-opacity-50 rounded-lg p-6 border border-neutral-700`}>
+            <FuturisticContentBox>
+                <div style={{ padding: '1.5rem', textAlign: 'center' }}>
+                    <div style={{
+                        backgroundColor: 'var(--theme-background)',
+                        padding: '1.5rem',
+                        borderRadius: '0.5rem',
+                        border: '1px solid var(--theme-border)',
+                        clipPath: 'polygon(0px 5px, 5px 0px, 100% 0px, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0px 100%)',
+                    }}>
                         <FontAwesomeIcon
                             icon={faExclamationTriangle}
-                            css={tw`text-yellow-400 text-3xl md:text-4xl mb-3`}
+                            style={{ color: '#facc15', fontSize: '2rem', marginBottom: '0.75rem', display: 'block' }}
                         />
-                        <p css={tw`text-sm md:text-base text-neutral-200 mb-2`}>
+                        <p style={{ fontSize: '0.875rem', color: 'var(--theme-text-base)', marginBottom: '0.5rem' }}>
                             {playerItems?.error || 'No inventory data available'}
                         </p>
                         {playerItems?.error && (
-                            <p css={tw`text-xs text-neutral-400 mt-2`}>
+                            <p style={{ fontSize: '0.75rem', color: 'var(--theme-text-muted)', marginTop: '0.5rem' }}>
                                 This may happen with modded servers or if the player hasn't joined yet.
                             </p>
                         )}
                     </div>
                 </div>
-            </div>
+            </FuturisticContentBox>
         );
     }
     const currentInventory = Array.isArray(
@@ -696,10 +681,10 @@ export default function PlayerInventory({
     };
     const armorTypes = ['helmet', 'chestplate', 'leggings', 'boots'];
     return (
-        <div css={tw`bg-neutral-800 rounded-lg border border-neutral-700 shadow-md`}>
-            <div css={tw`p-4 border-b border-neutral-700`}>
-                <div css={tw`flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 md:gap-0`}>
-                    <h4 css={tw`text-base md:text-lg font-semibold text-neutral-100 flex items-center gap-1 md:gap-2`}>
+        <FuturisticContentBox>
+            <div style={{ padding: '1rem', borderBottom: '1px solid var(--theme-border)' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                    <h4 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--theme-text-base)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontFamily: "'Orbitron', sans-serif" }}>
                         <img
                             src={
                                 inventoryType === 'inventory'
@@ -707,39 +692,46 @@ export default function PlayerInventory({
                                     : 'https://mc.nerothe.com/img/1.21.8/minecraft_ender_chest.png'
                             }
                             alt='Inventory Icon'
-                            css={tw`w-6 h-6`}
+                            style={{ width: '1.5rem', height: '1.5rem' }}
                         />
-                        <span css={tw`truncate`}>
+                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                             {playerName}'s {inventoryType === 'inventory' ? 'Inventory' : 'Ender Chest'}
                         </span>
                     </h4>
                     <button
                         onClick={() => setInventoryType(inventoryType === 'inventory' ? 'ender_chest' : 'inventory')}
-                        css={[
-                            tw`flex items-center gap-1 md:gap-2 px-3 py-1.5 rounded-lg transition-colors text-xs md:text-sm border shadow-sm`,
-                            inventoryType === 'inventory'
-                                ? tw`bg-gray-900 border-cyan-400 text-cyan-300 hover:bg-gray-800 hover:border-cyan-300`
-                                : tw`bg-gray-900 border-purple-400 text-purple-300 hover:bg-gray-800 hover:border-purple-300`,
-                        ]}
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            padding: '0.375rem 0.75rem',
+                            transition: 'all 200ms',
+                            fontSize: '0.75rem',
+                            border: '1px solid ' + (inventoryType === 'inventory' ? '#22d3ee' : '#a78bfa'),
+                            backgroundColor: 'var(--theme-background)',
+                            color: inventoryType === 'inventory' ? '#22d3ee' : '#a78bfa',
+                            cursor: 'pointer',
+                            borderRadius: '0.375rem',
+                        }}
                     >
                         {inventoryType === 'inventory' ? (
                             <img
                                 src='https://mc.nerothe.com/img/1.21.8/minecraft_ender_chest.png'
                                 alt='Ender Chest Icon'
-                                css={tw`w-5 h-5`}
+                                style={{ width: '1.25rem', height: '1.25rem' }}
                             />
                         ) : (
                             <img
                                 src='https://mc.nerothe.com/img/1.21.8/minecraft_chest.png'
                                 alt='Inventory Icon'
-                                css={tw`w-5 h-5`}
+                                style={{ width: '1.25rem', height: '1.25rem' }}
                             />
                         )}
-                        <span css={tw`truncate`}>{inventoryType === 'inventory' ? 'Ender Chest' : 'Inventory'}</span>
+                        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{inventoryType === 'inventory' ? 'Ender Chest' : 'Inventory'}</span>
                     </button>
                 </div>
             </div>
-            <div css={tw`p-4`}>
+            <div style={{ padding: '1rem' }}>
                 <div
                     css={tw`bg-neutral-900 rounded-lg p-3 md:p-4 border border-neutral-700 shadow-inner overflow-x-auto`}
                 >
@@ -903,6 +895,6 @@ export default function PlayerInventory({
                     }}
                 />
             )}
-        </div>
+        </FuturisticContentBox>
     );
 }
