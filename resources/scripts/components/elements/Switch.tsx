@@ -12,7 +12,9 @@ const ToggleContainer = styled.div`
         ${tw`hidden`};
 
         &:checked + label {
-            ${tw`bg-primary-500 border-primary-700 shadow-none`};
+            background-color: var(--theme-primary);
+            border-color: var(--theme-primary);
+            box-shadow: none;
         }
 
         &:checked + label:before {
@@ -21,15 +23,15 @@ const ToggleContainer = styled.div`
     }
 
     & > label {
-        ${tw`mb-0 block overflow-hidden cursor-pointer bg-neutral-400 border border-neutral-700 rounded-full h-6 shadow-inner`};
+        ${tw`mb-0 block overflow-hidden cursor-pointer rounded-full h-6 shadow-inner`};
+        background-color: var(--theme-background-secondary);
+        border: 1px solid var(--theme-border);
         transition: all 75ms linear;
 
         &::before {
             ${tw`absolute block bg-white border h-5 w-5 rounded-full`};
             top: 0.125rem;
             right: calc(50% + 0.125rem);
-            //width: 1.25rem;
-            //height: 1.25rem;
             content: '';
             transition: all 75ms ease-in;
         }
@@ -71,7 +73,11 @@ const Switch = ({ name, label, description, defaultChecked, readOnly, onChange, 
                             {label}
                         </Label>
                     )}
-                    {description && <p css={tw`text-neutral-400 text-sm mt-2`}>{description}</p>}
+                    {description && (
+                        <p css={tw`text-sm mt-2`} style={{ color: 'var(--theme-text-muted)' }}>
+                            {description}
+                        </p>
+                    )}
                 </div>
             )}
         </div>

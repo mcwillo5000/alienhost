@@ -169,7 +169,6 @@ export default ({ style, initialContent, filename, mode, fetchContent, onContent
             autocorrect: false,
             autocapitalize: false,
             lint: false,
-            // @ts-expect-error this property is actually used, the d.ts file for CodeMirror is incorrect.
             autoCloseBrackets: true,
             matchBrackets: true,
             gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
@@ -191,12 +190,7 @@ export default ({ style, initialContent, filename, mode, fetchContent, onContent
     }, [editor, mode]);
 
     useEffect(() => {
-        if (editor) {
-            editor.setValue(initialContent || '');
-            // Reset the history so that "Ctrl+Z" doesn't delete the intial content
-            // we just set above.
-            editor.setHistory({ done: [], undone: [] });
-        }
+        editor && editor.setValue(initialContent || '');
     }, [editor, initialContent]);
 
     useEffect(() => {

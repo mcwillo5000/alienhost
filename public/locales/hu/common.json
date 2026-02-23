@@ -1,0 +1,690 @@
+{
+  "account": {
+    "overview": {
+      "title": "Fiók áttekintése",
+      "twoFactorRequired": {
+        "title": "Kétfaktoros hitelesítés szükséges",
+        "message": "A fiókodhoz engedélyezve kell lennie a kétfaktoros hitelesítésnek a folytatáshoz."
+      }
+    },
+    "password": {
+      "title": "Jelszó frissítése",
+      "requirements": "Az új jelszónak legalább 8 karakter hosszúnak kell lennie és egyedinek ezen a weboldalon.",
+      "currentPassword": "Jelenlegi jelszó",
+      "newPassword": "Új jelszó",
+      "confirmPassword": "Új jelszó megerősítése",
+      "updateButton": "Jelszó frissítése",
+      "updated": "A jelszavad frissítve lett."
+    },
+    "email": {
+      "title": "E-mail cím frissítése",
+      "newEmail": "Új e-mail",
+      "password": "Jelszó megerősítése",
+      "updateButton": "E-mail frissítése",
+      "updated": "Az e-mail címed frissítve lett."
+    },
+    "twoFactor": {
+      "title": "Kétlépcsős ellenőrzés",
+      "button": "Jelenleg nincs engedélyezve a kétlépcsős ellenőrzés a fiókodon. Kattints az alábbi gombra a beállítás megkezdéséhez.",
+      "enabled": "A kétfaktoros hitelesítés engedélyezve lett a fiókodon! Mostantól bejelentkezéskor meg kell adnod az eszközöd által generált kódot.",
+      "disabled": "A kétfaktoros hitelesítés letiltva lett a fiókodon. A jövőben nem kell megadnod a tokent bejelentkezéskor.",
+      "invalid": "A megadott token érvénytelen volt.",
+      "setup": {
+        "title": "Kétfaktoros hitelesítés beállítása",
+        "help": "Nem tudod beolvasni a kódot? Írd be az alábbi kódot az alkalmazásodba:",
+        "description": "Olvasd be a fenti QR-kódot a választott kétlépcsős hitelesítési alkalmazással. Ezután írd be a generált 6 számjegyű kódot az alábbi mezőbe.",
+        "field": "Token megadása",
+        "accountPassword": "Fiók jelszava",
+        "cancel": "Mégse",
+        "enable": "Engedélyezés"
+      },
+      "disable": {
+        "title": "Kétfaktoros hitelesítés letiltása",
+        "password": "Jelszó",
+        "cancel": "Mégse",
+        "disable": "Letiltás"
+      },
+      "tokens": {
+        "title": "Helyreállítási tokenek",
+        "description": "Tárold ezeket a tokeneket biztonságos helyen. Ha elveszíted a hozzáférést a telefonodhoz, ezekkel a tartalék tokenekkel tudsz bejelentkezni.",
+        "close": "Bezárás"
+      }
+    },
+    "api": {
+      "title": "Fiók API",
+      "createKey": {
+        "title": "API kulcs létrehozása",
+        "description": {
+          "label": "Leírás",
+          "help": "Ennek az API kulcsnak a leírása."
+        },
+        "allowedIps": {
+          "label": "Engedélyezett IP-k",
+          "help": "Hagyd üresen, hogy bármely IP-cím használhassa ezt az API kulcsot, egyébként adj meg minden IP-címet új sorban."
+        },
+        "create": "Létrehozás"
+      },
+      "keys": {
+        "title": "API kulcsok",
+        "loading": "Betöltés...",
+        "none": "Nincsenek API kulcsok ehhez a fiókhoz.",
+        "lastUsed": "Utoljára használva",
+        "never": "Soha",
+        "deleteConfirm": {
+          "title": "API kulcs törlése",
+          "confirm": "Kulcs törlése",
+          "message": "Az összes kérés, amely a {{identifier}} kulcsot használja, érvénytelenítve lesz."
+        }
+      },
+      "modal": {
+        "title": "Az API kulcsod",
+        "description": "A kért API kulcs alább látható. Kérjük, tárold biztonságos helyen, mert többé nem jelenik meg.",
+        "close": "Bezárás"
+      }
+    },
+    "ssh": {
+      "title": "SSH kulcsok",
+      "addKey": {
+        "title": "SSH kulcs hozzáadása",
+        "name": {
+          "label": "SSH kulcs neve"
+        },
+        "publicKey": {
+          "label": "Nyilvános kulcs",
+          "help": "Add meg a nyilvános SSH kulcsodat."
+        },
+        "save": "Mentés"
+      },
+      "keys": {
+        "title": "SSH kulcsok",
+        "loading": "Betöltés...",
+        "none": "Nincsenek SSH kulcsok ehhez a fiókhoz.",
+        "addedOn": "Hozzáadva",
+        "deleteConfirm": {
+          "title": "SSH kulcs törlése",
+          "confirm": "Kulcs törlése",
+          "message": "A {{name}} SSH kulcs eltávolítása érvényteleníti a használatát a panelen."
+        }
+      }
+    },
+    "activity": {
+      "title": "Fiók aktivitási napló",
+      "clearFilters": "Szűrők törlése"
+    }
+  },
+  "dashboard": {
+    "title": "Vezérlőpult",
+    "showingYourServers": "A te szervereid megjelenítése",
+    "showingOthersServers": "Mások szervereinek megjelenítése",
+    "noServers": "Nincsenek szerverek a fiókodhoz rendelve.",
+    "noOtherServers": "Nincsenek más szerverek megjelenítésre.",
+    "serverRow": {
+      "status": {
+        "online": "Online",
+        "offline": "Offline",
+        "starting": "Indítás",
+        "suspended": "Felfüggesztve",
+        "install": "Telepítés",
+        "restore": "Visszaállítás",
+        "transfer": "Áthelyezés",
+        "transferring": "Áthelyezés folyamatban",
+        "installing": "Telepítés folyamatban",
+        "restoringBackup": "Biztonsági mentés visszaállítása",
+        "unavailable": "Nem elérhető",
+        "connectionError": "Kapcsolódási hiba"
+      },
+      "resources": {
+        "cpu": "CPU",
+        "ram": "RAM",
+        "storage": "Tárhely",
+        "ip": "IP"
+      },
+      "manageServer": "Szerver kezelése"
+    }
+  },
+  "console": {
+    "title": "Konzol",
+    "header": {
+      "title": "Szerver konzol",
+      "status": {
+        "running": "Fut",
+        "stopped": "Leállítva",
+        "starting": "Indítás",
+        "stopping": "Leállítás",
+        "disconnected": "Kapcsolat megszakadt",
+        "unknown": "Ismeretlen"
+      }
+    },
+    "input": {
+      "placeholder": "Parancs megadása...",
+      "send": "Küldés"
+    },
+    "filters": {
+      "all": "Összes",
+      "errors": "Hibák",
+      "warnings": "Figyelmeztetések",
+      "showAll": "Összes konzol kimenet megjelenítése",
+      "showErrors": "Csak hibák megjelenítése",
+      "showWarnings": "Csak figyelmeztetések megjelenítése"
+    },
+    "alerts": {
+      "nodeMaintenance": "Ennek a szervernek a csomópontja jelenleg karbantartás alatt van, és minden művelet nem elérhető.",
+      "installing": "Ez a szerver jelenleg a telepítési folyamatot futtatja, és a legtöbb művelet nem elérhető.",
+      "transferring": "Ez a szerver jelenleg egy másik csomópontra kerül áthelyezésre, és minden művelet nem elérhető."
+    },
+    "power": {
+      "start": "Indítás",
+      "stop": "Leállítás",
+      "restart": "Újraindítás",
+      "kill": "Kényszerített leállítás",
+      "killConfirm": {
+        "title": "Folyamat kényszerített leállítása",
+        "message": "A szerver kényszerített leállítása adatvesztéshez vezethet.",
+        "confirm": "Folytatás"
+      }
+    },
+    "stats": {
+      "serverAddress": "Szerver címe",
+      "uptime": "Működési idő",
+      "cpuUsage": "CPU használat",
+      "memoryUsage": "Memória használat",
+      "diskUsage": "Lemez használat",
+      "networkUsage": "Hálózat használat",
+      "offline": "Offline",
+      "networkIn": "Bejövő hálózat",
+      "networkOut": "Kimenő hálózat",
+      "copyTooltip": "Cím másolása a vágólapra",
+      "clickToCopy": "Kattints a cím másolásához"
+    },
+    "graphs": {
+      "cpu": "CPU",
+      "memory": "Memória",
+      "network": "Hálózat",
+      "networkIn": "Bejövő hálózat",
+      "networkOut": "Kimenő hálózat"
+    }
+  },
+  "files": {
+    "title": "Fájlkezelő",
+    "upload": "Feltöltés",
+    "uploadModal": {
+      "title": "Húzd ide a fájlokat a feltöltéshez.",
+      "error": "A mappák feltöltése jelenleg nem támogatott."
+    },
+    "createDirectory": "Mappa létrehozása",
+    "createDirectoryModal": {
+      "title": "Mappa létrehozása",
+      "name": "Név",
+      "creating": "Ez a mappa itt lesz létrehozva",
+      "cancel": "Mégse",
+      "create": "Létrehozás"
+    },
+    "newFile": "Új fájl",
+    "fileNameModal": {
+      "title": "Fájlnév",
+      "description": "Add meg a nevet, amelyen ezt a fájlt menteni kell.",
+      "create": "Fájl létrehozása"
+    },
+    "massActions": {
+      "selected": "{{count}} fájl kiválasztva.",
+      "delete": "Törlés",
+      "move": "Áthelyezés",
+      "compress": "Tömörítés",
+      "archiving": "Fájlok archiválása...",
+      "deleting": "Fájlok törlése...",
+      "deleteConfirm": {
+        "title": "Fájlok törlése",
+        "message": "Biztos vagy benne, hogy törölni szeretnéd",
+        "files": "fájl(oka)t",
+        "permanent": "Ez egy végleges művelet, és a fájlok nem állíthatók vissza.",
+        "andOthers": "és {{count}} másik",
+        "confirm": "Törlés",
+        "cancel": "Mégse"
+      }
+    },
+    "rename": "Átnevezés",
+    "renameModal": {
+      "title": "Fájlnév",
+      "move": "Áthelyezés",
+      "rename": "Átnevezés",
+      "description": "Add meg ennek a fájlnak vagy mappának az új nevét és könyvtárát a jelenlegi könyvtárhoz képest.",
+      "newLocation": "Új hely:"
+    },
+    "chmod": "Jogosultságok",
+    "chmodModal": {
+      "title": "Fájl mód",
+      "update": "Frissítés"
+    },
+    "dropdown": {
+      "rename": "Átnevezés",
+      "move": "Áthelyezés",
+      "chmod": "Jogosultságok",
+      "copy": "Másolás",
+      "download": "Letöltés",
+      "compress": "Tömörítés",
+      "decompress": "Kicsomagolás",
+      "delete": "Törlés",
+      "deleteConfirm": {
+        "title": "{{type}} törlése",
+        "file": "Fájl",
+        "directory": "Mappa",
+        "message": "Nem fogod tudni visszaállítani a következő tartalmát:",
+        "confirm": "Törlés"
+      }
+    },
+    "fileUploads": {
+      "title": "Fájl feltöltések",
+      "description": "A következő fájlok kerülnek feltöltésre a szerveredre.",
+      "cancelAll": "Feltöltések megszakítása",
+      "close": "Bezárás",
+      "uploading": "{{count}} fájl feltöltése folyamatban, kattints a megtekintéshez"
+    },
+    "editor": {
+      "title": "Fájl szerkesztő",
+      "editingFile": "Fájl szerkesztése",
+      "creatingFile": "Új fájl létrehozása",
+      "save": "Tartalom mentése",
+      "create": "Fájl létrehozása",
+      "fileNameModal": {
+        "title": "Fájlnév",
+        "description": "Add meg a nevet, amelyen ezt a fájlt menteni kell.",
+        "create": "Fájl létrehozása"
+      }
+    }
+  },
+  "databases": {
+    "title": "Adatbázisok",
+    "noDatabases": "Úgy tűnik, nincsenek adatbázisaid.",
+    "cannotCreate": "Adatbázisok nem hozhatók létre ehhez a szerverhez.",
+    "allocated": "{{current}} / {{limit}} adatbázis lett lefoglalva ehhez a szerverhez.",
+    "newDatabase": "Új adatbázis",
+    "create": {
+      "title": "Új adatbázis létrehozása",
+      "databaseName": "Adatbázis neve",
+      "databaseNameDescription": "Egy leíró név az adatbázis példányodhoz.",
+      "connectionsFrom": "Kapcsolatok innen",
+      "connectionsFromDescription": "Honnan engedélyezettek a kapcsolatok. Hagyd üresen, hogy bárhonnan engedélyezd a kapcsolatokat.",
+      "cancel": "Mégse",
+      "createButton": "Adatbázis létrehozása"
+    },
+    "delete": {
+      "title": "Adatbázis törlésének megerősítése",
+      "description": "Az adatbázis törlése végleges művelet, nem vonható vissza. Ez véglegesen törli a",
+      "description2": "adatbázist és eltávolítja az összes kapcsolódó adatot.",
+      "confirmName": "Adatbázis nevének megerősítése",
+      "confirmDescription": "Írd be az adatbázis nevét a törlés megerősítéséhez.",
+      "cancel": "Mégse",
+      "deleteButton": "Adatbázis törlése"
+    },
+    "connection": {
+      "title": "Adatbázis kapcsolat részletei",
+      "endpoint": "Végpont",
+      "connectionsFrom": "Kapcsolatok innen",
+      "username": "Felhasználónév",
+      "password": "Jelszó",
+      "jdbcString": "JDBC kapcsolati karakterlánc",
+      "rotatePassword": "Jelszó forgatása",
+      "close": "Bezárás"
+    }
+  },
+  "schedules": {
+    "title": "Ütemezések",
+    "noSchedules": "Nincsenek ütemezések beállítva ehhez a szerverhez.",
+    "createSchedule": "Ütemezés létrehozása",
+    "newTask": "Új feladat",
+    "runNow": "Futtatás most",
+    "deleteButton": "Törlés",
+    "lastRunAt": "Utoljára futott:",
+    "never": "soha",
+    "active": "Aktív",
+    "inactive": "Inaktív",
+    "processing": "Feldolgozás",
+    "edit": {
+      "titleCreate": "Új ütemezés létrehozása",
+      "titleEdit": "Ütemezés szerkesztése",
+      "scheduleName": "Ütemezés neve",
+      "scheduleNameDescription": "Egy emberek számára olvasható azonosító ehhez az ütemezéshez.",
+      "minute": "Perc",
+      "hour": "Óra",
+      "dayOfMonth": "Hónap napja",
+      "month": "Hónap",
+      "dayOfWeek": "Hét napja",
+      "cronDescription": "Az ütemezési rendszer támogatja a Cronjob szintaxis használatát annak meghatározásához, hogy mikor kezdődjenek el a feladatok futása. Használd a fenti mezőket annak megadásához, hogy mikor kezdődjön el ezeknek a feladatoknak a futása.",
+      "showCheatsheet": "Cheatsheet megjelenítése",
+      "showCheatsheetDescription": "Mutasd meg a cron cheatsheet-et néhány példával.",
+      "onlyWhenOnline": "Csak amikor a szerver online",
+      "onlyWhenOnlineDescription": "Csak akkor hajtsd végre ezt az ütemezést, amikor a szerver fut.",
+      "scheduleEnabled": "Ütemezés engedélyezve",
+      "scheduleEnabledDescription": "Ez az ütemezés automatikusan végrehajtásra kerül.",
+      "cancel": "Mégse",
+      "create": "Ütemezés létrehozása",
+      "save": "Módosítások mentése"
+    },
+    "delete": {
+      "title": "Ütemezés törlése",
+      "confirm": "Törlés",
+      "description": "Minden feladat eltávolításra kerül, és minden futó folyamat leáll."
+    },
+    "cheatsheet": {
+      "examples": "Példák",
+      "specialCharacters": "Speciális karakterek",
+      "everyFiveMinutes": "5 percenként",
+      "everyHour": "óránként",
+      "hourRange": "óra tartomány",
+      "onceADay": "naponta egyszer",
+      "everyMonday": "minden hétfőn",
+      "anyValue": "bármely érték",
+      "valueListSeparator": "érték lista elválasztó",
+      "rangeValues": "tartomány értékek",
+      "stepValues": "lépés értékek"
+    },
+    "task": {
+      "titleCreate": "Feladat létrehozása",
+      "titleEdit": "Feladat szerkesztése",
+      "action": "Művelet",
+      "timeOffset": "Idő eltolás (másodpercben)",
+      "timeOffsetDescription": "Az az idő, amennyit várni kell az előző feladat végrehajtása után, mielőtt ezt futtatnánk. Ha ez az első feladat egy ütemezésben, akkor ez nem kerül alkalmazásra.",
+      "payload": "Hasznos adat",
+      "continueOnFailure": "Folytatás hiba esetén",
+      "continueOnFailureDescription": "A jövőbeli feladatok akkor is futni fognak, ha ez a feladat meghiúsul.",
+      "cancel": "Mégse",
+      "create": "Feladat létrehozása",
+      "save": "Módosítások mentése",
+      "actions": {
+        "command": "Parancs küldése",
+        "power": "Energiaművelet küldése",
+        "backup": "Biztonsági mentés létrehozása"
+      },
+      "powerActions": {
+        "start": "Szerver indítása",
+        "restart": "Szerver újraindítása",
+        "stop": "Szerver leállítása",
+        "kill": "Szerver kényszerített leállítása"
+      },
+      "backupIgnored": "Figyelmen kívül hagyott fájlok és mappák:",
+      "sendCommand": "Parancs küldése",
+      "sendPowerAction": "Energiaművelet küldése",
+      "createBackup": "Biztonsági mentés létrehozása",
+      "unknownAction": "Ismeretlen művelet",
+      "deleteConfirm": {
+        "title": "Feladat törlésének megerősítése",
+        "confirm": "Feladat törlése",
+        "description": "Biztos vagy benne, hogy törölni szeretnéd ezt a feladatot? Ez a művelet nem vonható vissza."
+      }
+    }
+  },
+  "users": {
+    "title": "Felhasználók",
+    "noUsers": "Úgy tűnik, nincsenek alfelhasználóid.",
+    "newUser": "Új felhasználó",
+    "twoFactorEnabled": "2FA engedélyezve",
+    "permissionsLabel": "Jogosultságok",
+    "permissionsCount": "{{count}} jogosultság",
+    "edit": {
+      "titleCreate": "Új alfelhasználó létrehozása",
+      "titleModify": "Jogosultságok módosítása: {{email}}",
+      "titleView": "Jogosultságok megtekintése: {{email}}",
+      "save": "Mentés",
+      "inviteUser": "Felhasználó meghívása",
+      "userEmail": "Felhasználó e-mail címe",
+      "userEmailDescription": "Add meg annak a felhasználónak az e-mail címét, akit alfelhasználóként szeretnél meghívni erre a szerverre.",
+      "permissionNotice": "Csak azok a jogosultságok választhatók ki, amelyek jelenleg a fiókodhoz vannak rendelve, más felhasználók létrehozásakor vagy módosításakor."
+    },
+    "delete": {
+      "title": "Törlöd ezt az alfelhasználót?",
+      "confirm": "Igen, alfelhasználó eltávolítása",
+      "description": "Biztos vagy benne, hogy el szeretnéd távolítani ezt az alfelhasználót? Azonnal elveszíti az összes hozzáférést ehhez a szerverhez."
+    },
+    "permissions": {
+      "control": {
+        "title": "Vezérlés",
+        "description": "Jogosultságok, amelyek szabályozzák a felhasználó képességét a szerver energiaállapotának vezérlésére vagy parancsok küldésére.",
+        "console": "Lehetővé teszi a felhasználó számára, hogy parancsokat küldjön a szerver példánynak a konzolon keresztül.",
+        "start": "Lehetővé teszi a felhasználó számára, hogy elindítsa a szervert, ha az leállított.",
+        "stop": "Lehetővé teszi a felhasználó számára, hogy leállítsa a szervert, ha az fut.",
+        "restart": "Lehetővé teszi a felhasználó számára, hogy újraindítsa a szervert. Ez lehetővé teszi számukra, hogy elindítsák a szervert, ha az offline, de nem állíthatják teljesen leállított állapotba a szervert."
+      },
+      "user": {
+        "title": "Felhasználó",
+        "description": "Jogosultságok, amelyek szabályozzák a felhasználó képességét más alfelhasználók kezelésére egy szerveren. Soha nem tudják szerkeszteni a saját fiókükat, vagy olyan jogosultságokat osztani ki, amelyekkel maguk nem rendelkeznek.",
+        "create": "Lehetővé teszi a felhasználó számára, hogy új alfelhasználókat hozzon létre a szerverhez.",
+        "read": "Lehetővé teszi a felhasználó számára, hogy megtekintse az alfelhasználókat és jogosultságaikat a szerveren.",
+        "update": "Lehetővé teszi a felhasználó számára, hogy módosítsa a többi alfelhasználót.",
+        "delete": "Lehetővé teszi a felhasználó számára, hogy törölje a többi alfelhasználót a szerveren."
+      },
+      "file": {
+        "title": "Fájl",
+        "description": "Jogosultságok, amelyek szabályozzák a felhasználó képességét a fájlrendszer módosítására ezen a szerveren.",
+        "create": "Lehetővé teszi a felhasználó számára, hogy további fájlokat és mappákat hozzon létre a panelen keresztül vagy közvetlen feltöltéssel.",
+        "read": "Lehetővé teszi a felhasználó számára, hogy megtekintse egy könyvtár tartalmát, de ne a fájlok tartalmát vagy ne töltse le a fájlokat.",
+        "read-content": "Lehetővé teszi a felhasználó számára, hogy megtekintse egy adott fájl tartalmát. Ez azt is lehetővé teszi a felhasználó számára, hogy letöltse a fájlokat.",
+        "update": "Lehetővé teszi a felhasználó számára, hogy frissítse egy meglévő fájl vagy könyvtár tartalmát.",
+        "delete": "Lehetővé teszi a felhasználó számára, hogy fájlokat vagy könyvtárakat töröljön.",
+        "archive": "Lehetővé teszi a felhasználó számára, hogy archiválja egy könyvtár tartalmát, valamint kicsomagolja a meglévő archívumokat a rendszeren.",
+        "sftp": "Lehetővé teszi a felhasználó számára, hogy csatlakozzon SFTP-hez és kezelje a szerver fájljait a többi hozzárendelt fájl jogosultsággal."
+      },
+      "allocation": {
+        "title": "Lefoglalás",
+        "description": "Jogosultságok, amelyek szabályozzák a felhasználó képességét a port lefoglalások módosítására ezen a szerveren.",
+        "read": "Lehetővé teszi a felhasználó számára, hogy megtekintse az ehhez a szerverhez rendelt lefoglalásokat.",
+        "create": "Lehetővé teszi a felhasználó számára, hogy további lefoglalásokat rendeljen a szerverhez.",
+        "update": "Lehetővé teszi a felhasználó számára, hogy megváltoztassa az elsődleges szerver lefoglalást és megjegyzéseket fűzzön minden lefoglaláshoz.",
+        "delete": "Lehetővé teszi a felhasználó számára, hogy töröljön egy lefoglalást a szerverről."
+      },
+      "startup": {
+        "title": "Indítás",
+        "description": "Jogosultságok, amelyek szabályozzák a felhasználó képességét az indítási paraméterek megtekintésére és módosítására ezen a szerveren.",
+        "read": "Lehetővé teszi a felhasználó számára, hogy megtekintse a szerver indítási változóit.",
+        "update": "Lehetővé teszi a felhasználó számára, hogy módosítsa a szerver indítási változóit.",
+        "docker-image": "Lehetővé teszi a felhasználó számára, hogy módosítsa a Docker képet, amelyet a szerver futtatásakor használnak."
+      },
+      "database": {
+        "title": "Adatbázis",
+        "description": "Jogosultságok, amelyek szabályozzák a felhasználó képességét az adatbázisok kezelésére ezen a szerveren.",
+        "create": "Lehetővé teszi a felhasználó számára, hogy új adatbázist hozzon létre ehhez a szerverhez.",
+        "read": "Lehetővé teszi a felhasználó számára, hogy megtekintse az ehhez a szerverhez kapcsolódó adatbázist.",
+        "update": "Lehetővé teszi a felhasználó számára, hogy forgassa a jelszót egy adatbázis példányon. Ha a felhasználónak nincs view_password jogosultsága, nem fogja látni a frissített jelszót.",
+        "delete": "Lehetővé teszi a felhasználó számára, hogy eltávolítson egy adatbázis példányt erről a szerverről.",
+        "view_password": "Lehetővé teszi a felhasználó számára, hogy megtekintse az ehhez a szerverhez kapcsolódó adatbázis példány jelszavát."
+      },
+      "schedule": {
+        "title": "Ütemezés",
+        "description": "Jogosultságok, amelyek szabályozzák a felhasználó képességét az ütemezések kezelésére ezen a szerveren.",
+        "create": "Lehetővé teszi a felhasználó számára, hogy új ütemezéseket hozzon létre ehhez a szerverhez.",
+        "read": "Lehetővé teszi a felhasználó számára, hogy megtekintse az ütemezéseket és a hozzájuk kapcsolódó feladatokat ezen a szerveren.",
+        "update": "Lehetővé teszi a felhasználó számára, hogy frissítse az ütemezéseket és az ütemezési feladatokat ezen a szerveren.",
+        "delete": "Lehetővé teszi a felhasználó számára, hogy törölje az ütemezéseket ezen a szerveren."
+      },
+      "settings": {
+        "title": "Beállítások",
+        "description": "Jogosultságok, amelyek szabályozzák a felhasználó képességét a szerver beállítások módosítására.",
+        "rename": "Lehetővé teszi a felhasználó számára, hogy átnevezze ezt a szervert és megváltoztassa a szerver leírását.",
+        "reinstall": "Lehetővé teszi a felhasználó számára, hogy újratelepítést indítson ezen a szerveren."
+      },
+      "backup": {
+        "title": "Biztonsági mentés",
+        "description": "Jogosultságok, amelyek szabályozzák a felhasználó képességét a szerver biztonsági mentések kezelésére.",
+        "create": "Lehetővé teszi a felhasználó számára, hogy új biztonsági mentéseket hozzon létre ehhez a szerverhez.",
+        "read": "Lehetővé teszi a felhasználó számára, hogy megtekintse az összes biztonsági mentést, amely ehhez a szerverhez létezik.",
+        "update": "Lehetővé teszi a felhasználó számára, hogy zároljon vagy oldjon fel biztonsági mentéseket ezen a szerveren.",
+        "delete": "Lehetővé teszi a felhasználó számára, hogy töröljön biztonsági mentéseket ezen a szerveren.",
+        "download": "Lehetővé teszi a felhasználó számára, hogy letöltsön biztonsági mentéseket ezen a szerveren.",
+        "restore": "Lehetővé teszi a felhasználó számára, hogy visszaállítson egy biztonsági mentést ezen a szerveren."
+      },
+      "activity": {
+        "title": "Aktivitás",
+        "description": "Jogosultságok, amelyek szabályozzák a felhasználó hozzáférését a szerver aktivitási naplókhoz.",
+        "read": "Lehetővé teszi a felhasználó számára, hogy megtekintse a szerver aktivitási naplóit."
+      }
+    }
+  },
+  "backups": {
+    "title": "Biztonsági mentések",
+    "noBackups": "Úgy tűnik, jelenleg nincsenek biztonsági mentések tárolva ehhez a szerverhez.",
+    "noBackupsPage": "Úgy tűnik, elfogytak a biztonsági mentések megjelenítéshez, próbálj meg visszalépni egy oldalt.",
+    "noBackupLimit": "Biztonsági mentések nem hozhatók létre ehhez a szerverhez, mert a biztonsági mentési limit 0-ra van állítva.",
+    "backupsUsed": "{{count}} / {{limit}} biztonsági mentés lett létrehozva ehhez a szerverhez.",
+    "createBackup": "Biztonsági mentés létrehozása",
+    "failed": "Sikertelen",
+    "created": "Létrehozva",
+    "locked": "Zárolt",
+    "download": "Letöltés",
+    "restore": "Visszaállítás",
+    "lock": "Zárolás",
+    "unlock": "Feloldás",
+    "delete": "Törlés",
+    "create": {
+      "title": "Szerver biztonsági mentés létrehozása",
+      "nameLabel": "Biztonsági mentés neve",
+      "nameDescription": "Ha meg van adva, a név, amelyre hivatkozni kell ehhez a biztonsági mentéshez.",
+      "ignoredLabel": "Figyelmen kívül hagyott fájlok és mappák",
+      "ignoredDescription": "Add meg a fájlokat vagy mappákat, amelyeket figyelmen kívül kell hagyni a biztonsági mentés generálásakor. Hagyd üresen, hogy használd a .pteroignore fájl tartalmát a szerver könyvtár gyökerében, ha jelen van. A fájlok és mappák helyettesítő karakteres egyeztetése támogatott, valamint a szabály negálása úgy, hogy egy felkiáltójelet teszel az elérési út elé.",
+      "lockedLabel": "Zárolt",
+      "lockedDescription": "Megakadályozza ennek a biztonsági mentésnek a törlését, amíg kifejezetten fel nem oldják.",
+      "startBackup": "Biztonsági mentés indítása"
+    },
+    "unlockModal": {
+      "title": "\"{{name}}\" feloldása",
+      "description": "Ez a biztonsági mentés többé nem lesz védve az automatikus vagy véletlen törlésektől."
+    },
+    "restoreModal": {
+      "title": "\"{{name}}\" visszaállítása",
+      "confirm": "Visszaállítás",
+      "description1": "A szervered leáll. Nem fogod tudni vezérelni az energiaállapotot, hozzáférni a fájlkezelőhöz, vagy további biztonsági mentéseket létrehozni, amíg be nem fejeződik.",
+      "truncateLabel": "Töröld az összes fájlt a biztonsági mentés visszaállítása előtt."
+    },
+    "deleteModal": {
+      "title": "\"{{name}}\" törlése",
+      "confirm": "Folytatás",
+      "description": "Ez egy végleges művelet. A biztonsági mentés nem állítható vissza a törlés után."
+    }
+  },
+  "network": {
+    "title": "Hálózat",
+    "hostname": "Gazdagép neve",
+    "ipAddress": "IP cím",
+    "port": "Port",
+    "notes": "Megjegyzések",
+    "primary": "Elsődleges",
+    "makePrimary": "Elsődlegessé tétel",
+    "createAllocation": "Lefoglalás létrehozása",
+    "allocationsUsed": "Jelenleg {{count}} / {{limit}} engedélyezett lefoglalást használsz ehhez a szerverhez.",
+    "deleteAllocation": {
+      "title": "Lefoglalás eltávolítása",
+      "confirm": "Törlés",
+      "description": "Ez a lefoglalás azonnal eltávolításra kerül a szerverről."
+    }
+  },
+  "startup": {
+    "title": "Indítási beállítások",
+    "error": "Hoppá!",
+    "startupCommand": "Indítási parancs",
+    "dockerImage": "Docker kép",
+    "dockerImageDescription": "Ez egy haladó funkció, amely lehetővé teszi a Docker kép kiválasztását, amelyet a szerver példány futtatásakor használni kell.",
+    "customDockerImage": "Ennek a szervernek a Docker képét manuálisan állította be egy adminisztrátor, és nem módosítható ezen a felületen keresztül.",
+    "variables": "Változók",
+    "readOnly": "Csak olvasható",
+    "vars": {
+      "MINECRAFT_VERSION": {
+        "name": "Minecraft verzió",
+        "description": "A letöltendő Minecraft verzió. Hagyd \"latest\"-nek, hogy mindig a legújabb verziót kapd. Érvénytelen verziók alapértelmezés szerint latest lesznek."
+      },
+      "SERVER_JARFILE": {
+        "name": "Szerver JAR fájl",
+        "description": "A szerver jarfile neve, amellyel futtatni kell a szervert."
+      },
+      "BUILD_NUMBER": {
+        "name": "Build szám",
+        "description": "A paper kiadás build száma. Hagyd \"latest\"-nek, hogy mindig a legújabb verziót kapd. Érvénytelen verziók alapértelmezés szerint latest lesznek."
+      },
+      "VANILLA_VERSION": {
+        "name": "Minecraft verzió",
+        "description": "A letöltendő és használandó Minecraft Vanilla verzió."
+      },
+      "FORGE_VERSION": {
+        "name": "Forge verzió",
+        "description": "A telepítendő Minecraft Forge verzió. Használd a \"recommended\"-et az ajánlott verzió telepítéséhez."
+      },
+      "MC_VERSION": {
+        "name": "Minecraft verzió",
+        "description": "A telepítendő Minecraft verzió."
+      },
+      "STARTUP": {
+        "name": "Indítási parancs",
+        "description": "A szervered indítási parancsa."
+      },
+      "DL_VERSION": {
+        "name": "Verzió",
+        "description": "A letöltendő és telepítendő verzió."
+      }
+    }
+  },
+  "settings": {
+    "title": "Beállítások",
+    "sftp": {
+      "title": "SFTP részletek",
+      "serverAddress": "Szerver címe",
+      "username": "Felhasználónév",
+      "passwordNotice": "Az SFTP jelszavad megegyezik a jelszóval, amelyet használsz a panelhez való hozzáféréshez.",
+      "launchSftp": "SFTP indítása"
+    },
+    "debug": {
+      "title": "Hibakeresési információk",
+      "node": "Csomópont",
+      "serverId": "Szerver azonosító"
+    },
+    "rename": {
+      "title": "Szerver részletek módosítása",
+      "serverName": "Szerver neve",
+      "serverDescription": "Szerver leírása",
+      "save": "Mentés"
+    },
+    "reinstall": {
+      "title": "Szerver újratelepítése",
+      "description": "A szerver újratelepítése leállítja azt, majd újra futtatja a telepítési szkriptet, amely kezdetben beállította.",
+      "warning": "Néhány fájl törölhető vagy módosulhat a folyamat során, kérjük, mentsd el az adataidat a folytatás előtt.",
+      "button": "Szerver újratelepítése",
+      "confirmTitle": "Szerver újratelepítésének megerősítése",
+      "confirmButton": "Igen, szerver újratelepítése",
+      "confirmMessage": "A szervered le fog állni, és néhány fájl törölhető vagy módosulhat a folyamat során, biztos vagy benne, hogy folytatni szeretnéd?",
+      "successMessage": "A szervered elkezdte az újratelepítési folyamatot."
+    }
+  },
+  "sidebar": {
+    "dashboard": "Vezérlőpult",
+    "servers": "Szerverek",
+    "adminPanel": "Admin panel",
+    "serverManagement": "{{serverName}} kezelése",
+    "account": "Fiók",
+    "profile": "Profil",
+    "accountSettings": "Fiók beállítások",
+    "apiKeys": "API kulcsok",
+    "sshAccess": "SSH hozzáférés",
+    "accountActivity": "Fiók aktivitás",
+    "apiCredentials": "API hitelesítő adatok",
+    "sshKeys": "SSH kulcsok",
+    "activity": "Aktivitás",
+    "signOut": "Kijelentkezés",
+    "console": "Konzol",
+    "fileManager": "Fájlkezelő",
+    "databases": "Adatbázisok",
+    "schedules": "Ütemezések",
+    "users": "Felhasználók",
+    "backups": "Biztonsági mentések",
+    "network": "Hálózat",
+    "startup": "Indítás",
+    "settings": "Beállítások",
+    "support": "Támogatás",
+    "newServer": "Új szerver",
+    "billingArea": "Számlázási terület",
+    "adminView": "Admin nézet"
+  },
+  "topbar": {
+    "matrix": "Matrix",
+    "accountSettings": "Fiók beállítások",
+    "apiKeys": "API kulcsok",
+    "sshAccess": "SSH hozzáférés",
+    "accountActivity": "Fiók aktivitás",
+    "signOut": "Kijelentkezés"
+  }
+}

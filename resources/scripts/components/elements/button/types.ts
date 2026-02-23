@@ -7,11 +7,16 @@ enum Size {
     Default,
     Small,
     Large,
+    Compact,
 }
 
 enum Variant {
     Primary,
     Secondary,
+    Start,
+    Restart,
+    Stop,
+    Kill,
 }
 
 export const Options = { Shape, Size, Variant };

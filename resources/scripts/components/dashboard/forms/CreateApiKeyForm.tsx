@@ -9,10 +9,15 @@ import { httpErrorToHuman } from '@/api/http';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import { ApiKey } from '@/api/account/getApiKeys';
 import tw from 'twin.macro';
-import Button from '@/components/elements/Button';
+import FuturisticFormButton from '@/components/elements/rivion/FuturisticFormButton';
 import Input, { Textarea } from '@/components/elements/Input';
 import styled from 'styled-components/macro';
 import ApiKeyModal from '@/components/dashboard/ApiKeyModal';
+import { useTranslation } from 'react-i18next';
+
+interface Props {
+    onKeyCreated: (key: ApiKey) => void;
+}
 
 interface Values {
     description: string;
@@ -23,9 +28,10 @@ const CustomTextarea = styled(Textarea)`
     ${tw`h-32`}
 `;
 
-export default ({ onKeyCreated }: { onKeyCreated: (key: ApiKey) => void }) => {
+export default ({ onKeyCreated }: Props) => {
     const [apiKey, setApiKey] = useState('');
     const { addError, clearFlashes } = useStoreActions((actions: Actions<ApplicationStore>) => actions.flashes);
+    const { t } = useTranslation();
 
     const submit = (values: Values, { setSubmitting, resetForm }: FormikHelpers<Values>) => {
         clearFlashes('account');
@@ -59,24 +65,27 @@ export default ({ onKeyCreated }: { onKeyCreated: (key: ApiKey) => void }) => {
                     <Form>
                         <SpinnerOverlay visible={isSubmitting} />
                         <FormikFieldWrapper
-                            label={'Description'}
+                            label={t('account.api.createKey.description.label')}
                             name={'description'}
-                            description={'A description of this API key.'}
+                            description={t('account.api.createKey.description.help')}
                             css={tw`mb-6`}
                         >
                             <Field name={'description'} as={Input} />
                         </FormikFieldWrapper>
                         <FormikFieldWrapper
-                            label={'Allowed IPs'}
+                            label={t('account.api.createKey.allowedIps.label')}
                             name={'allowedIps'}
-                            description={
-                                'Leave blank to allow any IP address to use this API key, otherwise provide each IP address on a new line.'
-                            }
+                            description={t('account.api.createKey.allowedIps.help')}
                         >
                             <Field name={'allowedIps'} as={CustomTextarea} />
                         </FormikFieldWrapper>
                         <div css={tw`flex justify-end mt-6`}>
-                            <Button>Create</Button>
+                            <FuturisticFormButton 
+                                type="submit"
+                                disabled={isSubmitting}
+                            >
+                                {t('account.api.createKey.create')}
+                            </FuturisticFormButton>
                         </div>
                     </Form>
                 )}

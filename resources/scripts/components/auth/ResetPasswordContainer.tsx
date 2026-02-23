@@ -11,7 +11,8 @@ import { object, ref, string } from 'yup';
 import Field from '@/components/elements/Field';
 import Input from '@/components/elements/Input';
 import tw from 'twin.macro';
-import Button from '@/components/elements/Button';
+import { Button } from '@/components/elements/button/index';
+import { Options } from '@/components/elements/button/types';
 
 interface Values {
     password: string;
@@ -32,7 +33,6 @@ export default ({ match, location }: RouteComponentProps<{ token: string }>) => 
         clearFlashes();
         performPasswordReset(email, { token: match.params.token, password, passwordConfirmation })
             .then(() => {
-                // @ts-expect-error this is valid
                 window.location = '/';
             })
             .catch((error) => {
@@ -79,14 +79,21 @@ export default ({ match, location }: RouteComponentProps<{ token: string }>) => 
                         <Field light label={'Confirm New Password'} name={'passwordConfirmation'} type={'password'} />
                     </div>
                     <div css={tw`mt-6`}>
-                        <Button size={'xlarge'} type={'submit'} disabled={isSubmitting} isLoading={isSubmitting}>
+                        <Button 
+                            type={'submit'} 
+                            disabled={isSubmitting} 
+                            css={tw`w-full py-2`}
+                        >
                             Reset Password
                         </Button>
                     </div>
                     <div css={tw`mt-6 text-center`}>
                         <Link
                             to={'/auth/login'}
-                            css={tw`text-xs text-neutral-500 tracking-wide no-underline uppercase hover:text-neutral-600`}
+                            css={tw`text-xs tracking-wide no-underline uppercase transition-colors duration-200`}
+                            style={{ color: 'var(--theme-text-muted)' }}
+                            onMouseEnter={(e) => e.currentTarget.style.color = 'var(--theme-text-base)'}
+                            onMouseLeave={(e) => e.currentTarget.style.color = 'var(--theme-text-muted)'}
                         >
                             Return to Login
                         </Link>

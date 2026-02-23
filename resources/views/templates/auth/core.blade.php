@@ -1,6 +1,6 @@
-@extends('templates/wrapper', [
-    'css' => ['body' => 'bg-neutral-900']
-])
+@extends('templates.wrapper')
+
+@section('title', 'Login')
 
 @section('container')
     <div id="app"></div>

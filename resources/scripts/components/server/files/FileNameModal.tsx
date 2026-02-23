@@ -4,9 +4,10 @@ import { Form, Formik, FormikHelpers } from 'formik';
 import { object, string } from 'yup';
 import Field from '@/components/elements/Field';
 import { ServerContext } from '@/state/server';
-import { join } from 'pathe';
+import { join } from '@/lib/path';
 import tw from 'twin.macro';
 import Button from '@/components/elements/Button';
+import { useTranslation } from 'react-i18next';
 
 type Props = RequiredModalProps & {
     onFileNamed: (name: string) => void;
@@ -17,6 +18,7 @@ interface Values {
 }
 
 export default ({ onFileNamed, onDismissed, ...props }: Props) => {
+    const { t } = useTranslation();
     const directory = ServerContext.useStoreState((state) => state.files.directory);
 
     const submit = (values: Values, { setSubmitting }: FormikHelpers<Values>) => {
@@ -44,12 +46,12 @@ export default ({ onFileNamed, onDismissed, ...props }: Props) => {
                         <Field
                             id={'fileName'}
                             name={'fileName'}
-                            label={'File Name'}
-                            description={'Enter the name that this file should be saved as.'}
+                            label={t('files.fileNameModal.title')}
+                            description={t('files.fileNameModal.description')}
                             autoFocus
                         />
                         <div css={tw`mt-6 text-right`}>
-                            <Button>Create File</Button>
+                            <Button>{t('files.fileNameModal.create')}</Button>
                         </div>
                     </Form>
                 </Modal>

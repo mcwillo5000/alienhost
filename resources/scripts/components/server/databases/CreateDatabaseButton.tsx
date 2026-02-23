@@ -8,8 +8,9 @@ import { ServerContext } from '@/state/server';
 import { httpErrorToHuman } from '@/api/http';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import useFlash from '@/plugins/useFlash';
-import Button from '@/components/elements/Button';
+import FuturisticFormButton from '@/components/elements/rivion/FuturisticFormButton';
 import tw from 'twin.macro';
+import { useTranslation } from 'react-i18next';
 
 interface Values {
     databaseName: string;
@@ -29,6 +30,7 @@ const schema = object().shape({
 });
 
 export default () => {
+    const { t } = useTranslation();
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
     const { addError, clearFlashes } = useFlash();
     const [visible, setVisible] = useState(false);
@@ -69,44 +71,49 @@ export default () => {
                         }}
                     >
                         <FlashMessageRender byKey={'database:create'} css={tw`mb-6`} />
-                        <h2 css={tw`text-2xl mb-6`}>Create new database</h2>
+                        <h2 css={tw`text-2xl mb-6`} style={{ color: 'var(--theme-text-base)' }}>{t('databases.create.title')}</h2>
                         <Form css={tw`m-0`}>
                             <Field
                                 type={'string'}
                                 id={'database_name'}
                                 name={'databaseName'}
-                                label={'Database Name'}
-                                description={'A descriptive name for your database instance.'}
+                                label={t('databases.create.databaseName')}
+                                description={t('databases.create.databaseNameDescription')}
                             />
                             <div css={tw`mt-6`}>
                                 <Field
                                     type={'string'}
                                     id={'connections_from'}
                                     name={'connectionsFrom'}
-                                    label={'Connections From'}
-                                    description={
-                                        'Where connections should be allowed from. Leave blank to allow connections from anywhere.'
-                                    }
+                                    label={t('databases.create.connectionsFrom')}
+                                    description={t('databases.create.connectionsFromDescription')}
                                 />
                             </div>
                             <div css={tw`flex flex-wrap justify-end mt-6`}>
-                                <Button
+                                <FuturisticFormButton
                                     type={'button'}
-                                    isSecondary
+                                    variant={'secondary'}
                                     css={tw`w-full sm:w-auto sm:mr-2`}
                                     onClick={() => setVisible(false)}
                                 >
-                                    Cancel
-                                </Button>
-                                <Button css={tw`w-full mt-4 sm:w-auto sm:mt-0`} type={'submit'}>
-                                    Create Database
-                                </Button>
+                                    {t('databases.create.cancel')}
+                                </FuturisticFormButton>
+                                <FuturisticFormButton 
+                                    type={'submit'}
+                                    css={tw`w-full mt-4 sm:w-auto sm:mt-0`}
+                                >
+                                    {t('databases.create.createButton')}
+                                </FuturisticFormButton>
                             </div>
                         </Form>
                     </Modal>
                 )}
             </Formik>
-            <Button onClick={() => setVisible(true)}>New Database</Button>
+            <FuturisticFormButton 
+                onClick={() => setVisible(true)}
+            >
+                {t('databases.newDatabase')}
+            </FuturisticFormButton>
         </>
     );
 };

@@ -8,7 +8,6 @@ export type SpinnerSize = 'small' | 'base' | 'large';
 interface Props {
     size?: SpinnerSize;
     centered?: boolean;
-    isBlue?: boolean;
 }
 
 interface Spinner extends React.FC<Props> {
@@ -16,29 +15,80 @@ interface Spinner extends React.FC<Props> {
     Suspense: React.FC<Props>;
 }
 
-const spin = keyframes`
-    to { transform: rotate(360deg); }
+const animLoader = keyframes`
+    0%   { height: 48px; } 
+    100% { height: 4px; }
 `;
 
-// noinspection CssOverwrittenProperties
 const SpinnerComponent = styled.div<Props>`
-    ${tw`w-8 h-8`};
-    border-width: 3px;
-    border-radius: 50%;
-    animation: ${spin} 1s cubic-bezier(0.55, 0.25, 0.25, 0.7) infinite;
+    width: 8px;
+    height: 40px;
+    border-radius: 4px;
+    display: block;
+    margin: 20px auto;
+    position: relative;
+    background: var(--theme-primary);
+    color: var(--theme-primary);
+    box-sizing: border-box;
+    animation: ${animLoader} 0.3s 0.3s linear infinite alternate;
 
     ${(props) =>
         props.size === 'small'
-            ? tw`w-4 h-4 border-2`
+            ? css`
+                width: 6px;
+                height: 30px;
+                border-radius: 3px;
+                margin: 15px auto;
+                
+                &::after, &::before {
+                    width: 6px;
+                    height: 30px;
+                    border-radius: 3px;
+                    left: 15px;
+                }
+                
+                &::before {
+                    left: -15px;
+                }
+              `
             : props.size === 'large'
             ? css`
-                  ${tw`w-16 h-16`};
-                  border-width: 6px;
+                width: 10px;
+                height: 50px;
+                border-radius: 5px;
+                margin: 25px auto;
+                
+                &::after, &::before {
+                    width: 10px;
+                    height: 50px;
+                    border-radius: 5px;
+                    left: 25px;
+                }
+                
+                &::before {
+                    left: -25px;
+                }
               `
             : null};
 
-    border-color: ${(props) => (!props.isBlue ? 'rgba(255, 255, 255, 0.2)' : 'hsla(212, 92%, 43%, 0.2)')};
-    border-top-color: ${(props) => (!props.isBlue ? 'rgb(255, 255, 255)' : 'hsl(212, 92%, 43%)')};
+    &::after, &::before {
+        content: '';
+        width: 8px;
+        height: 40px;
+        border-radius: 4px;
+        background: var(--theme-primary);
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 20px;
+        box-sizing: border-box;
+        animation: ${animLoader} 0.3s 0.45s linear infinite alternate;
+    }
+    
+    &::before {
+        left: -20px;
+        animation-delay: 0s;
+    }
 `;
 
 const Spinner: Spinner = ({ centered, ...props }) =>

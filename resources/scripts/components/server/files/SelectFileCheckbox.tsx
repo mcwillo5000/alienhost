@@ -6,10 +6,20 @@ import Input from '@/components/elements/Input';
 
 export const FileActionCheckbox = styled(Input)`
     && {
-        ${tw`border-neutral-500 bg-transparent`};
+        background: transparent;
+        border: 1px solid var(--theme-border);
 
         &:not(:checked) {
-            ${tw`hover:border-neutral-300`};
+            &:hover {
+                border-color: var(--theme-primary);
+            }
+        }
+
+        &:checked {
+            background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='%23666666' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
         }
     }
 `;
@@ -20,7 +30,7 @@ export default ({ name }: { name: string }) => {
     const removeSelectedFile = ServerContext.useStoreActions((actions) => actions.files.removeSelectedFile);
 
     return (
-        <label css={tw`flex-none px-4 py-2 absolute self-center z-30 cursor-pointer`}>
+        <label css={tw`flex items-center cursor-pointer`}>
             <FileActionCheckbox
                 name={'selectedFiles'}
                 value={name}

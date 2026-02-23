@@ -22,7 +22,8 @@ export interface ModalProps extends RequiredModalProps {
 
 export const ModalMask = styled.div`
     ${tw`fixed z-50 overflow-auto flex w-full inset-0`};
-    background: rgba(0, 0, 0, 0.7);
+    background: color-mix(in srgb, var(--theme-background) 20%, rgba(0, 0, 0, 0.8));
+    backdrop-filter: blur(4px);
 `;
 
 const ModalContainer = styled.div<{ alignTop?: boolean }>`
@@ -37,20 +38,46 @@ const ModalContainer = styled.div<{ alignTop?: boolean }>`
         css`
             margin-top: 20%;
             ${breakpoint('md')`margin-top: 10%`};
+            
+            /* Mobile responsive adjustments */
+            @media (max-width: 768px) {
+                margin-top: 2rem;
+                margin-bottom: 2rem;
+                max-height: calc(100vh - 4rem);
+            }
         `};
 
     margin-bottom: auto;
+    
+    /* Mobile responsive layout */
+    @media (max-width: 768px) {
+        max-width: calc(100vw - 2rem);
+        margin: 1rem;
+        max-height: calc(100vh - 2rem);
+        display: flex;
+        flex-direction: column;
+    }
 
     & > .close-icon {
-        ${tw`absolute right-0 p-2 text-white cursor-pointer opacity-50 transition-all duration-150 ease-linear hover:opacity-100`};
+        ${tw`absolute right-0 p-2 cursor-pointer transition-all duration-150 ease-linear`};
         top: -2.5rem;
+        color: var(--theme-text-muted);
 
         &:hover {
             ${tw`transform rotate-90`}
+            color: var(--theme-primary);
         }
 
         & > svg {
             ${tw`w-6 h-6`};
+        }
+        
+        /* Mobile close icon positioning */
+        @media (max-width: 768px) {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 100;
         }
     }
 `;
@@ -123,16 +150,37 @@ const Modal: React.FC<ModalProps> = ({
                         <Fade timeout={150} appear in>
                             <div
                                 css={tw`absolute w-full h-full rounded flex items-center justify-center`}
-                                style={{ background: 'hsla(211, 10%, 53%, 0.35)', zIndex: 9999 }}
+                                style={{ 
+                                    background: 'color-mix(in srgb, var(--theme-background) 85%, transparent)',
+                                    backdropFilter: 'blur(2px)',
+                                    zIndex: 9999 
+                                }}
                             >
                                 <Spinner />
                             </div>
                         </Fade>
                     )}
                     <div
-                        css={tw`bg-neutral-800 p-3 sm:p-4 md:p-6 rounded shadow-md overflow-y-scroll transition-all duration-150`}
+                        css={tw`p-3 sm:p-4 md:p-6 rounded shadow-md overflow-y-auto transition-all duration-150`}
+                        style={{
+                            background: 'var(--theme-background-secondary)',
+                            border: '1px solid var(--theme-border)',
+                            borderRadius: '0.5rem',
+                            maxHeight: '100%',
+                            display: 'flex',
+                            flexDirection: 'column'
+                        }}
                     >
-                        {children}
+                        <div style={{ 
+                            overflowY: 'auto', 
+                            flex: 1,
+                            WebkitOverflowScrolling: 'touch',
+                            minHeight: 0,
+                            paddingRight: '0.5rem',
+                            marginRight: '-0.5rem'
+                        }}>
+                            {children}
+                        </div>
                     </div>
                 </ModalContainer>
             </ModalMask>

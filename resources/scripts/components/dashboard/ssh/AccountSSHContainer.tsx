@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import ContentBox from '@/components/elements/ContentBox';
+import FuturisticContentBox from '@/components/elements/rivion/FuturisticContentBox';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import PageContentBlock from '@/components/elements/PageContentBlock';
@@ -12,6 +12,7 @@ import { faKey } from '@fortawesome/free-solid-svg-icons';
 import { format } from 'date-fns';
 import CreateSSHKeyForm from '@/components/dashboard/ssh/CreateSSHKeyForm';
 import DeleteSSHKeyButton from '@/components/dashboard/ssh/DeleteSSHKeyButton';
+import { useTranslation } from 'react-i18next';
 
 export default () => {
     const { clearAndAddHttpError } = useFlashKey('account');
@@ -19,36 +20,63 @@ export default () => {
         revalidateOnMount: true,
         revalidateOnFocus: false,
     });
+    const { t } = useTranslation();
 
     useEffect(() => {
         clearAndAddHttpError(error);
     }, [error]);
 
     return (
-        <PageContentBlock title={'SSH Keys'}>
+        <PageContentBlock title={t('account.ssh.title')}>
             <FlashMessageRender byKey={'account'} />
             <div css={tw`md:flex flex-nowrap my-10`}>
-                <ContentBox title={'Add SSH Key'} css={tw`flex-none w-full md:w-1/2`}>
+                <FuturisticContentBox title={t('account.ssh.addKey.title')} css={tw`flex-none w-full md:w-1/2`}>
                     <CreateSSHKeyForm />
-                </ContentBox>
-                <ContentBox title={'SSH Keys'} css={tw`flex-1 overflow-hidden mt-8 md:mt-0 md:ml-8`}>
+                </FuturisticContentBox>
+                <FuturisticContentBox title={t('account.ssh.keys.title')} css={tw`flex-1 overflow-hidden mt-8 md:mt-0 md:ml-8`}>
                     <SpinnerOverlay visible={!data && isValidating} />
                     {!data || !data.length ? (
-                        <p css={tw`text-center text-sm`}>
-                            {!data ? 'Loading...' : 'No SSH Keys exist for this account.'}
+                        <p 
+                            css={tw`text-center text-sm`}
+                            style={{ color: 'var(--theme-text-muted)' }}
+                        >
+                            {!data ? t('account.ssh.keys.loading') : t('account.ssh.keys.none')}
                         </p>
                     ) : (
                         data.map((key, index) => (
                             <GreyRowBox
                                 key={key.fingerprint}
-                                css={[tw`bg-neutral-600 flex space-x-4 items-center`, index > 0 && tw`mt-2`]}
+                                css={[
+                                    tw`flex space-x-4 items-center`, 
+                                    index > 0 && tw`mt-2`,
+                                    {
+                                        backgroundColor: 'var(--theme-background-secondary)',
+                                        borderColor: 'var(--theme-border)',
+                                    }
+                                ]}
                             >
-                                <FontAwesomeIcon icon={faKey} css={tw`text-neutral-300`} />
+                                <FontAwesomeIcon 
+                                    icon={faKey} 
+                                    style={{ color: 'var(--theme-text-muted)' }}
+                                />
                                 <div css={tw`flex-1`}>
-                                    <p css={tw`text-sm break-words font-medium`}>{key.name}</p>
-                                    <p css={tw`text-xs mt-1 font-mono truncate`}>SHA256:{key.fingerprint}</p>
-                                    <p css={tw`text-xs mt-1 text-neutral-300 uppercase`}>
-                                        Added on:&nbsp;
+                                    <p 
+                                        css={tw`text-sm break-words font-medium`}
+                                        style={{ color: 'var(--theme-text-base)' }}
+                                    >
+                                        {key.name}
+                                    </p>
+                                    <p 
+                                        css={tw`text-xs mt-1 font-mono truncate`}
+                                        style={{ color: 'var(--theme-text-muted)' }}
+                                    >
+                                        SHA256:{key.fingerprint}
+                                    </p>
+                                    <p 
+                                        css={tw`text-xs mt-1 uppercase`}
+                                        style={{ color: 'var(--theme-text-muted)' }}
+                                    >
+                                        {t('account.ssh.keys.addedOn')}:&nbsp;
                                         {format(key.createdAt, 'MMM do, yyyy HH:mm')}
                                     </p>
                                 </div>
@@ -56,7 +84,7 @@ export default () => {
                             </GreyRowBox>
                         ))
                     )}
-                </ContentBox>
+                </FuturisticContentBox>
             </div>
         </PageContentBlock>
     );

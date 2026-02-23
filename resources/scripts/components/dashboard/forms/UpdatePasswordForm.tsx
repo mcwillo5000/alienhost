@@ -8,7 +8,8 @@ import updateAccountPassword from '@/api/account/updateAccountPassword';
 import { httpErrorToHuman } from '@/api/http';
 import { ApplicationStore } from '@/state';
 import tw from 'twin.macro';
-import { Button } from '@/components/elements/button/index';
+import FuturisticFormButton from '@/components/elements/rivion/FuturisticFormButton';
+import { useTranslation } from 'react-i18next';
 
 interface Values {
     current: string;
@@ -31,6 +32,7 @@ const schema = Yup.object().shape({
 export default () => {
     const user = useStoreState((state: State<ApplicationStore>) => state.user.data);
     const { clearFlashes, addFlash } = useStoreActions((actions: Actions<ApplicationStore>) => actions.flashes);
+    const { t } = useTranslation();
 
     if (!user) {
         return null;
@@ -40,7 +42,7 @@ export default () => {
         clearFlashes('account:password');
         updateAccountPassword({ ...values })
             .then(() => {
-                // @ts-expect-error this is valid
+                
                 window.location = '/auth/login';
             })
             .catch((error) =>
@@ -69,17 +71,15 @@ export default () => {
                                 id={'current_password'}
                                 type={'password'}
                                 name={'current'}
-                                label={'Current Password'}
+                                label={t('account.password.currentPassword')}
                             />
                             <div css={tw`mt-6`}>
                                 <Field
                                     id={'new_password'}
                                     type={'password'}
                                     name={'password'}
-                                    label={'New Password'}
-                                    description={
-                                        'Your new password should be at least 8 characters in length and unique to this website.'
-                                    }
+                                    label={t('account.password.newPassword')}
+                                    description={t('account.password.requirements')}
                                 />
                             </div>
                             <div css={tw`mt-6`}>
@@ -87,11 +87,13 @@ export default () => {
                                     id={'confirm_new_password'}
                                     type={'password'}
                                     name={'confirmPassword'}
-                                    label={'Confirm New Password'}
+                                    label={t('account.password.confirmPassword')}
                                 />
                             </div>
-                            <div css={tw`mt-6`}>
-                                <Button disabled={isSubmitting || !isValid}>Update Password</Button>
+                            <div css={tw`mt-4 text-right`}>
+                                <FuturisticFormButton type="submit" disabled={isSubmitting || !isValid}>
+                                    {t('account.password.updateButton')}
+                                </FuturisticFormButton>
                             </div>
                         </Form>
                     </React.Fragment>

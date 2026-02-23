@@ -32,7 +32,6 @@ const CopyOnClick = ({ text, showInNotification = true, children }: CopyOnClickP
     const child = !text
         ? React.Children.only(children)
         : React.cloneElement(React.Children.only(children), {
-              // @ts-expect-error todo: check on this
               className: classNames(children.props.className || '', 'cursor-pointer'),
               onClick: (e: React.MouseEvent<HTMLElement>) => {
                   copy(String(text));
@@ -49,7 +48,15 @@ const CopyOnClick = ({ text, showInNotification = true, children }: CopyOnClickP
                 <Portal>
                     <Fade in appear timeout={250} key={copied ? 'visible' : 'invisible'}>
                         <div className={'fixed z-50 bottom-0 right-0 m-4'}>
-                            <div className={'rounded-md py-3 px-4 text-gray-200 bg-neutral-600/95 shadow'}>
+                            <div 
+                                className={'rounded-md py-3 px-4 shadow-lg border'}
+                                style={{
+                                    backgroundColor: 'var(--theme-background-secondary)',
+                                    color: 'var(--theme-text-base)',
+                                    borderColor: 'var(--theme-border)',
+                                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2)'
+                                }}
+                            >
                                 <p>
                                     {showInNotification
                                         ? `Copied "${String(text)}" to clipboard.`

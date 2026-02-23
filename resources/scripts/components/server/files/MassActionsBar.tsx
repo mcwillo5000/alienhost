@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import tw from 'twin.macro';
 import { Button } from '@/components/elements/button/index';
+import { Options } from '@/components/elements/button/types';
 import Fade from '@/components/elements/Fade';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import useFileManagerSwr from '@/plugins/useFileManagerSwr';
@@ -11,8 +12,12 @@ import deleteFiles from '@/api/server/files/deleteFiles';
 import RenameFileModal from '@/components/server/files/RenameFileModal';
 import Portal from '@/components/elements/Portal';
 import { Dialog } from '@/components/elements/dialog';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowsAlt, faFileArchive, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
 
 const MassActionsBar = () => {
+    const { t } = useTranslation();
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
 
     const { mutate } = useFileManagerSwr();
@@ -33,7 +38,7 @@ const MassActionsBar = () => {
     const onClickCompress = () => {
         setLoading(true);
         clearFlashes('files');
-        setLoadingMessage('Archiving files...');
+        setLoadingMessage(t('files.massActions.archiving'));
 
         compressFiles(uuid, directory, selectedFiles)
             .then(() => mutate())
@@ -46,7 +51,7 @@ const MassActionsBar = () => {
         setLoading(true);
         setShowConfirm(false);
         clearFlashes('files');
-        setLoadingMessage('Deleting files...');
+        setLoadingMessage(t('files.massActions.deleting'));
 
         deleteFiles(uuid, directory, selectedFiles)
             .then(() => {
@@ -67,21 +72,20 @@ const MassActionsBar = () => {
                     {loadingMessage}
                 </SpinnerOverlay>
                 <Dialog.Confirm
-                    title={'Delete Files'}
+                    title={t('files.massActions.deleteConfirm.title')}
                     open={showConfirm}
-                    confirm={'Delete'}
+                    confirm={t('files.massActions.deleteConfirm.confirm')}
                     onClose={() => setShowConfirm(false)}
                     onConfirmed={onClickConfirmDeletion}
                 >
                     <p className={'mb-2'}>
-                        Are you sure you want to delete&nbsp;
-                        <span className={'font-semibold text-gray-50'}>{selectedFiles.length} files</span>? This is a
-                        permanent action and the files cannot be recovered.
+                        {t('files.massActions.deleteConfirm.message')}&nbsp;
+                        <span className={'font-semibold'} style={{ color: 'var(--theme-text-base)' }}>{selectedFiles.length} {t('files.massActions.deleteConfirm.files')}</span>? {t('files.massActions.deleteConfirm.permanent')}
                     </p>
                     {selectedFiles.slice(0, 15).map((file) => (
                         <li key={file}>{file}</li>
                     ))}
-                    {selectedFiles.length > 15 && <li>and {selectedFiles.length - 15} others</li>}
+                    {selectedFiles.length > 15 && <li>{t('files.massActions.deleteConfirm.andOthers', { count: selectedFiles.length - 15 })}</li>}
                 </Dialog.Confirm>
                 {showMove && (
                     <RenameFileModal
@@ -95,12 +99,63 @@ const MassActionsBar = () => {
                 <Portal>
                     <div className={'pointer-events-none fixed bottom-0 mb-6 flex justify-center w-full z-50'}>
                         <Fade timeout={75} in={selectedFiles.length > 0} unmountOnExit>
-                            <div css={tw`flex items-center space-x-4 pointer-events-auto rounded p-4 bg-black/50`}>
-                                <Button onClick={() => setShowMove(true)}>Move</Button>
-                                <Button onClick={onClickCompress}>Archive</Button>
-                                <Button.Danger variant={Button.Variants.Secondary} onClick={() => setShowConfirm(true)}>
-                                    Delete
-                                </Button.Danger>
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '1rem',
+                                pointerEvents: 'auto',
+                                borderRadius: '0.5rem',
+                                padding: '1rem',
+                                backgroundColor: 'var(--theme-background-secondary)',
+                                border: '1px solid var(--theme-border)',
+                                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                maxWidth: '90vw',
+                                width: 'auto'
+                            }}>
+                                <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.75rem',
+                                    flexWrap: 'wrap',
+                                    justifyContent: 'center'
+                                }}>
+                                    <Button 
+                                        size={Options.Size.Compact}
+                                        variant={Options.Variant.Primary}
+                                        onClick={() => setShowMove(true)}
+                                        style={{
+                                            minWidth: '80px',
+                                            fontSize: '0.875rem'
+                                        }}
+                                    >
+                                        <FontAwesomeIcon icon={faArrowsAlt} className="mr-1" />
+                                        {t('files.massActions.move')}
+                                    </Button>
+                                    <Button 
+                                        size={Options.Size.Compact}
+                                        variant={Options.Variant.Primary}
+                                        onClick={onClickCompress}
+                                        style={{
+                                            minWidth: '80px',
+                                            fontSize: '0.875rem'
+                                        }}
+                                    >
+                                        <FontAwesomeIcon icon={faFileArchive} className="mr-1" />
+                                        {t('files.massActions.compress')}
+                                    </Button>
+                                    <Button.Danger 
+                                        size={Options.Size.Compact}
+                                        variant={Options.Variant.Primary} 
+                                        onClick={() => setShowConfirm(true)}
+                                        style={{
+                                            minWidth: '80px',
+                                            fontSize: '0.875rem'
+                                        }}
+                                    >
+                                        <FontAwesomeIcon icon={faTrash} className="mr-1" />
+                                        {t('files.massActions.delete')}
+                                    </Button.Danger>
+                                </div>
                             </div>
                         </Fade>
                     </div>

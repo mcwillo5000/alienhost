@@ -4,11 +4,12 @@ import { object, string } from 'yup';
 import FormikFieldWrapper from '@/components/elements/FormikFieldWrapper';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import tw from 'twin.macro';
-import Button from '@/components/elements/Button';
+import FuturisticFormButton from '@/components/elements/rivion/FuturisticFormButton';
 import Input, { Textarea } from '@/components/elements/Input';
 import styled from 'styled-components/macro';
 import { useFlashKey } from '@/plugins/useFlash';
 import { createSSHKey, useSSHKeys } from '@/api/account/ssh-keys';
+import { useTranslation } from 'react-i18next';
 
 interface Values {
     name: string;
@@ -22,6 +23,7 @@ const CustomTextarea = styled(Textarea)`
 export default () => {
     const { clearAndAddHttpError } = useFlashKey('account');
     const { mutate } = useSSHKeys();
+    const { t } = useTranslation();
 
     const submit = (values: Values, { setSubmitting, resetForm }: FormikHelpers<Values>) => {
         clearAndAddHttpError();
@@ -48,18 +50,23 @@ export default () => {
                 {({ isSubmitting }) => (
                     <Form>
                         <SpinnerOverlay visible={isSubmitting} />
-                        <FormikFieldWrapper label={'SSH Key Name'} name={'name'} css={tw`mb-6`}>
+                        <FormikFieldWrapper label={t('account.ssh.addKey.name.label')} name={'name'} css={tw`mb-6`}>
                             <Field name={'name'} as={Input} />
                         </FormikFieldWrapper>
                         <FormikFieldWrapper
-                            label={'Public Key'}
+                            label={t('account.ssh.addKey.publicKey.label')}
                             name={'publicKey'}
-                            description={'Enter your public SSH key.'}
+                            description={t('account.ssh.addKey.publicKey.help')}
                         >
                             <Field name={'publicKey'} as={CustomTextarea} />
                         </FormikFieldWrapper>
                         <div css={tw`flex justify-end mt-6`}>
-                            <Button>Save</Button>
+                            <FuturisticFormButton 
+                                type="submit"
+                                disabled={isSubmitting}
+                            >
+                                {t('account.ssh.addKey.save')}
+                            </FuturisticFormButton>
                         </div>
                     </Form>
                 )}

@@ -1,10 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Dialog, DialogWrapperContext } from '@/components/elements/dialog';
+import React, { useEffect, useState } from 'react';
+import { Dialog } from '@/components/elements/dialog';
 import getTwoFactorTokenData, { TwoFactorTokenData } from '@/api/account/getTwoFactorTokenData';
 import { useFlashKey } from '@/plugins/useFlash';
 import tw from 'twin.macro';
 import QRCode from 'qrcode.react';
 import { Button } from '@/components/elements/button/index';
+import { Options } from '@/components/elements/button/types';
 import Spinner from '@/components/elements/Spinner';
 import { Input } from '@/components/elements/inputs';
 import CopyOnClick from '@/components/elements/CopyOnClick';
@@ -13,13 +14,14 @@ import enableAccountTwoFactor from '@/api/account/enableAccountTwoFactor';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import { Actions, useStoreActions } from 'easy-peasy';
 import { ApplicationStore } from '@/state';
-import asDialog from '@/hoc/asDialog';
 
 interface Props {
     onTokens: (tokens: string[]) => void;
+    open: boolean;
+    onClose: () => void;
 }
 
-const ConfigureTwoFactorForm = ({ onTokens }: Props) => {
+const ConfigureTwoFactorForm = ({ onTokens, open, onClose }: Props) => {
     const [submitting, setSubmitting] = useState(false);
     const [value, setValue] = useState('');
     const [password, setPassword] = useState('');
@@ -27,17 +29,11 @@ const ConfigureTwoFactorForm = ({ onTokens }: Props) => {
     const { clearAndAddHttpError } = useFlashKey('account:two-step');
     const updateUserData = useStoreActions((actions: Actions<ApplicationStore>) => actions.user.updateUserData);
 
-    const { close, setProps } = useContext(DialogWrapperContext);
-
     useEffect(() => {
         getTwoFactorTokenData()
             .then(setToken)
             .catch((error) => clearAndAddHttpError(error));
     }, []);
-
-    useEffect(() => {
-        setProps((state) => ({ ...state, preventExternalClose: submitting }));
-    }, [submitting]);
 
     const submit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -58,14 +54,30 @@ const ConfigureTwoFactorForm = ({ onTokens }: Props) => {
             });
     };
 
+    if (!open) {
+        return null;
+    }
+
     return (
         <form id={'enable-totp-form'} onSubmit={submit}>
             <FlashMessageRender byKey={'account:two-step'} className={'mt-4'} />
-            <div className={'flex items-center justify-center w-56 h-56 p-2 bg-gray-50 shadow mx-auto mt-6'}>
+            <div 
+                css={tw`flex items-center justify-center w-56 h-56 p-2 mx-auto mt-6 shadow rounded`}
+                style={{
+                    backgroundColor: '#ffffff',
+                    border: '1px solid var(--theme-border)',
+                }}
+            >
                 {!token ? (
                     <Spinner />
                 ) : (
-                    <QRCode renderAs={'svg'} value={token.image_url_data} css={tw`w-full h-full shadow-none`} />
+                    <QRCode 
+                        renderAs={'svg'} 
+                        value={token.image_url_data} 
+                        css={tw`w-full h-full shadow-none`}
+                        fgColor="#000000"
+                        bgColor="#ffffff"
+                    />
                 )}
             </div>
             <CopyOnClick text={token?.secret}>
@@ -81,7 +93,7 @@ const ConfigureTwoFactorForm = ({ onTokens }: Props) => {
                 aria-labelledby={'totp-code-description'}
                 variant={Input.Text.Variants.Loose}
                 value={value}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.value)}
+                onChange={(e) => setValue(e.currentTarget.value)}
                 className={'mt-3'}
                 placeholder={'000000'}
                 type={'text'}
@@ -97,34 +109,46 @@ const ConfigureTwoFactorForm = ({ onTokens }: Props) => {
                 className={'mt-1'}
                 type={'password'}
                 value={password}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.currentTarget.value)}
+                onChange={(e) => setPassword(e.currentTarget.value)}
             />
-            <Dialog.Footer>
-                <Button.Text onClick={close}>Cancel</Button.Text>
-                <Tooltip
-                    disabled={password.length > 0 && value.length === 6}
-                    content={
-                        !token
-                            ? 'Waiting for QR code to load...'
-                            : 'You must enter the 6-digit code and your password to continue.'
-                    }
-                    delay={100}
+            <div 
+                css={tw`flex justify-end mt-6 space-x-2`}
+            >
+                <Button
+                    type={'button'}
+                    size={Options.Size.Compact}
+                    onClick={onClose}
+                    css={tw`inline-flex items-center px-4 py-2 rounded text-sm font-medium transition-colors`}
+                    style={{
+                        backgroundColor: 'var(--theme-background-secondary)',
+                        color: 'var(--theme-text-base)',
+                        border: '1px solid var(--theme-border)',
+                    }}
                 >
-                    <Button
-                        disabled={!token || value.length !== 6 || !password.length}
-                        type={'submit'}
-                        form={'enable-totp-form'}
-                    >
-                        Enable
-                    </Button>
-                </Tooltip>
-            </Dialog.Footer>
+                    Cancel
+                </Button>
+                <Button
+                    disabled={!token || value.length !== 6 || !password.length}
+                    type={'submit'}
+                    size={Options.Size.Compact}
+                    form={'enable-totp-form'}
+                    css={tw`inline-flex items-center px-4 py-2 rounded text-sm font-medium transition-colors`}
+                    style={{
+                        backgroundColor: !token || value.length !== 6 || !password.length 
+                            ? 'var(--theme-background-muted)' 
+                            : 'var(--theme-primary)',
+                        color: !token || value.length !== 6 || !password.length 
+                            ? 'var(--theme-text-muted)' 
+                            : 'var(--theme-text-inverted)',
+                        cursor: !token || value.length !== 6 || !password.length ? 'not-allowed' : 'pointer',
+                    }}
+                >
+                    {submitting && <Spinner css={tw`w-4 h-4 mr-2`} />}
+                    Enable
+                </Button>
+            </div>
         </form>
     );
 };
 
-export default asDialog({
-    title: 'Enable Two-Step Verification',
-    description:
-        "Help protect your account from unauthorized access. You'll be prompted for a verification code each time you sign in.",
-})(ConfigureTwoFactorForm);
+export default ConfigureTwoFactorForm;

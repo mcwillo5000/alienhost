@@ -9,16 +9,32 @@ interface Props {
 }
 
 export const DropdownButtonRow = styled.button<{ danger?: boolean }>`
-    ${tw`p-2 flex items-center rounded w-full text-neutral-500`};
-    transition: 150ms all ease;
-
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    border-radius: 0.375rem;
+    width: 100%;
+    background: transparent;
+    color: var(--theme-text-base);
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-size: 0.875rem;
+    
     &:hover {
-        ${(props) => (props.danger ? tw`text-red-700 bg-red-100` : tw`text-neutral-700 bg-neutral-100`)};
+        ${(props: { danger?: boolean }) => 
+            props.danger 
+                ? `background: color-mix(in srgb, #ef4444 15%, var(--theme-background-secondary));
+                   color: var(--theme-text-base);`
+                : `background: color-mix(in srgb, var(--theme-primary) 15%, var(--theme-background-secondary));
+                   color: var(--theme-text-base);`
+        };
     }
 `;
 
 interface State {
     posX: number;
+    posY: number;
     visible: boolean;
 }
 
@@ -27,6 +43,7 @@ class DropdownMenu extends React.PureComponent<Props, State> {
 
     state: State = {
         posX: 0,
+        posY: 0,
         visible: false,
     };
 
@@ -40,7 +57,29 @@ class DropdownMenu extends React.PureComponent<Props, State> {
         if (this.state.visible && !prevState.visible && menu) {
             document.addEventListener('click', this.windowListener);
             document.addEventListener('contextmenu', this.contextMenuListener);
-            menu.style.left = `${Math.round(this.state.posX - menu.clientWidth)}px`;
+            
+            const menuRect = menu.getBoundingClientRect();
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            
+            let left = this.state.posX - menuRect.width;
+            if (left < 10) {
+                left = this.state.posX + 10;
+            }
+            if (left + menuRect.width > viewportWidth - 10) {
+                left = viewportWidth - menuRect.width - 10;
+            }
+            
+            let top = this.state.posY;
+            if (top + menuRect.height > viewportHeight - 10) {
+                top = this.state.posY - menuRect.height;
+            }
+            if (top < 10) {
+                top = 10;
+            }
+            
+            menu.style.left = `${Math.round(left)}px`;
+            menu.style.top = `${Math.round(top)}px`;
         }
 
         if (!this.state.visible && prevState.visible) {
@@ -55,7 +94,7 @@ class DropdownMenu extends React.PureComponent<Props, State> {
 
     onClickHandler = (e: React.MouseEvent<any, MouseEvent>) => {
         e.preventDefault();
-        this.triggerMenu(e.clientX);
+        this.triggerMenu(e.clientX, e.clientY);
     };
 
     contextMenuListener = () => this.setState({ visible: false });
@@ -76,9 +115,10 @@ class DropdownMenu extends React.PureComponent<Props, State> {
         }
     };
 
-    triggerMenu = (posX: number) =>
+    triggerMenu = (posX: number, posY?: number) =>
         this.setState((s) => ({
             posX: !s.visible ? posX : s.posX,
+            posY: !s.visible ? (posY || 0) : s.posY,
             visible: !s.visible,
         }));
 
@@ -93,8 +133,14 @@ class DropdownMenu extends React.PureComponent<Props, State> {
                             e.stopPropagation();
                             this.setState({ visible: false });
                         }}
-                        style={{ width: '12rem' }}
-                        css={tw`absolute bg-white p-2 rounded border border-neutral-700 shadow-lg text-neutral-500 z-50`}
+                        className="fixed p-2 rounded-lg shadow-sm z-50"
+                        style={{ 
+                            width: '12rem',
+                            backgroundColor: 'var(--theme-background-secondary)',
+                            border: '1px solid var(--theme-border)',
+                            color: 'var(--theme-text-base)',
+                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                        }}
                     >
                         {this.props.children}
                     </div>

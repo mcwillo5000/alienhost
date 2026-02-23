@@ -12,8 +12,10 @@ import tw from 'twin.macro';
 import Fade from '@/components/elements/Fade';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
 import { useDeepMemoize } from '@/plugins/useDeepMemoize';
+import { useTranslation } from 'react-i18next';
 
 export default () => {
+    const { t } = useTranslation();
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
     const databaseLimit = ServerContext.useStoreState((state) => state.server.data!.featureLimits.databases);
 
@@ -37,7 +39,7 @@ export default () => {
     }, []);
 
     return (
-        <ServerContentBlock title={'Databases'}>
+        <ServerContentBlock title={t('databases.title')}>
             <FlashMessageRender byKey={'databases'} css={tw`mb-4`} />
             {!databases.length && loading ? (
                 <Spinner size={'large'} centered />
@@ -53,22 +55,21 @@ export default () => {
                                 />
                             ))
                         ) : (
-                            <p css={tw`text-center text-sm text-neutral-300`}>
+                            <p css={tw`text-center text-sm`} style={{ color: 'var(--theme-text-muted)' }}>
                                 {databaseLimit > 0
-                                    ? 'It looks like you have no databases.'
-                                    : 'Databases cannot be created for this server.'}
+                                    ? t('databases.noDatabases')
+                                    : t('databases.cannotCreate')}
                             </p>
                         )}
                         <Can action={'database.create'}>
-                            <div css={tw`mt-6 flex items-center justify-end`}>
-                                {databaseLimit > 0 && databases.length > 0 && (
-                                    <p css={tw`text-sm text-neutral-300 mb-4 sm:mr-6 sm:mb-0`}>
-                                        {databases.length} of {databaseLimit} databases have been allocated to this
-                                        server.
+                            <div css={tw`mt-6 sm:flex items-center justify-end`}>
+                                {databaseLimit > 0 && (
+                                    <p css={tw`text-sm mb-4 sm:mr-6 sm:mb-0`} style={{ color: 'var(--theme-text-muted)' }}>
+                                        {t('databases.allocated', { current: databases.length, limit: databaseLimit })}
                                     </p>
                                 )}
                                 {databaseLimit > 0 && databaseLimit !== databases.length && (
-                                    <CreateDatabaseButton css={tw`flex justify-end mt-6`} />
+                                    <CreateDatabaseButton />
                                 )}
                             </div>
                         </Can>

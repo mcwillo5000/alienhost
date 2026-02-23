@@ -7,6 +7,7 @@ import { Button } from '@/components/elements/button/index';
 import Tooltip from '@/components/elements/tooltip/Tooltip';
 import Code from '@/components/elements/Code';
 import { useSignal } from '@preact/signals-react';
+import { useTranslation } from 'react-i18next';
 
 const svgProps = {
     cx: 16,
@@ -31,6 +32,7 @@ const Spinner = ({ progress, className }: { progress: number; className?: string
 );
 
 const FileUploadList = () => {
+    const { t } = useTranslation();
     const { close } = useContext(DialogWrapperContext);
     const cancelFileUpload = ServerContext.useStoreActions((actions) => actions.files.cancelFileUpload);
     const clearFileUploads = ServerContext.useStoreActions((actions) => actions.files.clearFileUploads);
@@ -41,7 +43,7 @@ const FileUploadList = () => {
     return (
         <div className={'space-y-2 mt-6'}>
             {uploads.map(([name, file]) => (
-                <div key={name} className={'flex items-center space-x-3 bg-gray-700 p-3 rounded'}>
+                <div key={name} className={'flex items-center space-x-3 p-3 rounded'} style={{ backgroundColor: 'var(--theme-background-secondary)' }}>
                     <Tooltip content={`${Math.floor((file.loaded / file.total) * 100)}%`} placement={'left'}>
                         <div className={'flex-shrink-0'}>
                             <Spinner progress={(file.loaded / file.total) * 100} className={'w-6 h-6'} />
@@ -50,7 +52,10 @@ const FileUploadList = () => {
                     <Code className={'flex-1 truncate'}>{name}</Code>
                     <button
                         onClick={cancelFileUpload.bind(this, name)}
-                        className={'text-gray-500 hover:text-gray-200 transition-colors duration-75'}
+                        className={'transition-colors duration-75'}
+                        style={{ color: 'var(--theme-text-muted)' }}
+                        onMouseEnter={(e) => e.currentTarget.style.color = 'var(--theme-text-base)'}
+                        onMouseLeave={(e) => e.currentTarget.style.color = 'var(--theme-text-muted)'}
                     >
                         <XIcon className={'w-5 h-5'} />
                     </button>
@@ -58,9 +63,9 @@ const FileUploadList = () => {
             ))}
             <Dialog.Footer>
                 <Button.Danger variant={Button.Variants.Secondary} onClick={() => clearFileUploads()}>
-                    Cancel Uploads
+                    {t('files.fileUploads.cancelAll')}
                 </Button.Danger>
-                <Button.Text onClick={close}>Close</Button.Text>
+                <Button.Text onClick={close}>{t('files.fileUploads.close')}</Button.Text>
             </Dialog.Footer>
         </div>
     );

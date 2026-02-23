@@ -44,7 +44,7 @@ const LoginCheckpointContainer = () => {
                 />
             </div>
             <div css={tw`mt-6`}>
-                <Button size={'xlarge'} type={'submit'} disabled={isSubmitting} isLoading={isSubmitting}>
+                <Button type={'submit'} disabled={isSubmitting} isLoading={isSubmitting} css={tw`w-full py-2`}>
                     Continue
                 </Button>
             </div>
@@ -55,7 +55,10 @@ const LoginCheckpointContainer = () => {
                         setFieldValue('recoveryCode', '');
                         setIsMissingDevice((s) => !s);
                     }}
-                    css={tw`cursor-pointer text-xs text-neutral-500 tracking-wide uppercase no-underline hover:text-neutral-700`}
+                    css={tw`cursor-pointer text-xs tracking-wide uppercase no-underline transition-colors duration-200`}
+                    style={{ color: 'var(--theme-text-muted)' }}
+                    onMouseEnter={(e) => e.currentTarget.style.color = 'var(--theme-text-base)'}
+                    onMouseLeave={(e) => e.currentTarget.style.color = 'var(--theme-text-muted)'}
                 >
                     {!isMissingDevice ? "I've Lost My Device" : 'I Have My Device'}
                 </span>
@@ -63,7 +66,10 @@ const LoginCheckpointContainer = () => {
             <div css={tw`mt-6 text-center`}>
                 <Link
                     to={'/auth/login'}
-                    css={tw`text-xs text-neutral-500 tracking-wide uppercase no-underline hover:text-neutral-700`}
+                    css={tw`text-xs tracking-wide uppercase no-underline transition-colors duration-200`}
+                    style={{ color: 'var(--theme-text-muted)' }}
+                    onMouseEnter={(e) => e.currentTarget.style.color = 'var(--theme-text-base)'}
+                    onMouseLeave={(e) => e.currentTarget.style.color = 'var(--theme-text-muted)'}
                 >
                     Return to Login
                 </Link>
@@ -77,7 +83,6 @@ const EnhancedForm = withFormik<Props, Values>({
         loginCheckpoint(location.state?.token || '', code, recoveryCode)
             .then((response) => {
                 if (response.complete) {
-                    // @ts-expect-error this is valid
                     window.location = response.intended || '/';
                     return;
                 }

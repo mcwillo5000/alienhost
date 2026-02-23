@@ -10,12 +10,14 @@ type Props = React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, 
 };
 
 const Container = styled.div`
+    width: 100%;
+    
     ${breakpoint('sm')`
         ${tw`w-4/5 mx-auto`}
     `};
 
     ${breakpoint('md')`
-        ${tw`p-10`}
+        ${tw`p-8`}
     `};
 
     ${breakpoint('lg')`
@@ -30,23 +32,42 @@ const Container = styled.div`
 
 export default forwardRef<HTMLFormElement, Props>(({ title, ...props }, ref) => (
     <Container>
-        {title && <h2 css={tw`text-3xl text-center text-neutral-100 font-medium py-4`}>{title}</h2>}
+        {title && (
+            <h2 
+                css={tw`text-3xl text-center font-medium py-4`}
+                style={{ color: 'var(--theme-text-base)' }}
+            >
+                {title}
+            </h2>
+        )}
         <FlashMessageRender css={tw`mb-2 px-1`} />
         <Form {...props} ref={ref}>
-            <div css={tw`md:flex w-full bg-white shadow-lg rounded-lg p-6 md:pl-0 mx-1`}>
-                <div css={tw`flex-none select-none mb-6 md:mb-0 self-center`}>
-                    <img src={'/assets/svgs/pterodactyl.svg'} css={tw`block w-48 md:w-64 mx-auto`} />
-                </div>
-                <div css={tw`flex-1`}>{props.children}</div>
+            <div 
+                css={tw`w-full`}
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1.5rem',
+                }}
+            >
+                {props.children}
             </div>
         </Form>
-        <p css={tw`text-center text-neutral-500 text-xs mt-4`}>
+        <p 
+            css={tw`text-center text-xs mt-4`}
+            style={{ color: 'var(--theme-text-muted)' }}
+        >
             &copy; 2015 - {new Date().getFullYear()}&nbsp;
             <a
                 rel={'noopener nofollow noreferrer'}
                 href={'https://pterodactyl.io'}
                 target={'_blank'}
-                css={tw`no-underline text-neutral-500 hover:text-neutral-300`}
+                css={tw`no-underline hover:underline transition-colors duration-200`}
+                style={{ 
+                    color: 'var(--theme-text-muted)',
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--theme-text-base)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--theme-text-muted)'}
             >
                 Pterodactyl Software
             </a>

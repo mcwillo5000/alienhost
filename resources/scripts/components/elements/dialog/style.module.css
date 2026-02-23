@@ -3,12 +3,16 @@
 }
 
 .panel {
-    @apply relative bg-gray-600 rounded max-w-xl w-full mx-auto shadow-lg text-left;
-    @apply ring-4 ring-gray-800 ring-opacity-80;
+    @apply relative max-w-xl w-full mx-auto shadow-lg text-left;
+    background-color: var(--theme-background-secondary);
+    border: 1px solid var(--theme-border);
+    clip-path: polygon(0px 12px, 12px 0px, 100% 0px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0px 100%);
 }
 
 .title {
-    @apply font-header text-xl font-medium mb-2 text-gray-50 pr-4;
+    @apply font-header text-xl font-medium mb-2 pr-4;
+    color: var(--theme-text-base);
+    font-family: 'Orbitron', sans-serif;
 }
 
 .close_icon {
@@ -16,21 +20,26 @@
 }
 
 .dialog_icon {
-    @apply flex items-center justify-center w-10 h-10 rounded-full mr-4;
+    @apply flex items-center justify-center w-10 h-10 mr-4;
+    clip-path: polygon(0px 8px, 8px 0px, 100% 0px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0px 100%);
 
     &.danger {
-        @apply bg-red-500 text-red-50;
+        background-color: var(--theme-danger);
+        color: white;
     }
 
     &.warning {
-        @apply bg-yellow-600 text-yellow-50;
+        background-color: var(--theme-warning, #f59e0b);
+        color: white;
     }
 
     &.success {
-        @apply bg-green-600 text-green-50;
+        background-color: var(--theme-success);
+        color: white;
     }
 
     &.info {
-        @apply bg-primary-500 text-primary-50;
+        background-color: var(--theme-primary);
+        color: var(--theme-text-inverted);
     }
 }

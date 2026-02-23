@@ -2,6 +2,7 @@ import React from 'react';
 import { PaginationDataSet } from '@/api/http';
 import classNames from 'classnames';
 import { Button } from '@/components/elements/button/index';
+import { Options } from '@/components/elements/button/types';
 import { ChevronDoubleLeftIcon, ChevronDoubleRightIcon } from '@heroicons/react/solid';
 
 interface Props {
@@ -31,22 +32,21 @@ const PaginationFooter = ({ pagination, className, onPageSelect }: Props) => {
     }
 
     const buttonProps = (page: number) => ({
-        size: Button.Sizes.Small,
-        shape: Button.Shapes.IconSquare,
-        variant: Button.Variants.Secondary,
+        size: Options.Size.Small,
+        variant: Options.Variant.Secondary,
         onClick: () => onPageSelect(page),
     });
 
     return (
         <div className={classNames('flex items-center justify-between my-2', className)}>
-            <p className={'text-sm text-neutral-500'}>
+            <p className={'text-sm'} style={{ color: 'var(--theme-text-muted)' }}>
                 Showing&nbsp;
-                <span className={'font-semibold text-neutral-400'}>
+                <span className={'font-semibold'} style={{ color: 'var(--theme-text-base)' }}>
                     {Math.max(start, Math.min(pagination.total, 1))}
                 </span>
                 &nbsp;to&nbsp;
-                <span className={'font-semibold text-neutral-400'}>{end}</span> of&nbsp;
-                <span className={'font-semibold text-neutral-400'}>{pagination.total}</span> results.
+                <span className={'font-semibold'} style={{ color: 'var(--theme-text-base)' }}>{end}</span> of&nbsp;
+                <span className={'font-semibold'} style={{ color: 'var(--theme-text-base)' }}>{pagination.total}</span> results.
             </p>
             {pagination.totalPages > 1 && (
                 <div className={'flex space-x-1'}>
@@ -58,7 +58,10 @@ const PaginationFooter = ({ pagination, className, onPageSelect }: Props) => {
                             {value}
                         </Button.Text>
                     ))}
-                    <Button size={Button.Sizes.Small} shape={Button.Shapes.IconSquare}>
+                    <Button 
+                        size={Options.Size.Small} 
+                        variant={Options.Variant.Primary}
+                    >
                         {current}
                     </Button>
                     {pages.next.map((value) => (

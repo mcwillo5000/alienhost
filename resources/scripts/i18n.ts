@@ -1,33 +1,60 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import I18NextHttpBackend, { HttpBackendOptions } from 'i18next-http-backend';
-import I18NextMultiloadBackendAdapter from 'i18next-multiload-backend-adapter';
+import I18NextHttpBackend from 'i18next-http-backend';
 
-// If we're using HMR use a unique hash per page reload so that we're always
-// doing cache busting. Otherwise just use the builder provided hash value in
-// the URL to allow cache busting to occur whenever the front-end is rebuilt.
-const hash = module.hot ? Date.now().toString(16) : process.env.WEBPACK_BUILD_HASH;
 
-i18n.use(I18NextMultiloadBackendAdapter)
+const defaultLanguage = document.querySelector('meta[name="default-language"]')?.getAttribute('content') || 'en';
+
+
+let savedLanguage = localStorage.getItem('panel_language') || defaultLanguage;
+if (!savedLanguage || typeof savedLanguage !== 'string' || savedLanguage.length < 2) {
+    savedLanguage = 'en';
+}
+
+const hash = Date.now().toString(16);
+
+i18n
+    .use(I18NextHttpBackend)
     .use(initReactI18next)
     .init({
-        debug: process.env.DEBUG === 'true',
-        lng: 'en',
+        lng: savedLanguage,
         fallbackLng: 'en',
+        debug: process.env.NODE_ENV === 'development',
+        defaultNS: 'common',
+        ns: ['common'],
+        load: 'languageOnly',
         keySeparator: '.',
+        nsSeparator: ':',
         backend: {
-            backend: I18NextHttpBackend,
-            backendOption: {
-                loadPath: '/locales/locale.json?locale={{lng}}&namespace={{ns}}',
-                queryStringParams: { hash },
-                allowMultiLoading: true,
-            } as HttpBackendOptions,
-        } as Record<string, any>,
+            loadPath: '/locales/{{lng}}/{{ns}}.json',
+            queryStringParams: { v: hash },
+        },
         interpolation: {
-            // Per i18n-react documentation: this is not needed since React is already
-            // handling escapes for us.
             escapeValue: false,
         },
+        react: {
+            useSuspense: false,
+            bindI18n: 'languageChanged loaded',
+            bindI18nStore: 'added removed',
+        },
+        returnEmptyString: false,
+        saveMissing: false,
+        missingKeyHandler: (lngs, ns, key, fallbackValue) => {
+            console.warn(`[i18n] Missing translation: ${ns}:${key} for languages: ${lngs.join(', ')}`);
+        },
     });
+
+i18n.on('initialized', () => {
+    console.log('[i18n] Initialized with language:', i18n.language);
+    console.log('[i18n] Load path:', '/locales/{{lng}}/{{ns}}.json');
+});
+
+i18n.on('loaded', (loaded) => {
+    console.log('[i18n] Loaded translations:', Object.keys(loaded));
+});
+
+i18n.on('failedLoading', (lng, ns, msg) => {
+    console.error(`[i18n] Failed to load ${ns} for ${lng}:`, msg);
+});
 
 export default i18n;

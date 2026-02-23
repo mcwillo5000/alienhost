@@ -13,6 +13,12 @@ import useSWR from 'swr';
 import { PaginatedResult } from '@/api/http';
 import Pagination from '@/components/elements/Pagination';
 import { useLocation } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PowerActionsBar from '@/components/dashboard/PowerActionsBar';
+import BentoBoxSection from '@/components/dashboard/BentoBoxSection';
+import AnnouncementBanner from '@/components/dashboard/AnnouncementBanner';
+import { useTranslation } from 'react-i18next';
+import SectionHeader from '@/components/elements/rivion/SectionHeader';
 
 export default () => {
     const { search } = useLocation();
@@ -23,15 +29,33 @@ export default () => {
     const uuid = useStoreState((state) => state.user.data!.uuid);
     const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
     const [showOnlyAdmin, setShowOnlyAdmin] = usePersistedState(`${uuid}:show_all_servers`, false);
+    const { t } = useTranslation();
+
+    const getAnnouncement = () => {
+        const siteConfig = (window as any).SiteConfiguration;
+        if (siteConfig?.announcement) {
+            return siteConfig.announcement;
+        }
+        return { icon: '', title: '', description: '' };
+    };
+
+    const [selectedServer, setSelectedServer] = useState<Server | null>(null);
+    const [powerActionsVisible, setPowerActionsVisible] = useState(false);
+
+    const handlePowerAction = (server: Server) => {
+        setSelectedServer(server);
+        setPowerActionsVisible(true);
+    };
+
+    const closePowerActionsModal = () => {
+        setPowerActionsVisible(false);
+        setSelectedServer(null);
+    };
 
     const { data: servers, error } = useSWR<PaginatedResult<Server>>(
         ['/api/client/servers', showOnlyAdmin && rootAdmin, page],
         () => getServers({ page, type: showOnlyAdmin && rootAdmin ? 'admin' : undefined })
     );
-
-    useEffect(() => {
-        setPage(1);
-    }, [showOnlyAdmin]);
 
     useEffect(() => {
         if (!servers) return;
@@ -41,9 +65,6 @@ export default () => {
     }, [servers?.pagination.currentPage]);
 
     useEffect(() => {
-        // Don't use react-router to handle changing this part of the URL, otherwise it
-        // triggers a needless re-render. We just want to track this in the URL incase the
-        // user refreshes the page.
         window.history.replaceState(null, document.title, `/${page <= 1 ? '' : `?page=${page}`}`);
     }, [page]);
 
@@ -53,38 +74,65 @@ export default () => {
     }, [error]);
 
     return (
-        <PageContentBlock title={'Dashboard'} showFlashKey={'dashboard'}>
+        <PageContentBlock title={t('dashboard.title')} showFlashKey={'dashboard'}>
             {rootAdmin && (
-                <div css={tw`mb-2 flex justify-end items-center`}>
-                    <p css={tw`uppercase text-xs text-neutral-400 mr-2`}>
-                        {showOnlyAdmin ? "Showing others' servers" : 'Showing your servers'}
-                    </p>
-                    <Switch
-                        name={'show_all_servers'}
-                        defaultChecked={showOnlyAdmin}
-                        onChange={() => setShowOnlyAdmin((s) => !s)}
-                    />
+                <div css={tw`mb-4 flex justify-end items-center`}>
+                    <div css={tw`flex items-center`}>
+                        <p css={tw`uppercase text-xs text-neutral-400 mr-2`}>
+                            {showOnlyAdmin ? t('dashboard.showingOthersServers') : t('dashboard.showingYourServers')}
+                        </p>
+                        <Switch
+                            name={'show_all_servers'}
+                            defaultChecked={showOnlyAdmin}
+                            onChange={() => setShowOnlyAdmin((s) => !s)}
+                        />
+                    </div>
                 </div>
             )}
+            
+            {/* Announcement Banner */}
+            <AnnouncementBanner 
+                announcement={getAnnouncement()} 
+            />
+            
+            {/* Bento Box Section */}
+            <BentoBoxSection />
+            
+            {/* Servers Section Header */}
+            <SectionHeader title="Servers" />
+            
             {!servers ? (
                 <Spinner centered size={'large'} />
             ) : (
                 <Pagination data={servers} onPageSelect={setPage}>
                     {({ items }) =>
                         items.length > 0 ? (
-                            items.map((server, index) => (
-                                <ServerRow key={server.uuid} server={server} css={index > 0 ? tw`mt-2` : undefined} />
-                            ))
+                            <div css={tw`grid gap-4 grid-cols-1 lg:grid-cols-2`}>
+                                {items.map((server, index) => (
+                                    <ServerRow 
+                                        key={server.uuid} 
+                                        server={server}
+                                        onPowerAction={handlePowerAction}
+                                    />
+                                ))}
+                            </div>
                         ) : (
                             <p css={tw`text-center text-sm text-neutral-400`}>
                                 {showOnlyAdmin
-                                    ? 'There are no other servers to display.'
-                                    : 'There are no servers associated with your account.'}
+                                    ? t('dashboard.noOtherServers')
+                                    : t('dashboard.noServers')}
                             </p>
                         )
                     }
                 </Pagination>
             )}
+            
+            {/* Power Actions Modal */}
+            <PowerActionsBar 
+                server={selectedServer}
+                visible={powerActionsVisible}
+                onClose={closePowerActionsModal}
+            />
         </PageContentBlock>
     );
 };

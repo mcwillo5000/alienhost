@@ -1,35 +1,54 @@
 import React from 'react';
 import { Schedule } from '@/api/server/schedules/getServerSchedules';
 import classNames from 'classnames';
+import styled from 'styled-components/macro';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     cron: Schedule['cron'];
     className?: string;
 }
 
-const ScheduleCronRow = ({ cron, className }: Props) => (
-    <div className={classNames('flex', className)}>
-        <div className={'w-1/5 sm:w-auto text-center'}>
-            <p className={'font-medium'}>{cron.minute}</p>
-            <p className={'text-2xs text-neutral-500 uppercase'}>Minute</p>
+const CronValue = styled.p`
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 500;
+    color: var(--theme-text-base);
+`;
+
+const CronLabel = styled.p`
+    font-family: 'Electrolize', sans-serif;
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    color: var(--theme-text-muted);
+`;
+
+const ScheduleCronRow = ({ cron, className }: Props) => {
+    const { t } = useTranslation();
+    
+    return (
+        <div className={classNames('flex', className)}>
+            <div className={'w-1/5 sm:w-auto text-center'}>
+                <CronValue>{cron.minute}</CronValue>
+                <CronLabel>{t('schedules.edit.minute')}</CronLabel>
+            </div>
+            <div className={'w-1/5 sm:w-auto text-center ml-4'}>
+                <CronValue>{cron.hour}</CronValue>
+                <CronLabel>{t('schedules.edit.hour')}</CronLabel>
+            </div>
+            <div className={'w-1/5 sm:w-auto text-center ml-4'}>
+                <CronValue>{cron.dayOfMonth}</CronValue>
+                <CronLabel>{t('schedules.edit.dayOfMonth')}</CronLabel>
+            </div>
+            <div className={'w-1/5 sm:w-auto text-center ml-4'}>
+                <CronValue>{cron.month}</CronValue>
+                <CronLabel>{t('schedules.edit.month')}</CronLabel>
+            </div>
+            <div className={'w-1/5 sm:w-auto text-center ml-4'}>
+                <CronValue>{cron.dayOfWeek}</CronValue>
+                <CronLabel>{t('schedules.edit.dayOfWeek')}</CronLabel>
+            </div>
         </div>
-        <div className={'w-1/5 sm:w-auto text-center ml-4'}>
-            <p className={'font-medium'}>{cron.hour}</p>
-            <p className={'text-2xs text-neutral-500 uppercase'}>Hour</p>
-        </div>
-        <div className={'w-1/5 sm:w-auto text-center ml-4'}>
-            <p className={'font-medium'}>{cron.dayOfMonth}</p>
-            <p className={'text-2xs text-neutral-500 uppercase'}>Day (Month)</p>
-        </div>
-        <div className={'w-1/5 sm:w-auto text-center ml-4'}>
-            <p className={'font-medium'}>{cron.month}</p>
-            <p className={'text-2xs text-neutral-500 uppercase'}>Month</p>
-        </div>
-        <div className={'w-1/5 sm:w-auto text-center ml-4'}>
-            <p className={'font-medium'}>{cron.dayOfWeek}</p>
-            <p className={'text-2xs text-neutral-500 uppercase'}>Day (Week)</p>
-        </div>
-    </div>
-);
+    );
+};
 
 export default ScheduleCronRow;

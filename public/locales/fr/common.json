@@ -1,0 +1,690 @@
+{
+  "account": {
+    "overview": {
+      "title": "Aperçu du compte",
+      "twoFactorRequired": {
+        "title": "Authentification à deux facteurs requise",
+        "message": "Votre compte doit avoir l’authentification à deux facteurs activée pour continuer."
+      }
+    },
+    "password": {
+      "title": "Mettre à jour le mot de passe",
+      "requirements": "Votre nouveau mot de passe doit comporter au moins 8 caractères et être unique à ce site.",
+      "currentPassword": "Mot de passe actuel",
+      "newPassword": "Nouveau mot de passe",
+      "confirmPassword": "Confirmer le nouveau mot de passe",
+      "updateButton": "Mettre à jour le mot de passe",
+      "updated": "Votre mot de passe a été mis à jour."
+    },
+    "email": {
+      "title": "Mettre à jour l’adresse e-mail",
+      "newEmail": "Nouvelle adresse e-mail",
+      "password": "Confirmer le mot de passe",
+      "updateButton": "Mettre à jour l’e-mail",
+      "updated": "Votre adresse e-mail a été mise à jour."
+    },
+    "twoFactor": {
+      "title": "Vérification en deux étapes",
+      "button": "Vous n’avez actuellement pas activé la vérification en deux étapes sur votre compte. Cliquez sur le bouton ci-dessous pour commencer la configuration.",
+      "enabled": "L’authentification à deux facteurs a été activée sur votre compte ! Désormais, lors de votre connexion, vous devrez fournir le code généré par votre appareil.",
+      "disabled": "L’authentification à deux facteurs a été désactivée sur votre compte. Vous ne serez plus invité à fournir un jeton lors de la connexion.",
+      "invalid": "Le jeton fourni est invalide.",
+      "setup": {
+        "title": "Configurer l’authentification à deux facteurs",
+        "help": "Vous ne pouvez pas scanner le code ? Entrez le code ci-dessous dans votre application :",
+        "description": "Scannez le code QR ci-dessus à l’aide de l’application d’authentification de votre choix. Ensuite, entrez le code à 6 chiffres généré dans le champ ci-dessous.",
+        "field": "Entrer le jeton",
+        "accountPassword": "Mot de passe du compte",
+        "cancel": "Annuler",
+        "enable": "Activer"
+      },
+      "disable": {
+        "title": "Désactiver l’authentification à deux facteurs",
+        "password": "Mot de passe",
+        "cancel": "Annuler",
+        "disable": "Désactiver"
+      },
+      "tokens": {
+        "title": "Jetons de récupération",
+        "description": "Conservez ces jetons dans un endroit sûr. Si vous perdez l’accès à votre téléphone, vous pourrez utiliser ces jetons de secours pour vous connecter.",
+        "close": "Fermer"
+      }
+    },
+    "api": {
+      "title": "API du compte",
+      "createKey": {
+        "title": "Créer une clé API",
+        "description": {
+          "label": "Description",
+          "help": "Une description de cette clé API."
+        },
+        "allowedIps": {
+          "label": "IPs autorisées",
+          "help": "Laissez vide pour autoriser n'importe quelle adresse IP, sinon fournissez chaque adresse IP sur une nouvelle ligne."
+        },
+        "create": "Créer"
+      },
+      "keys": {
+        "title": "Clés API",
+        "loading": "Chargement...",
+        "none": "Aucune clé API n’existe pour ce compte.",
+        "lastUsed": "Dernière utilisation",
+        "never": "Jamais",
+        "deleteConfirm": {
+          "title": "Supprimer la clé API",
+          "confirm": "Supprimer la clé",
+          "message": "Toutes les requêtes utilisant la clé {{identifier}} seront invalidées."
+        }
+      },
+      "modal": {
+        "title": "Votre clé API",
+        "description": "La clé API demandée est affichée ci-dessous. Veuillez la conserver dans un endroit sûr, elle ne sera plus affichée.",
+        "close": "Fermer"
+      }
+    },
+    "ssh": {
+      "title": "Clés SSH",
+      "addKey": {
+        "title": "Ajouter une clé SSH",
+        "name": {
+          "label": "Nom de la clé SSH"
+        },
+        "publicKey": {
+          "label": "Clé publique",
+          "help": "Entrez votre clé SSH publique."
+        },
+        "save": "Enregistrer"
+      },
+      "keys": {
+        "title": "Clés SSH",
+        "loading": "Chargement...",
+        "none": "Aucune clé SSH n’existe pour ce compte.",
+        "addedOn": "Ajoutée le",
+        "deleteConfirm": {
+          "title": "Supprimer la clé SSH",
+          "confirm": "Supprimer la clé",
+          "message": "La suppression de la clé SSH {{name}} invalidera son utilisation sur le panneau."
+        }
+      }
+    },
+    "activity": {
+      "title": "Journal d'activité du compte",
+      "clearFilters": "Effacer les filtres"
+    }
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "showingYourServers": "Affichage de vos serveurs",
+    "showingOthersServers": "Affichage des serveurs des autres",
+    "noServers": "Aucun serveur n'est associé à votre compte.",
+    "noOtherServers": "Il n'y a aucun autre serveur à afficher.",
+    "serverRow": {
+      "status": {
+        "online": "En ligne",
+        "offline": "Hors ligne",
+        "starting": "Démarrage",
+        "suspended": "Suspendu",
+        "install": "Installation",
+        "restore": "Restauration",
+        "transfer": "Transfert",
+        "transferring": "Transfert en cours",
+        "installing": "Installation en cours",
+        "restoringBackup": "Restauration de sauvegarde",
+        "unavailable": "Indisponible",
+        "connectionError": "Erreur de connexion"
+      },
+      "resources": {
+        "cpu": "CPU",
+        "ram": "RAM",
+        "storage": "Stockage",
+        "ip": "IP"
+      },
+      "manageServer": "Gérer le serveur"
+    }
+  },
+  "console": {
+    "title": "Console",
+    "header": {
+      "title": "Console du serveur",
+      "status": {
+        "running": "En cours d'exécution",
+        "stopped": "Arrêté",
+        "starting": "Démarrage",
+        "stopping": "Arrêt en cours",
+        "disconnected": "Déconnecté",
+        "unknown": "Inconnu"
+      }
+    },
+    "input": {
+      "placeholder": "Entrer une commande...",
+      "send": "Envoyer"
+    },
+    "filters": {
+      "all": "Tout",
+      "errors": "Erreurs",
+      "warnings": "Avertissements",
+      "showAll": "Afficher toute la sortie de la console",
+      "showErrors": "Afficher uniquement les erreurs",
+      "showWarnings": "Afficher uniquement les avertissements"
+    },
+    "alerts": {
+      "nodeMaintenance": "Le nœud de ce serveur est actuellement en maintenance et toutes les actions sont indisponibles.",
+      "installing": "Ce serveur exécute actuellement son processus d'installation et la plupart des actions sont indisponibles.",
+      "transferring": "Ce serveur est actuellement transféré vers un autre nœud et toutes les actions sont indisponibles."
+    },
+    "power": {
+      "start": "Démarrer",
+      "stop": "Arrêter",
+      "restart": "Redémarrer",
+      "kill": "Forcer l'arrêt",
+      "killConfirm": {
+        "title": "Forcer l'arrêt du processus",
+        "message": "Forcer l'arrêt d'un serveur peut entraîner une corruption des données.",
+        "confirm": "Continuer"
+      }
+    },
+    "stats": {
+      "serverAddress": "Adresse du serveur",
+      "uptime": "Disponibilité",
+      "cpuUsage": "Utilisation CPU",
+      "memoryUsage": "Utilisation mémoire",
+      "diskUsage": "Utilisation disque",
+      "networkUsage": "Utilisation réseau",
+      "offline": "Hors ligne",
+      "networkIn": "Entrée réseau",
+      "networkOut": "Sortie réseau",
+      "copyTooltip": "Copier l'adresse dans le presse-papiers",
+      "clickToCopy": "Cliquez pour copier l'adresse"
+    },
+    "graphs": {
+      "cpu": "CPU",
+      "memory": "Mémoire",
+      "network": "Réseau",
+      "networkIn": "Entrée réseau",
+      "networkOut": "Sortie réseau"
+    }
+  },
+  "files": {
+    "title": "Gestionnaire de fichiers",
+    "upload": "Télécharger",
+    "uploadModal": {
+      "title": "Glissez et déposez des fichiers pour les télécharger.",
+      "error": "Le téléchargement de dossiers n'est pas pris en charge pour le moment."
+    },
+    "createDirectory": "Créer un répertoire",
+    "createDirectoryModal": {
+      "title": "Créer un répertoire",
+      "name": "Nom",
+      "creating": "Ce répertoire sera créé en tant que",
+      "cancel": "Annuler",
+      "create": "Créer"
+    },
+    "newFile": "Nouveau fichier",
+    "fileNameModal": {
+      "title": "Nom du fichier",
+      "description": "Entrez le nom sous lequel ce fichier doit être enregistré.",
+      "create": "Créer le fichier"
+    },
+    "massActions": {
+      "selected": "{{count}} fichier(s) sélectionné(s).",
+      "delete": "Supprimer",
+      "move": "Déplacer",
+      "compress": "Compresser",
+      "archiving": "Archivage des fichiers...",
+      "deleting": "Suppression des fichiers...",
+      "deleteConfirm": {
+        "title": "Supprimer les fichiers",
+        "message": "Êtes-vous sûr de vouloir supprimer",
+        "files": "fichier(s)",
+        "permanent": "Il s'agit d'une action permanente et les fichiers ne peuvent pas être récupérés.",
+        "andOthers": "et {{count}} autres",
+        "confirm": "Supprimer",
+        "cancel": "Annuler"
+      }
+    },
+    "rename": "Renommer",
+    "renameModal": {
+      "title": "Nom du fichier",
+      "move": "Déplacer",
+      "rename": "Renommer",
+      "description": "Entrez le nouveau nom et le répertoire de ce fichier ou dossier, relatif au répertoire actuel.",
+      "newLocation": "Nouvel emplacement :"
+    },
+    "chmod": "Permissions",
+    "chmodModal": {
+      "title": "Mode de fichier",
+      "update": "Mettre à jour"
+    },
+    "dropdown": {
+      "rename": "Renommer",
+      "move": "Déplacer",
+      "chmod": "Permissions",
+      "copy": "Copier",
+      "download": "Télécharger",
+      "compress": "Compresser",
+      "decompress": "Décompresser",
+      "delete": "Supprimer",
+      "deleteConfirm": {
+        "title": "Supprimer {{type}}",
+        "file": "le fichier",
+        "directory": "le répertoire",
+        "message": "Vous ne pourrez pas récupérer le contenu de",
+        "confirm": "Supprimer"
+      }
+    },
+    "fileUploads": {
+      "title": "Téléchargements de fichiers",
+      "description": "Les fichiers suivants sont en cours de téléchargement vers votre serveur.",
+      "cancelAll": "Annuler les téléchargements",
+      "close": "Fermer",
+      "uploading": "{{count}} fichiers en cours de téléchargement, cliquez pour voir"
+    },
+    "editor": {
+      "title": "Éditeur de fichiers",
+      "editingFile": "Modification du fichier",
+      "creatingFile": "Création d'un nouveau fichier",
+      "save": "Enregistrer le contenu",
+      "create": "Créer le fichier",
+      "fileNameModal": {
+        "title": "Nom du fichier",
+        "description": "Entrez le nom sous lequel ce fichier doit être enregistré.",
+        "create": "Créer le fichier"
+      }
+    }
+  },
+  "databases": {
+    "title": "Bases de données",
+    "noDatabases": "Il semble que vous n'ayez aucune base de données.",
+    "cannotCreate": "Les bases de données ne peuvent pas être créées pour ce serveur.",
+    "allocated": "{{current}} sur {{limit}} bases de données ont été allouées à ce serveur.",
+    "newDatabase": "Nouvelle base de données",
+    "create": {
+      "title": "Créer une nouvelle base de données",
+      "databaseName": "Nom de la base de données",
+      "databaseNameDescription": "Un nom descriptif pour votre instance de base de données.",
+      "connectionsFrom": "Connexions depuis",
+      "connectionsFromDescription": "D'où les connexions doivent être autorisées. Laissez vide pour autoriser les connexions de n'importe où.",
+      "cancel": "Annuler",
+      "createButton": "Créer la base de données"
+    },
+    "delete": {
+      "title": "Confirmer la suppression de la base de données",
+      "description": "La suppression d'une base de données est une action permanente, elle ne peut pas être annulée. Cela supprimera définitivement la base de données",
+      "description2": "et supprimera toutes les données associées.",
+      "confirmName": "Confirmer le nom de la base de données",
+      "confirmDescription": "Entrez le nom de la base de données pour confirmer la suppression.",
+      "cancel": "Annuler",
+      "deleteButton": "Supprimer la base de données"
+    },
+    "connection": {
+      "title": "Détails de connexion à la base de données",
+      "endpoint": "Point de terminaison",
+      "connectionsFrom": "Connexions depuis",
+      "username": "Nom d'utilisateur",
+      "password": "Mot de passe",
+      "jdbcString": "Chaîne de connexion JDBC",
+      "rotatePassword": "Rotation du mot de passe",
+      "close": "Fermer"
+    }
+  },
+  "schedules": {
+    "title": "Planifications",
+    "noSchedules": "Aucune planification n'est configurée pour ce serveur.",
+    "createSchedule": "Créer une planification",
+    "newTask": "Nouvelle tâche",
+    "runNow": "Exécuter maintenant",
+    "deleteButton": "Supprimer",
+    "lastRunAt": "Dernière exécution :",
+    "never": "jamais",
+    "active": "Actif",
+    "inactive": "Inactif",
+    "processing": "En cours",
+    "edit": {
+      "titleCreate": "Créer une nouvelle planification",
+      "titleEdit": "Modifier la planification",
+      "scheduleName": "Nom de la planification",
+      "scheduleNameDescription": "Un identifiant lisible pour cette planification.",
+      "minute": "Minute",
+      "hour": "Heure",
+      "dayOfMonth": "Jour du mois",
+      "month": "Mois",
+      "dayOfWeek": "Jour de la semaine",
+      "cronDescription": "Le système de planification prend en charge l'utilisation de la syntaxe Cronjob pour définir quand les tâches doivent commencer à s'exécuter. Utilisez les champs ci-dessus pour spécifier quand ces tâches doivent commencer à s'exécuter.",
+      "showCheatsheet": "Afficher l'aide-mémoire",
+      "showCheatsheetDescription": "Afficher l'aide-mémoire cron pour quelques exemples.",
+      "onlyWhenOnline": "Uniquement lorsque le serveur est en ligne",
+      "onlyWhenOnlineDescription": "Exécuter cette planification uniquement lorsque le serveur est en cours d'exécution.",
+      "scheduleEnabled": "Planification activée",
+      "scheduleEnabledDescription": "Cette planification sera exécutée automatiquement.",
+      "cancel": "Annuler",
+      "create": "Créer la planification",
+      "save": "Enregistrer les modifications"
+    },
+    "delete": {
+      "title": "Supprimer la planification",
+      "confirm": "Supprimer",
+      "description": "Toutes les tâches seront supprimées et tous les processus en cours seront arrêtés."
+    },
+    "cheatsheet": {
+      "examples": "Exemples",
+      "specialCharacters": "Caractères spéciaux",
+      "everyFiveMinutes": "toutes les 5 minutes",
+      "everyHour": "toutes les heures",
+      "hourRange": "plage horaire",
+      "onceADay": "une fois par jour",
+      "everyMonday": "tous les lundis",
+      "anyValue": "n'importe quelle valeur",
+      "valueListSeparator": "séparateur de liste de valeurs",
+      "rangeValues": "valeurs de plage",
+      "stepValues": "valeurs d'étape"
+    },
+    "task": {
+      "titleCreate": "Créer une tâche",
+      "titleEdit": "Modifier la tâche",
+      "action": "Action",
+      "timeOffset": "Décalage horaire (en secondes)",
+      "timeOffsetDescription": "Le temps d'attente après l'exécution de la tâche précédente avant d'exécuter celle-ci. Si c'est la première tâche d'une planification, cela ne sera pas appliqué.",
+      "payload": "Charge utile",
+      "continueOnFailure": "Continuer en cas d'échec",
+      "continueOnFailureDescription": "Les tâches futures seront exécutées lorsque cette tâche échoue.",
+      "cancel": "Annuler",
+      "create": "Créer la tâche",
+      "save": "Enregistrer les modifications",
+      "actions": {
+        "command": "Envoyer une commande",
+        "power": "Envoyer une action d'alimentation",
+        "backup": "Créer une sauvegarde"
+      },
+      "powerActions": {
+        "start": "Démarrer le serveur",
+        "restart": "Redémarrer le serveur",
+        "stop": "Arrêter le serveur",
+        "kill": "Terminer le serveur"
+      },
+      "backupIgnored": "Ignorer les fichiers et dossiers :",
+      "sendCommand": "Envoyer une commande",
+      "sendPowerAction": "Envoyer une action d'alimentation",
+      "createBackup": "Créer une sauvegarde",
+      "unknownAction": "Action inconnue",
+      "deleteConfirm": {
+        "title": "Confirmer la suppression de la tâche",
+        "confirm": "Supprimer la tâche",
+        "description": "Êtes-vous sûr de vouloir supprimer cette tâche ? Cette action ne peut pas être annulée."
+      }
+    }
+  },
+  "users": {
+    "title": "Utilisateurs",
+    "noUsers": "Il semble que vous n'ayez aucun sous-utilisateur.",
+    "newUser": "Nouvel utilisateur",
+    "twoFactorEnabled": "2FA activé",
+    "permissionsLabel": "Permissions",
+    "permissionsCount": "{{count}} permissions",
+    "edit": {
+      "titleCreate": "Créer un nouveau sous-utilisateur",
+      "titleModify": "Modifier les permissions pour {{email}}",
+      "titleView": "Voir les permissions pour {{email}}",
+      "save": "Enregistrer",
+      "inviteUser": "Inviter un utilisateur",
+      "userEmail": "Email de l'utilisateur",
+      "userEmailDescription": "Entrez l'adresse e-mail de l'utilisateur que vous souhaitez inviter en tant que sous-utilisateur pour ce serveur.",
+      "permissionNotice": "Seules les permissions actuellement attribuées à votre compte peuvent être sélectionnées lors de la création ou de la modification d'autres utilisateurs."
+    },
+    "delete": {
+      "title": "Supprimer ce sous-utilisateur ?",
+      "confirm": "Oui, supprimer le sous-utilisateur",
+      "description": "Êtes-vous sûr de vouloir supprimer ce sous-utilisateur ? Il perdra immédiatement tout accès à ce serveur."
+    },
+    "permissions": {
+      "control": {
+        "title": "Contrôle",
+        "description": "Permissions qui contrôlent la capacité d'un utilisateur à contrôler l'état d'alimentation du serveur ou à envoyer des commandes.",
+        "console": "Permet à un utilisateur d'envoyer des commandes à l'instance du serveur via la console.",
+        "start": "Permet à un utilisateur de démarrer le serveur s'il est arrêté.",
+        "stop": "Permet à un utilisateur d'arrêter un serveur s'il est en cours d'exécution.",
+        "restart": "Permet à un utilisateur d'effectuer un redémarrage du serveur. Cela leur permet de démarrer le serveur s'il est hors ligne, mais pas de mettre le serveur dans un état complètement arrêté."
+      },
+      "user": {
+        "title": "Utilisateur",
+        "description": "Permissions qui contrôlent la capacité d'un utilisateur à gérer d'autres sous-utilisateurs sur un serveur. Ils ne pourront jamais modifier leur propre compte ou attribuer des permissions qu'ils n'ont pas eux-mêmes.",
+        "create": "Permet à un utilisateur de créer de nouveaux sous-utilisateurs pour le serveur.",
+        "read": "Permet à l'utilisateur de voir les sous-utilisateurs et leurs permissions pour le serveur.",
+        "update": "Permet à un utilisateur de modifier d'autres sous-utilisateurs.",
+        "delete": "Permet à un utilisateur de supprimer d'autres sous-utilisateurs sur le serveur."
+      },
+      "file": {
+        "title": "Fichier",
+        "description": "Permissions qui contrôlent la capacité d'un utilisateur à modifier le système de fichiers de ce serveur.",
+        "create": "Permet à un utilisateur de créer des fichiers et dossiers supplémentaires via le panneau ou le téléchargement direct.",
+        "read": "Permet à un utilisateur de voir le contenu d'un répertoire, mais pas de voir le contenu ou de télécharger des fichiers.",
+        "read-content": "Permet à un utilisateur de voir le contenu d'un fichier donné. Cela permettra également à l'utilisateur de télécharger des fichiers.",
+        "update": "Permet à un utilisateur de mettre à jour le contenu d'un fichier ou répertoire existant.",
+        "delete": "Permet à un utilisateur de supprimer des fichiers ou des répertoires.",
+        "archive": "Permet à un utilisateur d'archiver le contenu d'un répertoire ainsi que de décompresser les archives existantes sur le système.",
+        "sftp": "Permet à un utilisateur de se connecter à SFTP et de gérer les fichiers du serveur en utilisant les autres permissions de fichier attribuées."
+      },
+      "allocation": {
+        "title": "Allocation",
+        "description": "Permissions qui contrôlent la capacité d'un utilisateur à modifier les allocations de port pour ce serveur.",
+        "read": "Permet à un utilisateur de voir les allocations attribuées à ce serveur.",
+        "create": "Permet à un utilisateur d'attribuer des allocations supplémentaires au serveur.",
+        "update": "Permet à un utilisateur de modifier l'allocation principale du serveur et d'ajouter des notes à chaque allocation.",
+        "delete": "Permet à un utilisateur de supprimer une allocation du serveur."
+      },
+      "startup": {
+        "title": "Démarrage",
+        "description": "Permissions qui contrôlent la capacité d'un utilisateur à voir et modifier les paramètres de démarrage de ce serveur.",
+        "read": "Permet à un utilisateur de voir les variables de démarrage d'un serveur.",
+        "update": "Permet à un utilisateur de modifier les variables de démarrage du serveur.",
+        "docker-image": "Permet à un utilisateur de modifier l'image Docker utilisée lors de l'exécution du serveur."
+      },
+      "database": {
+        "title": "Base de données",
+        "description": "Permissions qui contrôlent la capacité d'un utilisateur à gérer les bases de données de ce serveur.",
+        "create": "Permet à un utilisateur de créer une nouvelle base de données pour ce serveur.",
+        "read": "Permet à un utilisateur de voir la base de données associée à ce serveur.",
+        "update": "Permet à un utilisateur de changer le mot de passe d'une instance de base de données. Si l'utilisateur n'a pas la permission view_password, il ne verra pas le mot de passe mis à jour.",
+        "delete": "Permet à un utilisateur de supprimer une instance de base de données de ce serveur.",
+        "view_password": "Permet à un utilisateur de voir le mot de passe associé à une instance de base de données pour ce serveur."
+      },
+      "schedule": {
+        "title": "Planification",
+        "description": "Permissions qui contrôlent la capacité d'un utilisateur à gérer les planifications de ce serveur.",
+        "create": "Permet à un utilisateur de créer de nouvelles planifications pour ce serveur.",
+        "read": "Permet à un utilisateur de voir les planifications et les tâches associées pour ce serveur.",
+        "update": "Permet à un utilisateur de mettre à jour les planifications et les tâches de planification pour ce serveur.",
+        "delete": "Permet à un utilisateur de supprimer des planifications pour ce serveur."
+      },
+      "settings": {
+        "title": "Paramètres",
+        "description": "Permissions qui contrôlent la capacité d'un utilisateur à modifier les paramètres du serveur.",
+        "rename": "Permet à un utilisateur de renommer ce serveur et de modifier la description du serveur.",
+        "reinstall": "Permet à un utilisateur de déclencher une réinstallation de ce serveur."
+      },
+      "backup": {
+        "title": "Sauvegarde",
+        "description": "Permissions qui contrôlent la capacité d'un utilisateur à gérer les sauvegardes du serveur.",
+        "create": "Permet à un utilisateur de créer de nouvelles sauvegardes pour ce serveur.",
+        "read": "Permet à un utilisateur de voir toutes les sauvegardes existantes pour ce serveur.",
+        "update": "Permet à un utilisateur de verrouiller ou de déverrouiller les sauvegardes de ce serveur.",
+        "delete": "Permet à un utilisateur de supprimer des sauvegardes pour ce serveur.",
+        "download": "Permet à un utilisateur de télécharger des sauvegardes pour ce serveur.",
+        "restore": "Permet à un utilisateur de restaurer une sauvegarde pour ce serveur."
+      },
+      "activity": {
+        "title": "Activité",
+        "description": "Permissions qui contrôlent l'accès d'un utilisateur aux journaux d'activité du serveur.",
+        "read": "Permet à un utilisateur de voir les journaux d'activité du serveur."
+      }
+    }
+  },
+  "backups": {
+    "title": "Sauvegardes",
+    "noBackups": "Il semble qu'il n'y ait actuellement aucune sauvegarde stockée pour ce serveur.",
+    "noBackupsPage": "Il semble que nous n'ayons plus de sauvegardes à vous montrer, essayez de revenir à la page précédente.",
+    "noBackupLimit": "Les sauvegardes ne peuvent pas être créées pour ce serveur car la limite de sauvegarde est définie à 0.",
+    "backupsUsed": "{{count}} sur {{limit}} sauvegardes ont été créées pour ce serveur.",
+    "createBackup": "Créer une sauvegarde",
+    "failed": "Échoué",
+    "created": "Créé",
+    "locked": "Verrouillé",
+    "download": "Télécharger",
+    "restore": "Restaurer",
+    "lock": "Verrouiller",
+    "unlock": "Déverrouiller",
+    "delete": "Supprimer",
+    "create": {
+      "title": "Créer une sauvegarde du serveur",
+      "nameLabel": "Nom de la sauvegarde",
+      "nameDescription": "Si fourni, le nom qui doit être utilisé pour référencer cette sauvegarde.",
+      "ignoredLabel": "Fichiers et répertoires ignorés",
+      "ignoredDescription": "Entrez les fichiers ou dossiers à ignorer lors de la génération de cette sauvegarde. Laissez vide pour utiliser le contenu du fichier .pteroignore à la racine du répertoire du serveur s'il est présent. La correspondance générique des fichiers et dossiers est prise en charge en plus de la négation d'une règle en préfixant le chemin avec un point d'exclamation.",
+      "lockedLabel": "Verrouillé",
+      "lockedDescription": "Empêche cette sauvegarde d'être supprimée jusqu'à ce qu'elle soit explicitement déverrouillée.",
+      "startBackup": "Démarrer la sauvegarde"
+    },
+    "unlockModal": {
+      "title": "Déverrouiller \"{{name}}\"",
+      "description": "Cette sauvegarde ne sera plus protégée contre les suppressions automatiques ou accidentelles."
+    },
+    "restoreModal": {
+      "title": "Restaurer \"{{name}}\"",
+      "confirm": "Restaurer",
+      "description1": "Votre serveur sera arrêté. Vous ne pourrez pas contrôler l'état d'alimentation, accéder au gestionnaire de fichiers ou créer des sauvegardes supplémentaires jusqu'à ce que l'opération soit terminée.",
+      "truncateLabel": "Supprimer tous les fichiers avant de restaurer la sauvegarde."
+    },
+    "deleteModal": {
+      "title": "Supprimer \"{{name}}\"",
+      "confirm": "Continuer",
+      "description": "Il s'agit d'une opération permanente. La sauvegarde ne peut pas être récupérée une fois supprimée."
+    }
+  },
+  "network": {
+    "title": "Réseau",
+    "hostname": "Nom d'hôte",
+    "ipAddress": "Adresse IP",
+    "port": "Port",
+    "notes": "Notes",
+    "primary": "Primaire",
+    "makePrimary": "Définir comme primaire",
+    "createAllocation": "Créer une allocation",
+    "allocationsUsed": "Vous utilisez actuellement {{count}} des {{limit}} allocations autorisées pour ce serveur.",
+    "deleteAllocation": {
+      "title": "Supprimer l'allocation",
+      "confirm": "Supprimer",
+      "description": "Cette allocation sera immédiatement supprimée de votre serveur."
+    }
+  },
+  "startup": {
+    "title": "Paramètres de démarrage",
+    "error": "Oups !",
+    "startupCommand": "Commande de démarrage",
+    "dockerImage": "Image Docker",
+    "dockerImageDescription": "Il s'agit d'une fonctionnalité avancée vous permettant de sélectionner une image Docker à utiliser lors de l'exécution de cette instance de serveur.",
+    "customDockerImage": "L'image Docker de ce serveur a été définie manuellement par un administrateur et ne peut pas être modifiée via cette interface.",
+    "variables": "Variables",
+    "readOnly": "Lecture seule",
+    "vars": {
+      "MINECRAFT_VERSION": {
+        "name": "Version de Minecraft",
+        "description": "La version de Minecraft à télécharger. Laissez à latest pour toujours obtenir la dernière version. Les versions invalides seront définies par défaut sur latest."
+      },
+      "SERVER_JARFILE": {
+        "name": "Fichier JAR du serveur",
+        "description": "Le nom du fichier JAR du serveur avec lequel exécuter le serveur."
+      },
+      "BUILD_NUMBER": {
+        "name": "Numéro de build",
+        "description": "Le numéro de build pour la version Paper. Laissez à latest pour toujours obtenir la dernière version. Les versions invalides seront définies par défaut sur latest."
+      },
+      "VANILLA_VERSION": {
+        "name": "Version de Minecraft",
+        "description": "La version de Minecraft Vanilla à télécharger et utiliser."
+      },
+      "FORGE_VERSION": {
+        "name": "Version de Forge",
+        "description": "La version de Minecraft Forge à installer. Utilisez recommended pour installer la version recommandée."
+      },
+      "MC_VERSION": {
+        "name": "Version de Minecraft",
+        "description": "La version de Minecraft à installer."
+      },
+      "STARTUP": {
+        "name": "Commande de démarrage",
+        "description": "La commande de démarrage pour votre serveur."
+      },
+      "DL_VERSION": {
+        "name": "Version",
+        "description": "La version à télécharger et installer."
+      }
+    }
+  },
+  "settings": {
+    "title": "Paramètres",
+    "sftp": {
+      "title": "Détails SFTP",
+      "serverAddress": "Adresse du serveur",
+      "username": "Nom d'utilisateur",
+      "passwordNotice": "Votre mot de passe SFTP est le même que celui que vous utilisez pour accéder à ce panneau.",
+      "launchSftp": "Lancer SFTP"
+    },
+    "debug": {
+      "title": "Informations de débogage",
+      "node": "Nœud",
+      "serverId": "ID du serveur"
+    },
+    "rename": {
+      "title": "Modifier les détails du serveur",
+      "serverName": "Nom du serveur",
+      "serverDescription": "Description du serveur",
+      "save": "Enregistrer"
+    },
+    "reinstall": {
+      "title": "Réinstaller le serveur",
+      "description": "La réinstallation de votre serveur l'arrêtera, puis exécutera à nouveau le script d'installation qui l'a initialement configuré.",
+      "warning": "Certains fichiers peuvent être supprimés ou modifiés au cours de ce processus, veuillez sauvegarder vos données avant de continuer.",
+      "button": "Réinstaller le serveur",
+      "confirmTitle": "Confirmer la réinstallation du serveur",
+      "confirmButton": "Oui, réinstaller le serveur",
+      "confirmMessage": "Votre serveur sera arrêté et certains fichiers peuvent être supprimés ou modifiés au cours de ce processus, êtes-vous sûr de vouloir continuer ?",
+      "successMessage": "Votre serveur a commencé le processus de réinstallation."
+    }
+  },
+  "sidebar": {
+    "dashboard": "Tableau de bord",
+    "servers": "Serveurs",
+    "adminPanel": "Panneau d'administration",
+    "serverManagement": "Gestion de {{serverName}}",
+    "account": "Compte",
+    "profile": "Profil",
+    "accountSettings": "Paramètres du compte",
+    "apiKeys": "Clés API",
+    "sshAccess": "Accès SSH",
+    "accountActivity": "Activité du compte",
+    "apiCredentials": "Identifiants API",
+    "sshKeys": "Clés SSH",
+    "activity": "Activité",
+    "signOut": "Déconnexion",
+    "console": "Console",
+    "fileManager": "Gestionnaire de fichiers",
+    "databases": "Bases de données",
+    "schedules": "Planifications",
+    "users": "Utilisateurs",
+    "backups": "Sauvegardes",
+    "network": "Réseau",
+    "startup": "Démarrage",
+    "settings": "Paramètres",
+    "support": "Assistance",
+    "newServer": "Nouveau serveur",
+    "billingArea": "Espace facturation",
+    "adminView": "Vue Admin"
+  },
+  "topbar": {
+    "matrix": "Matrix",
+    "accountSettings": "Paramètres du compte",
+    "apiKeys": "Clés API",
+    "sshAccess": "Accès SSH",
+    "accountActivity": "Activité du compte",
+    "signOut": "Déconnexion"
+  }
+}

@@ -1,5 +1,6 @@
 import React, { lazy } from 'react';
 import ServerConsole from '@/components/server/console/ServerConsoleContainer';
+import ServerInfoContainer from '@/components/server/ServerInfoContainer';
 import DatabasesContainer from '@/components/server/databases/DatabasesContainer';
 import ScheduleContainer from '@/components/server/schedules/ScheduleContainer';
 import UsersContainer from '@/components/server/users/UsersContainer';
@@ -27,13 +28,15 @@ import ServerImporterContainer from '@/components/server/serverimporter/ServerIm
 import GameConfigContainer from '@/components/server/game-config/GameConfigContainer';
 import MCPManagerContainer from '@/components/server/mcpmanager/Container';
 
+
+const FileEditContainer = lazy(() => import('@/components/server/files/FileEditContainer'));
+const ScheduleEditContainer = lazy(() => import('@/components/server/schedules/ScheduleEditContainer'));
+
 // Each of the router files is already code split out appropriately — so
 // all of the items above will only be loaded in when that router is loaded.
 //
 // These specific lazy loaded routes are to avoid loading in heavy screens
 // for the server dashboard when they're only needed for specific instances.
-const FileEditContainer = lazy(() => import('@/components/server/files/FileEditContainer'));
-const ScheduleEditContainer = lazy(() => import('@/components/server/schedules/ScheduleEditContainer'));
 
 interface RouteDefinition {
     path: string;
@@ -83,6 +86,13 @@ export default {
     server: [
         {
             path: '/',
+            permission: null,
+            name: 'Server Info',
+            component: ServerInfoContainer,
+            exact: true,
+        },
+        {
+            path: '/console',
             permission: null,
             name: 'Console',
             component: ServerConsole,

@@ -113,6 +113,11 @@ export default () => {
                             value={reinstallType}
                             onChange={(e) => setReinstallType(e.target.value as ReinstallType)}
                             css={tw`w-full`}
+                            style={{
+                                backgroundColor: 'var(--theme-background-secondary)',
+                                borderColor: 'var(--theme-border)',
+                                color: 'var(--theme-text-base)'
+                            }}
                         >
                             {reinstallOptions.map((option) => (
                                 <option key={option.value} value={option.value}>

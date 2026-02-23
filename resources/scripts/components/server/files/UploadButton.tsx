@@ -1,7 +1,8 @@
-import axios, { AxiosProgressEvent } from 'axios';
+import axios from 'axios';
 import getFileUploadUrl from '@/api/server/files/getFileUploadUrl';
 import tw from 'twin.macro';
 import { Button } from '@/components/elements/button/index';
+import { Options } from '@/components/elements/button/types';
 import React, { useEffect, useRef } from 'react';
 import { ModalMask } from '@/components/elements/Modal';
 import Fade from '@/components/elements/Fade';
@@ -13,6 +14,9 @@ import { WithClassname } from '@/components/types';
 import Portal from '@/components/elements/Portal';
 import { CloudUploadIcon } from '@heroicons/react/outline';
 import { useSignal } from '@preact/signals-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUpload } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
 
 function isFileOrDirectory(event: DragEvent): boolean {
     if (!event.dataTransfer?.types) {
@@ -23,6 +27,7 @@ function isFileOrDirectory(event: DragEvent): boolean {
 }
 
 export default ({ className }: WithClassname) => {
+    const { t } = useTranslation();
     const fileUploadInput = useRef<HTMLInputElement>(null);
 
     const visible = useSignal(false);
@@ -57,15 +62,15 @@ export default ({ className }: WithClassname) => {
         return () => timeouts.value.forEach(clearTimeout);
     }, []);
 
-    const onUploadProgress = (data: AxiosProgressEvent, name: string) => {
+    const onUploadProgress = (data: ProgressEvent, name: string) => {
         setUploadProgress({ name, loaded: data.loaded });
     };
 
     const onFileSubmission = (files: FileList) => {
         clearAndAddHttpError();
         const list = Array.from(files);
-        if (list.some((file) => !file.type && (!file.size || file.size === 4096))) {
-            return addError('Folder uploads are not supported.', 'Error');
+        if (list.some((file) => !file.size || (!file.type && file.size === 4096))) {
+            return addError(t('files.uploadModal.error'), 'Error');
         }
 
         const uploads = list.map((file) => {
@@ -119,12 +124,15 @@ export default ({ className }: WithClassname) => {
                     >
                         <div className={'w-full flex items-center justify-center pointer-events-none'}>
                             <div
-                                className={
-                                    'flex items-center space-x-4 bg-black w-full ring-4 ring-blue-200 ring-opacity-60 rounded p-6 mx-10 max-w-sm'
-                                }
+                                className={'flex items-center space-x-4 w-full rounded p-6 mx-10 max-w-sm'}
+                                style={{
+                                    backgroundColor: 'var(--theme-background)',
+                                    border: '2px dashed var(--theme-primary)',
+                                    boxShadow: '0 0 0 4px rgba(var(--theme-primary-rgb), 0.1)'
+                                }}
                             >
-                                <CloudUploadIcon className={'w-10 h-10 flex-shrink-0'} />
-                                <p className={'font-header flex-1 text-lg text-neutral-100 text-center'}>
+                                <CloudUploadIcon className={'w-10 h-10 flex-shrink-0'} style={{ color: 'var(--theme-primary)' }} />
+                                <p className={'font-header flex-1 text-lg text-center'} style={{ color: 'var(--theme-text-base)' }}>
                                     Drag and drop files to upload.
                                 </p>
                             </div>
@@ -146,8 +154,14 @@ export default ({ className }: WithClassname) => {
                 }}
                 multiple
             />
-            <Button className={className} onClick={() => fileUploadInput.current && fileUploadInput.current.click()}>
-                Upload
+            <Button 
+                className={className} 
+                size={Options.Size.Compact}
+                variant={Options.Variant.Primary}
+                onClick={() => fileUploadInput.current && fileUploadInput.current.click()}
+            >
+                <FontAwesomeIcon icon={faUpload} className="mr-1" />
+                {t('files.upload')}
             </Button>
         </>
     );

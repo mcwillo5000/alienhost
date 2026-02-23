@@ -5,8 +5,10 @@ import { Actions, useStoreActions } from 'easy-peasy';
 import { ApplicationStore } from '@/state';
 import { httpErrorToHuman } from '@/api/http';
 import { Button } from '@/components/elements/button/index';
+import { Options } from '@/components/elements/button/types';
 import { Dialog } from '@/components/elements/dialog';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     scheduleId: number;
@@ -14,6 +16,7 @@ interface Props {
 }
 
 export default ({ scheduleId, onDeleted }: Props) => {
+    const { t } = useTranslation();
     const [visible, setVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
@@ -41,19 +44,20 @@ export default ({ scheduleId, onDeleted }: Props) => {
             <Dialog.Confirm
                 open={visible}
                 onClose={() => setVisible(false)}
-                title={'Delete Schedule'}
-                confirm={'Delete'}
+                title={t('schedules.delete.title')}
+                confirm={t('schedules.delete.confirm')}
                 onConfirmed={onDelete}
             >
                 <SpinnerOverlay visible={isLoading} />
-                All tasks will be removed and any running processes will be terminated.
+                {t('schedules.delete.description')}
             </Dialog.Confirm>
             <Button.Danger
-                variant={Button.Variants.Secondary}
+                size={Options.Size.Compact}
+                variant={Options.Variant.Primary}
                 className={'flex-1 sm:flex-none mr-4 border-transparent'}
                 onClick={() => setVisible(true)}
             >
-                Delete
+                {t('schedules.deleteButton')}
             </Button.Danger>
         </>
     );

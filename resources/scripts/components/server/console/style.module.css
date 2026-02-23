@@ -1,16 +1,275 @@
+
+.console_container {
+    @apply overflow-hidden shadow-sm flex flex-col;
+    background-color: var(--theme-background-secondary);
+    height: 700px;
+    min-height: 700px;
+    max-height: 700px;
+    clip-path: polygon(0px 12px, 12px 0px, 100% 0px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0px 100%);
+    position: relative;
+    box-shadow: 0 0 10px rgba(var(--theme-primary-rgb, 59, 130, 246), 0.15),
+                inset 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.console_container::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: var(--theme-background-secondary);
+    clip-path: polygon(0px 12px, 12px 0px, 100% 0px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0px 100%);
+    z-index: -1;
+}
+
+.console_container::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    background: var(--theme-border);
+    clip-path: polygon(0px 12px, 12px 0px, 100% 0px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0px 100%);
+    z-index: -2;
+    box-shadow: 0 0 8px var(--theme-primary);
+}
+
+
+.console_header {
+    @apply px-6 py-3 flex items-center justify-between flex-shrink-0;
+    background-color: var(--theme-background);
+    border-bottom: 1px solid var(--theme-border);
+}
+
+.console_title {
+    @apply text-sm font-medium;
+    color: var(--theme-text-base);
+    font-family: 'Orbitron', sans-serif;
+}
+
+.terminal_icon {
+    @apply mr-2 text-xs;
+    color: var(--theme-primary);
+}
+
+
+.console_content {
+    @apply flex flex-col flex-1 overflow-hidden;
+}
+
+
+#terminal {
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+
+#terminal .xterm {
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+#terminal .xterm-viewport {
+    width: 100% !important;
+    background-color: transparent !important;
+}
+
+#terminal .xterm-screen {
+    padding: 10px !important;
+    margin: 0 !important;
+}
+
+
+#terminal,
+#terminal .xterm,
+#terminal .xterm-screen,
+#terminal .xterm-viewport {
+    touch-action: pan-y pinch-zoom !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+
+
+#terminal .xterm-selection {
+    pointer-events: none;
+}
+
+#terminal .xterm-rows {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+
+#terminal .xterm-viewport::-webkit-scrollbar {
+    width: 6px !important;
+    background: var(--scrollbar-track) !important;
+}
+
+#terminal .xterm-viewport::-webkit-scrollbar-track {
+    background: var(--scrollbar-track) !important;
+    border-radius: 3px !important;
+}
+
+#terminal .xterm-viewport::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb) !important;
+    border-radius: 3px !important;
+}
+
+#terminal .xterm-viewport::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scrollbar-thumb-hover) !important;
+}
+
+.console_output {
+    @apply flex-1 p-4 font-mono text-sm overflow-y-auto;
+    background-color: var(--theme-background-secondary);
+    min-height: 0;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    
+}
+
+
+.console_output::-webkit-scrollbar {
+    width: 6px !important;
+    height: 6px !important;
+    background: var(--scrollbar-track) !important;
+}
+
+.console_output::-webkit-scrollbar-track {
+    background: var(--scrollbar-track) !important;
+    border: none !important;
+    border-radius: 3px !important;
+    box-shadow: none !important;
+}
+
+.console_output::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb) !important;
+    border: none !important;
+    border-radius: 3px !important;
+    box-shadow: none !important;
+    transition: all 0.3s ease !important;
+}
+
+.console_output::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scrollbar-thumb-hover) !important;
+    transform: scaleX(1.2) !important;
+}
+
+
+.console_line {
+    @apply mb-1;
+    line-height: 1.4;
+}
+
+.console_timestamp {
+    @apply mr-2;
+    color: var(--theme-text-muted);
+}
+
+.console_message {
+    color: var(--theme-text-base);
+}
+
+
+.command_container {
+    @apply p-3 border-t flex-shrink-0 sticky bottom-0;
+    background-color: var(--theme-background);
+    border-color: var(--theme-border);
+    z-index: 20;
+}
+
+.command_wrapper {
+    @apply flex items-center space-x-3;
+}
+
+.command_prompt {
+    @apply font-mono text-sm;
+    color: var(--theme-text-muted);
+}
+
+.command_input {
+    @apply flex-1 px-3 py-2 text-sm font-mono;
+    @apply focus:outline-none transition-all duration-200;
+    background-color: var(--theme-background);
+    color: var(--theme-text-base);
+    border: 1px solid var(--theme-border);
+    min-height: 36px;
+    font-family: 'Electrolize', ui-monospace, monospace;
+    clip-path: polygon(0px 6px, 6px 0px, 100% 0px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0px 100%);
+    box-shadow: 0 0 4px rgba(var(--theme-border-rgb, 55, 65, 81), 0.3);
+}
+
+.command_input:focus {
+    border-color: var(--theme-primary);
+    box-shadow: 0 0 8px rgba(var(--theme-primary-rgb, 59, 130, 246), 0.4);
+}
+
+.command_input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.command_input::placeholder {
+    color: var(--theme-text-muted);
+}
+
+.send_button {
+    @apply inline-flex items-center px-3 py-2 text-sm font-medium;
+    @apply transition-all duration-200 focus:outline-none;
+    background-color: var(--theme-primary);
+    color: white;
+    border: 1px solid var(--theme-primary);
+    min-height: 36px;
+    font-family: 'Orbitron', sans-serif;
+    clip-path: polygon(0px 6px, 6px 0px, 100% 0px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0px 100%);
+    box-shadow: 0 0 8px rgba(var(--theme-primary-rgb, 59, 130, 246), 0.4);
+}
+
+.send_button:hover:not(:disabled) {
+    background-color: var(--theme-secondary);
+    border-color: var(--theme-secondary);
+    box-shadow: 0 0 12px rgba(var(--theme-primary-rgb, 59, 130, 246), 0.6);
+}
+
+.send_button:focus {
+    box-shadow: 0 0 10px rgba(var(--theme-primary-rgb, 59, 130, 246), 0.5);
+}
+
+.send_button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.send_icon {
+    @apply mr-1 text-xs;
+}
+
 .stat_block {
-    @apply flex items-center rounded shadow-lg relative;
+    @apply flex items-center relative;
     @apply col-span-3 md:col-span-2 lg:col-span-6;
     @apply px-3 py-2 md:p-3 lg:p-4;
+    background-color: var(--theme-background-secondary);
+    border: 1px solid var(--theme-border);
+    clip-path: polygon(0px 8px, 8px 0px, 100% 0px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0px 100%);
+    box-shadow: 0 0 6px rgba(var(--theme-border-rgb, 55, 65, 81), 0.4),
+                inset 0 0 10px rgba(0, 0, 0, 0.2);
+    transition: box-shadow 0.3s ease;
+
+    &:hover {
+        box-shadow: 0 0 10px rgba(var(--theme-primary-rgb, 59, 130, 246), 0.3),
+                    inset 0 0 10px rgba(0, 0, 0, 0.2);
+    }
 
     & > .status_bar {
-        @apply w-1 h-full absolute left-0 top-0 rounded-l sm:hidden;
+        @apply w-1 h-full absolute left-0 top-0 sm:hidden;
+        clip-path: polygon(0px 8px, 8px 0px, 100% 0px, 100% 100%, 0px 100%);
     }
 
     & > .icon {
-        @apply hidden flex-shrink-0 items-center justify-center rounded-lg shadow-md w-12 h-12;
-        @apply transition-colors duration-500;
+        @apply hidden flex-shrink-0 items-center justify-center w-12 h-12;
+        @apply transition-all duration-500;
         @apply sm:flex sm:mr-4;
+        clip-path: polygon(0px 6px, 6px 0px, 100% 0px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0px 100%);
+        box-shadow: 0 0 4px rgba(var(--theme-border-rgb, 55, 65, 81), 0.3);
 
         & > svg {
             @apply w-6 h-6 m-auto;
@@ -18,46 +277,12 @@
     }
 }
 
-.terminal {
-    @apply flex flex-col w-full;
-
-    & .overflows_container {
-        @apply -ml-4 sm:ml-0;
-        width: calc(100% + 2rem);
-
-        @screen sm {
-            @apply w-full;
-        }
-    }
-
-    & > .container {
-        @apply rounded-t p-1 sm:p-2 bg-black min-h-[16rem] flex-1 font-mono text-sm;
-
-        & #terminal {
-            @apply h-full;
-
-            &::-webkit-scrollbar-track {
-                @apply w-2;
-            }
-
-            &::-webkit-scrollbar-thumb {
-                @apply bg-gray-900;
-            }
-        }
-    }
-
-    & .command_icon {
-        @apply flex items-center top-0 left-0 absolute z-10 select-none h-full px-3 transition-colors duration-100;
-    }
-
-    & .command_input {
-        @apply relative bg-gray-900 px-2 text-gray-100 pl-10 pr-4 py-2 w-full font-mono text-sm sm:rounded-b;
-        @apply focus:ring-0 outline-none focus-visible:outline-none;
-        @apply border-0 border-b-2 border-transparent transition-colors duration-100;
-        @apply active:border-cyan-500 focus:border-cyan-500;
-    }
-}
 
 .chart_container {
-    @apply bg-gray-600 rounded shadow-lg pt-2 border-b-4 border-gray-700 relative;
+    @apply pt-2 relative;
+    background-color: var(--theme-background-secondary);
+    border: 1px solid var(--theme-border);
+    clip-path: polygon(0px 10px, 10px 0px, 100% 0px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0px 100%);
+    box-shadow: 0 0 8px rgba(var(--theme-border-rgb, 55, 65, 81), 0.4),
+                inset 0 0 15px rgba(0, 0, 0, 0.2);
 }

@@ -1,0 +1,690 @@
+{
+  "account": {
+    "overview": {
+      "title": "Kontooversigt",
+      "twoFactorRequired": {
+        "title": "2FA påkrævet",
+        "message": "Din konto skal have to-faktor-godkendelse aktiveret for at fortsætte."
+      }
+    },
+    "password": {
+      "title": "Opdater adgangskode",
+      "requirements": "Din nye adgangskode skal være mindst 8 tegn lang og unik for denne hjemmeside.",
+      "currentPassword": "Nuværende adgangskode",
+      "newPassword": "Ny adgangskode",
+      "confirmPassword": "Bekræft ny adgangskode",
+      "updateButton": "Opdater adgangskode",
+      "updated": "Din adgangskode er blevet opdateret."
+    },
+    "email": {
+      "title": "Opdater e-mailadresse",
+      "newEmail": "Ny e-mail",
+      "password": "Bekræft adgangskode",
+      "updateButton": "Opdater e-mail",
+      "updated": "Din e-mailadresse er blevet opdateret."
+    },
+    "twoFactor": {
+      "title": "To-trins-verifikation",
+      "button": "Du har i øjeblikket ikke aktiveret to-trins-verifikation på din konto. Klik på knappen nedenfor for at begynde at konfigurere den.",
+      "enabled": "To-faktor-godkendelse er blevet aktiveret på din konto! Fra nu af skal du angive koden genereret af din enhed, når du logger ind.",
+      "disabled": "To-faktor-godkendelse er blevet deaktiveret på din konto. Du vil ikke længere blive bedt om at angive et token, når du logger ind.",
+      "invalid": "Det angivne token var ugyldigt.",
+      "setup": {
+        "title": "Opsæt to-faktor-godkendelse",
+        "help": "Kan du ikke scanne koden? Indtast følgende kode i din applikation:",
+        "description": "Scan QR-koden ovenfor med din foretrukne to-trins-godkendelsesapp. Indtast derefter den genererede 6-cifrede kode i feltet nedenfor.",
+        "field": "Indtast token",
+        "accountPassword": "Kontoadgangskode",
+        "cancel": "Annuller",
+        "enable": "Aktiver"
+      },
+      "disable": {
+        "title": "Deaktiver to-faktor-godkendelse",
+        "password": "Adgangskode",
+        "cancel": "Annuller",
+        "disable": "Deaktiver"
+      },
+      "tokens": {
+        "title": "Gendannelsestokens",
+        "description": "Opbevar disse tokens et sikkert sted. Hvis du mister adgang til din telefon, kan du bruge disse backup-tokens til at logge ind.",
+        "close": "Luk"
+      }
+    },
+    "api": {
+      "title": "Konto-API",
+      "createKey": {
+        "title": "Opret API-nøgle",
+        "description": {
+          "label": "Beskrivelse",
+          "help": "En beskrivelse af denne API-nøgle."
+        },
+        "allowedIps": {
+          "label": "Tilladte IP'er",
+          "help": "Lad være blank for at tillade enhver IP-adresse at bruge denne API-nøgle, ellers angiv hver IP-adresse på en ny linje."
+        },
+        "create": "Opret"
+      },
+      "keys": {
+        "title": "API-nøgler",
+        "loading": "Indlæser...",
+        "none": "Der findes ingen API-nøgler for denne konto.",
+        "lastUsed": "Sidst brugt",
+        "never": "Aldrig",
+        "deleteConfirm": {
+          "title": "Slet API-nøgle",
+          "confirm": "Slet nøgle",
+          "message": "Alle anmodninger ved hjælp af {{identifier}}-nøglen vil blive ugyldiggjort."
+        }
+      },
+      "modal": {
+        "title": "Din API-nøgle",
+        "description": "Den API-nøgle, du har anmodet om, vises nedenfor. Opbevar den venligst et sikkert sted, den vil ikke blive vist igen.",
+        "close": "Luk"
+      }
+    },
+    "ssh": {
+      "title": "SSH-nøgler",
+      "addKey": {
+        "title": "Tilføj SSH-nøgle",
+        "name": {
+          "label": "SSH-nøglenavn"
+        },
+        "publicKey": {
+          "label": "Offentlig nøgle",
+          "help": "Indtast din offentlige SSH-nøgle."
+        },
+        "save": "Gem"
+      },
+      "keys": {
+        "title": "SSH-nøgler",
+        "loading": "Indlæser...",
+        "none": "Der findes ingen SSH-nøgler for denne konto.",
+        "addedOn": "Tilføjet den",
+        "deleteConfirm": {
+          "title": "Slet SSH-nøgle",
+          "confirm": "Slet nøgle",
+          "message": "Fjernelse af {{name}} SSH-nøglen vil ugyldiggøre dens brug på panelet."
+        }
+      }
+    },
+    "activity": {
+      "title": "Kontoaktivitetslog",
+      "clearFilters": "Ryd filtre"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "showingYourServers": "Viser dine servere",
+    "showingOthersServers": "Viser andres servere",
+    "noServers": "Der er ingen servere tilknyttet din konto.",
+    "noOtherServers": "Der er ingen andre servere at vise.",
+    "serverRow": {
+      "status": {
+        "online": "Online",
+        "offline": "Offline",
+        "starting": "Starter",
+        "suspended": "Suspenderet",
+        "install": "Installer",
+        "restore": "Gendan",
+        "transfer": "Overfør",
+        "transferring": "Overfører",
+        "installing": "Installerer",
+        "restoringBackup": "Gendanner backup",
+        "unavailable": "Ikke tilgængelig",
+        "connectionError": "Forbindelsesfejl"
+      },
+      "resources": {
+        "cpu": "CPU",
+        "ram": "RAM",
+        "storage": "Lagerplads",
+        "ip": "IP"
+      },
+      "manageServer": "Administrer server"
+    }
+  },
+  "console": {
+    "title": "Konsol",
+    "header": {
+      "title": "Serverkonsol",
+      "status": {
+        "running": "Kører",
+        "stopped": "Stoppet",
+        "starting": "Starter",
+        "stopping": "Stopper",
+        "disconnected": "Afbrudt",
+        "unknown": "Ukendt"
+      }
+    },
+    "input": {
+      "placeholder": "Indtast kommando...",
+      "send": "Send"
+    },
+    "filters": {
+      "all": "Alle",
+      "errors": "Fejl",
+      "warnings": "Advarsler",
+      "showAll": "Vis alle konsol output",
+      "showErrors": "Vis kun fejl",
+      "showWarnings": "Vis kun advarsler"
+    },
+    "alerts": {
+      "nodeMaintenance": "Denne servers node er i øjeblikket under vedligeholdelse, og alle handlinger er utilgængelige.",
+      "installing": "Denne server kører i øjeblikket sin installationsproces, og de fleste handlinger er utilgængelige.",
+      "transferring": "Denne server bliver i øjeblikket overført til en anden node, og alle handlinger er utilgængelige."
+    },
+    "power": {
+      "start": "Start",
+      "stop": "Stop",
+      "restart": "Genstart",
+      "kill": "Dræb",
+      "killConfirm": {
+        "title": "Tving proces til at stoppe",
+        "message": "At tvinge en server til at stoppe kan resultere i datatab.",
+        "confirm": "Fortsæt"
+      }
+    },
+    "stats": {
+      "serverAddress": "Serveradresse",
+      "uptime": "Oppetid",
+      "cpuUsage": "CPU-forbrug",
+      "memoryUsage": "Hukommelsesforbrug",
+      "diskUsage": "Diskforbrug",
+      "networkUsage": "Netværksforbrug",
+      "offline": "Offline",
+      "networkIn": "Netværk ind",
+      "networkOut": "Netværk ud",
+      "copyTooltip": "Kopier adresse til udklipsholder",
+      "clickToCopy": "Klik for at kopiere adresse"
+    },
+    "graphs": {
+      "cpu": "CPU",
+      "memory": "Hukommelse",
+      "network": "Netværk",
+      "networkIn": "Netværk ind",
+      "networkOut": "Netværk ud"
+    }
+  },
+  "files": {
+    "title": "Filhåndtering",
+    "upload": "Upload",
+    "uploadModal": {
+      "title": "Træk og slip filer for at uploade.",
+      "error": "Mappeupload understøttes ikke i øjeblikket."
+    },
+    "createDirectory": "Opret mappe",
+    "createDirectoryModal": {
+      "title": "Opret mappe",
+      "name": "Navn",
+      "creating": "Denne mappe vil blive oprettet som",
+      "cancel": "Annuller",
+      "create": "Opret"
+    },
+    "newFile": "Ny fil",
+    "fileNameModal": {
+      "title": "Filnavn",
+      "description": "Indtast navnet, som denne fil skal gemmes under.",
+      "create": "Opret fil"
+    },
+    "massActions": {
+      "selected": "{{count}} fil(er) valgt.",
+      "delete": "Slet",
+      "move": "Flyt",
+      "compress": "Komprimer",
+      "archiving": "Arkiverer filer...",
+      "deleting": "Sletter filer...",
+      "deleteConfirm": {
+        "title": "Slet filer",
+        "message": "Er du sikker på, at du vil slette",
+        "files": "fil(er)",
+        "permanent": "Dette er en permanent handling, og filerne kan ikke gendannes.",
+        "andOthers": "og {{count}} flere",
+        "confirm": "Slet",
+        "cancel": "Annuller"
+      }
+    },
+    "rename": "Omdøb",
+    "renameModal": {
+      "title": "Filnavn",
+      "move": "Flyt",
+      "rename": "Omdøb",
+      "description": "Indtast det nye navn og mappe for denne fil eller mappe i forhold til den aktuelle mappe.",
+      "newLocation": "Ny placering:"
+    },
+    "chmod": "Tilladelser",
+    "chmodModal": {
+      "title": "Filtilstand",
+      "update": "Opdater"
+    },
+    "dropdown": {
+      "rename": "Omdøb",
+      "move": "Flyt",
+      "chmod": "Tilladelser",
+      "copy": "Kopier",
+      "download": "Download",
+      "compress": "Komprimer",
+      "decompress": "Udpak",
+      "delete": "Slet",
+      "deleteConfirm": {
+        "title": "Slet {{type}}",
+        "file": "fil",
+        "directory": "mappe",
+        "message": "Du vil ikke kunne gendanne indholdet af",
+        "confirm": "Slet"
+      }
+    },
+    "fileUploads": {
+      "title": "Fil-uploads",
+      "description": "Følgende filer uploades til din server.",
+      "cancelAll": "Annuller uploads",
+      "close": "Luk",
+      "uploading": "Uploader {{count}} filer, klik for at se"
+    },
+    "editor": {
+      "title": "Fileditor",
+      "editingFile": "Redigerer fil",
+      "creatingFile": "Opretter en ny fil",
+      "save": "Gem indhold",
+      "create": "Opret fil",
+      "fileNameModal": {
+        "title": "Filnavn",
+        "description": "Indtast navnet, som denne fil skal gemmes under.",
+        "create": "Opret fil"
+      }
+    }
+  },
+  "databases": {
+    "title": "Databaser",
+    "noDatabases": "Det ser ud til, at du ikke har nogen databaser.",
+    "cannotCreate": "Databaser kan ikke oprettes for denne server.",
+    "allocated": "{{current}} af {{limit}} databaser er blevet tildelt denne server.",
+    "newDatabase": "Ny database",
+    "create": {
+      "title": "Opret ny database",
+      "databaseName": "Databasenavn",
+      "databaseNameDescription": "Et beskrivende navn til din databaseinstans.",
+      "connectionsFrom": "Forbindelser fra",
+      "connectionsFromDescription": "Hvorfra forbindelser skal tillades. Lad være blank for at tillade forbindelser fra hvor som helst.",
+      "cancel": "Annuller",
+      "createButton": "Opret database"
+    },
+    "delete": {
+      "title": "Bekræft sletning af database",
+      "description": "Sletning af en database er en permanent handling, der ikke kan fortrydes. Dette vil permanent slette",
+      "description2": "databasen og fjerne alle tilknyttede data.",
+      "confirmName": "Bekræft databasenavn",
+      "confirmDescription": "Indtast databasenavnet for at bekræfte sletning.",
+      "cancel": "Annuller",
+      "deleteButton": "Slet database"
+    },
+    "connection": {
+      "title": "Databaseforbindelsesdetaljer",
+      "endpoint": "Endepunkt",
+      "connectionsFrom": "Forbindelser fra",
+      "username": "Brugernavn",
+      "password": "Adgangskode",
+      "jdbcString": "JDBC-forbindelsesstreng",
+      "rotatePassword": "Roter adgangskode",
+      "close": "Luk"
+    }
+  },
+  "schedules": {
+    "title": "Tidsplaner",
+    "noSchedules": "Der er ingen tidsplaner konfigureret for denne server.",
+    "createSchedule": "Opret tidsplan",
+    "newTask": "Ny opgave",
+    "runNow": "Kør nu",
+    "deleteButton": "Slet",
+    "lastRunAt": "Sidst kørt:",
+    "never": "aldrig",
+    "active": "Aktiv",
+    "inactive": "Inaktiv",
+    "processing": "Behandler",
+    "edit": {
+      "titleCreate": "Opret ny tidsplan",
+      "titleEdit": "Rediger tidsplan",
+      "scheduleName": "Tidsplannavn",
+      "scheduleNameDescription": "En læsbar identifikator for denne tidsplan.",
+      "minute": "Minut",
+      "hour": "Time",
+      "dayOfMonth": "Dag i måneden",
+      "month": "Måned",
+      "dayOfWeek": "Ugedag",
+      "cronDescription": "Tidsplansystemet understøtter brugen af cronjob-syntaks ved definition af, hvornår opgaver skal køres. Brug felterne ovenfor til at specificere, hvornår disse opgaver skal køres.",
+      "showCheatsheet": "Vis snydearket",
+      "showCheatsheetDescription": "Vis cron-snydearket for nogle eksempler.",
+      "onlyWhenOnline": "Kun når serveren er online",
+      "onlyWhenOnlineDescription": "Kør kun denne tidsplan, når serveren er i en kørende tilstand.",
+      "scheduleEnabled": "Tidsplan aktiveret",
+      "scheduleEnabledDescription": "Denne tidsplan vil køre automatisk.",
+      "cancel": "Annuller",
+      "create": "Opret tidsplan",
+      "save": "Gem ændringer"
+    },
+    "delete": {
+      "title": "Slet tidsplan",
+      "confirm": "Slet",
+      "description": "Alle opgaver vil blive fjernet, og alle kørende processer vil blive afsluttet."
+    },
+    "cheatsheet": {
+      "examples": "Eksempler",
+      "specialCharacters": "Specialtegn",
+      "everyFiveMinutes": "hvert 5. minut",
+      "everyHour": "hver time",
+      "hourRange": "timeinterval",
+      "onceADay": "en gang om dagen",
+      "everyMonday": "hver mandag",
+      "anyValue": "enhver værdi",
+      "valueListSeparator": "værdilisteseparator",
+      "rangeValues": "intervalværdier",
+      "stepValues": "trinværdier"
+    },
+    "task": {
+      "titleCreate": "Opret opgave",
+      "titleEdit": "Rediger opgave",
+      "action": "Handling",
+      "timeOffset": "Tidsforskydning (i sekunder)",
+      "timeOffsetDescription": "Tiden at vente efter den forrige opgave kører, før denne kører. Hvis dette er den første opgave i en tidsplan, vil dette ikke blive anvendt.",
+      "payload": "Nyttelast",
+      "continueOnFailure": "Fortsæt ved fejl",
+      "continueOnFailureDescription": "Fremtidige opgaver vil køre, når denne opgave fejler.",
+      "cancel": "Annuller",
+      "create": "Opret opgave",
+      "save": "Gem ændringer",
+      "actions": {
+        "command": "Send kommando",
+        "power": "Send strømhandling",
+        "backup": "Opret backup"
+      },
+      "powerActions": {
+        "start": "Start server",
+        "restart": "Genstart server",
+        "stop": "Stop server",
+        "kill": "Dræb server"
+      },
+      "backupIgnored": "Ignorerede filer og mapper:",
+      "sendCommand": "Send kommando",
+      "sendPowerAction": "Send strømhandling",
+      "createBackup": "Opret backup",
+      "unknownAction": "Ukendt handling",
+      "deleteConfirm": {
+        "title": "Bekræft sletning af opgave",
+        "confirm": "Slet opgave",
+        "description": "Er du sikker på, at du vil slette denne opgave? Denne handling kan ikke fortrydes."
+      }
+    }
+  },
+  "users": {
+    "title": "Brugere",
+    "noUsers": "Det ser ud til, at du ikke har nogen underbrugere.",
+    "newUser": "Ny bruger",
+    "twoFactorEnabled": "2FA aktiveret",
+    "permissionsLabel": "Tilladelser",
+    "permissionsCount": "{{count}} tilladelser",
+    "edit": {
+      "titleCreate": "Opret ny underbruger",
+      "titleModify": "Rediger tilladelser for {{email}}",
+      "titleView": "Vis tilladelser for {{email}}",
+      "save": "Gem",
+      "inviteUser": "Inviter bruger",
+      "userEmail": "Bruger-e-mail",
+      "userEmailDescription": "Indtast e-mailadressen på den bruger, du ønsker at invitere som underbruger til denne server.",
+      "permissionNotice": "Ved oprettelse eller ændring af andre brugere kan kun tilladelser, der i øjeblikket er tildelt din konto, vælges."
+    },
+    "delete": {
+      "title": "Slet denne underbruger?",
+      "confirm": "Ja, fjern underbruger",
+      "description": "Er du sikker på, at du vil fjerne denne underbruger? Al adgang til denne server vil straks blive tilbagekaldt."
+    },
+    "permissions": {
+      "control": {
+        "title": "Kontrol",
+        "description": "Tilladelser, der styrer en brugers evne til at kontrollere strømtilstanden for en server eller sende kommandoer.",
+        "console": "Tillader en bruger at sende kommandoer via konsollen til serverinstansen.",
+        "start": "Tillader en bruger at starte serveren, hvis den er stoppet.",
+        "stop": "Tillader en bruger at stoppe en server, hvis den kører.",
+        "restart": "Tillader en bruger at udføre en servergenstart. Dette vil tillade dem at starte serveren, hvis den er offline, men ikke at sætte serveren i en fuldstændig stoppet tilstand."
+      },
+      "user": {
+        "title": "Bruger",
+        "description": "Tilladelser, der styrer en brugers evne til at administrere andre underbrugere på en server. De vil aldrig kunne redigere deres egen konto eller tildele tilladelser, de selv ikke har.",
+        "create": "Tillader en bruger at oprette nye underbrugere til serveren.",
+        "read": "Tillader brugeren at se underbrugere og deres tilladelser til serveren.",
+        "update": "Tillader en bruger at ændre andre underbrugere.",
+        "delete": "Tillader en bruger at slette andre underbrugere på serveren."
+      },
+      "file": {
+        "title": "Fil",
+        "description": "Tilladelser, der styrer en brugers evne til at ændre filsystemet for denne server.",
+        "create": "Tillader en bruger at oprette yderligere filer og mapper via panelet eller direkte upload.",
+        "read": "Tillader en bruger at se indholdet af en mappe, men ikke se indholdet af filer eller downloade filer.",
+        "read-content": "Tillader en bruger at se indholdet af en given fil. Dette vil også tillade brugeren at downloade filer.",
+        "update": "Tillader en bruger at opdatere indholdet af en eksisterende fil eller mappe.",
+        "delete": "Tillader en bruger at slette filer eller mapper.",
+        "archive": "Tillader en bruger at arkivere indholdet af en mappe samt udpakke eksisterende arkiver på systemet.",
+        "sftp": "Tillader en bruger at oprette forbindelse med SFTP og administrere serverfiler ved hjælp af de andre tildelte filtilladelser."
+      },
+      "allocation": {
+        "title": "Allokering",
+        "description": "Tilladelser, der styrer en brugers evne til at ændre portallokeringerne for denne server.",
+        "read": "Tillader en bruger at se de allokeringer, der er tildelt denne server.",
+        "create": "Tillader en bruger at tildele yderligere allokeringer til serveren.",
+        "update": "Tillader en bruger at ændre den primære serverallokering og vedhæfte noter til hver allokering.",
+        "delete": "Tillader en bruger at slette en allokering fra serveren."
+      },
+      "startup": {
+        "title": "Opstart",
+        "description": "Tilladelser, der styrer en brugers evne til at se og ændre opstartsparametrene for denne server.",
+        "read": "Tillader en bruger at se opstartsvariabler for en server.",
+        "update": "Tillader en bruger at ændre opstartsvariabler for serveren.",
+        "docker-image": "Tillader en bruger at ændre Docker-billedet, der bruges ved kørsel af serveren."
+      },
+      "database": {
+        "title": "Database",
+        "description": "Tilladelser, der styrer en brugers evne til at administrere databaser for denne server.",
+        "create": "Tillader en bruger at oprette en ny database til denne server.",
+        "read": "Tillader en bruger at se databasen tilknyttet denne server.",
+        "update": "Tillader en bruger at rotere adgangskoden for en databaseinstans. Hvis brugeren ikke har tilladelsen view_password, vil de ikke se den opdaterede adgangskode.",
+        "delete": "Tillader en bruger at fjerne en databaseinstans fra denne server.",
+        "view_password": "Tillader en bruger at se adgangskoden tilknyttet en databaseinstans for denne server."
+      },
+      "schedule": {
+        "title": "Tidsplan",
+        "description": "Tilladelser, der styrer en brugers evne til at administrere tidsplaner for denne server.",
+        "create": "Tillader en bruger at oprette nye tidsplaner for denne server.",
+        "read": "Tillader en bruger at se tidsplaner og de tilknyttede opgaver for denne server.",
+        "update": "Tillader en bruger at opdatere tidsplaner og tidsplanopgaver for denne server.",
+        "delete": "Tillader en bruger at slette tidsplaner for denne server."
+      },
+      "settings": {
+        "title": "Indstillinger",
+        "description": "Tilladelser, der styrer en brugers evne til at ændre serverindstillinger.",
+        "rename": "Tillader en bruger at omdøbe denne server og ændre serverbeskrivelsen.",
+        "reinstall": "Tillader en bruger at udløse en geninstallation af denne server."
+      },
+      "backup": {
+        "title": "Backup",
+        "description": "Tilladelser, der styrer en brugers evne til at administrere server-backups.",
+        "create": "Tillader en bruger at oprette nye backups for denne server.",
+        "read": "Tillader en bruger at se alle backups, der findes for denne server.",
+        "update": "Tillader en bruger at låse eller låse backups op for denne server.",
+        "delete": "Tillader en bruger at slette backups for denne server.",
+        "download": "Tillader en bruger at downloade backups for denne server.",
+        "restore": "Tillader en bruger at gendanne en backup for denne server."
+      },
+      "activity": {
+        "title": "Aktivitet",
+        "description": "Tilladelser, der styrer en brugers adgang til serveraktivitetslogger.",
+        "read": "Tillader en bruger at se aktivitetsloggene for serveren."
+      }
+    }
+  },
+  "backups": {
+    "title": "Backups",
+    "noBackups": "Det ser ud til, at der i øjeblikket ikke er gemt nogen backups for denne server.",
+    "noBackupsPage": "Det ser ud til, at vi ikke har flere backups at vise, prøv at gå tilbage til den forrige side.",
+    "noBackupLimit": "Backups kan ikke oprettes for denne server, da backupgrænsen er sat til 0.",
+    "backupsUsed": "{{count}} af {{limit}} backups er blevet oprettet for denne server.",
+    "createBackup": "Opret backup",
+    "failed": "Mislykkedes",
+    "created": "Oprettet",
+    "locked": "Låst",
+    "download": "Download",
+    "restore": "Gendan",
+    "lock": "Lås",
+    "unlock": "Lås op",
+    "delete": "Slet",
+    "create": {
+      "title": "Opret server-backup",
+      "nameLabel": "Backupnavn",
+      "nameDescription": "Hvis angivet, navnet der skal bruges til at referere til denne backup.",
+      "ignoredLabel": "Ignorerede filer og mapper",
+      "ignoredDescription": "Indtast de filer eller mapper, der skal ignoreres ved generering af denne backup. Lad være blank for at bruge indholdet af .pteroignore-filen i roden af servermappen, hvis den findes. Wildcard-matching af filer og mapper understøttes, ud over at negere en regel ved at foranstille stien med et udråbstegn.",
+      "lockedLabel": "Låst",
+      "lockedDescription": "Forhindrer denne backup i at blive slettet, indtil den udtrykkeligt låses op.",
+      "startBackup": "Start backup"
+    },
+    "unlockModal": {
+      "title": "Lås \"{{name}}\" op",
+      "description": "Denne backup vil ikke længere være beskyttet mod automatiske eller utilsigtede sletninger."
+    },
+    "restoreModal": {
+      "title": "Gendan \"{{name}}\"",
+      "confirm": "Gendan",
+      "description1": "Din server vil blive stoppet. Du vil ikke kunne kontrollere strømtilstanden, få adgang til filhåndteringen eller oprette yderligere backups, før operationen er afsluttet.",
+      "truncateLabel": "Slet alle filer før gendannelse af backup."
+    },
+    "deleteModal": {
+      "title": "Slet \"{{name}}\"",
+      "confirm": "Fortsæt",
+      "description": "Dette er en permanent handling. Backuppen kan ikke gendannes, når den er slettet."
+    }
+  },
+  "network": {
+    "title": "Netværk",
+    "hostname": "Værtsnavn",
+    "ipAddress": "IP-adresse",
+    "port": "Port",
+    "notes": "Noter",
+    "primary": "Primær",
+    "makePrimary": "Gør primær",
+    "createAllocation": "Opret allokering",
+    "allocationsUsed": "Du bruger i øjeblikket {{count}} af {{limit}} tilladte allokeringer for denne server.",
+    "deleteAllocation": {
+      "title": "Fjern allokering",
+      "confirm": "Slet",
+      "description": "Denne allokering vil straks blive fjernet fra din server."
+    }
+  },
+  "startup": {
+    "title": "Opstartsindstillinger",
+    "error": "Ups!",
+    "startupCommand": "Opstartskommando",
+    "dockerImage": "Docker-billede",
+    "dockerImageDescription": "Dette er en avanceret funktion, der giver dig mulighed for at vælge et Docker-billede, der skal bruges ved kørsel af denne serverinstans.",
+    "customDockerImage": "Denne servers Docker-billede er blevet manuelt sat af en administrator og kan ikke ændres via denne grænseflade.",
+    "variables": "Variabler",
+    "readOnly": "Skrivebeskyttet",
+    "vars": {
+      "MINECRAFT_VERSION": {
+        "name": "Minecraft-version",
+        "description": "Minecraft-versionen, der skal downloades. Lad det være latest for altid at få den seneste version. Ugyldige versioner vil som standard være latest."
+      },
+      "SERVER_JARFILE": {
+        "name": "Server JAR-fil",
+        "description": "Navnet på server-JAR-filen, der skal køre serveren med."
+      },
+      "BUILD_NUMBER": {
+        "name": "Byggenummer",
+        "description": "Byggenummeret for Paper-versionen. Lad det være latest for altid at få den seneste version. Ugyldige versioner vil som standard være latest."
+      },
+      "VANILLA_VERSION": {
+        "name": "Minecraft-version",
+        "description": "Minecraft Vanilla-versionen, der skal downloades og bruges."
+      },
+      "FORGE_VERSION": {
+        "name": "Forge-version",
+        "description": "Minecraft Forge-versionen, der skal installeres. Brug recommended for at installere den anbefalede version."
+      },
+      "MC_VERSION": {
+        "name": "Minecraft-version",
+        "description": "Minecraft-versionen, der skal installeres."
+      },
+      "STARTUP": {
+        "name": "Opstartskommando",
+        "description": "Opstartskommandoen til din server."
+      },
+      "DL_VERSION": {
+        "name": "Version",
+        "description": "Versionen, der skal downloades og installeres."
+      }
+    }
+  },
+  "settings": {
+    "title": "Indstillinger",
+    "sftp": {
+      "title": "SFTP-detaljer",
+      "serverAddress": "Serveradresse",
+      "username": "Brugernavn",
+      "passwordNotice": "Din SFTP-adgangskode er den samme som den adgangskode, du bruger til at få adgang til dette panel.",
+      "launchSftp": "Start SFTP"
+    },
+    "debug": {
+      "title": "Debug-information",
+      "node": "Node",
+      "serverId": "Server-ID"
+    },
+    "rename": {
+      "title": "Skift serverdetaljer",
+      "serverName": "Servernavn",
+      "serverDescription": "Serverbeskrivelse",
+      "save": "Gem"
+    },
+    "reinstall": {
+      "title": "Geninstaller server",
+      "description": "Geninstallering af din server vil stoppe den og derefter køre installationsscriptet igen, der oprindeligt konfigurerede den.",
+      "warning": "Nogle filer kan blive slettet eller ændret under denne proces. Sikkerhedskopier venligst dine data, før du fortsætter.",
+      "button": "Geninstaller server",
+      "confirmTitle": "Bekræft servergeninstallation",
+      "confirmButton": "Ja, geninstaller server",
+      "confirmMessage": "Din server vil blive stoppet, og nogle filer kan blive slettet eller ændret under denne proces. Er du sikker på, at du vil fortsætte?",
+      "successMessage": "Din server har påbegyndt geninstallationsprocessen."
+    }
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "servers": "Servere",
+    "adminPanel": "Administrationspanel",
+    "serverManagement": "{{serverName}} Administration",
+    "account": "Konto",
+    "profile": "Profil",
+    "accountSettings": "Kontoindstillinger",
+    "apiKeys": "API-nøgler",
+    "sshAccess": "SSH-adgang",
+    "accountActivity": "Kontoaktivitet",
+    "apiCredentials": "API-legitimationsoplysninger",
+    "sshKeys": "SSH-nøgler",
+    "activity": "Aktivitet",
+    "signOut": "Log ud",
+    "console": "Konsol",
+    "fileManager": "Filhåndtering",
+    "databases": "Databaser",
+    "schedules": "Tidsplaner",
+    "users": "Brugere",
+    "backups": "Backups",
+    "network": "Netværk",
+    "startup": "Opstart",
+    "settings": "Indstillinger",
+    "support": "Support",
+    "newServer": "Ny server",
+    "billingArea": "Faktureringsområde",
+    "adminView": "Admin visning"
+  },
+  "topbar": {
+    "matrix": "Matrix",
+    "accountSettings": "Kontoindstillinger",
+    "apiKeys": "API-nøgler",
+    "sshAccess": "SSH-adgang",
+    "accountActivity": "Kontoaktivitet",
+    "signOut": "Log ud"
+  }
+}

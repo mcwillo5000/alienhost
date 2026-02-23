@@ -4,6 +4,7 @@ import Checkbox from '@/components/elements/Checkbox';
 import React from 'react';
 import { useStoreState } from 'easy-peasy';
 import Label from '@/components/elements/Label';
+import { useTranslation } from 'react-i18next';
 
 const Container = styled.label`
     ${tw`flex items-center border border-transparent rounded md:p-2 transition-colors duration-75`};
@@ -13,7 +14,9 @@ const Container = styled.label`
         ${tw`cursor-pointer`};
 
         &:hover {
-            ${tw`border-neutral-500 bg-neutral-800`};
+            background: rgba(59, 130, 246, 0.08) !important; /* Fallback for blue primary */
+            background: color-mix(in srgb, var(--theme-primary) 8%, transparent) !important;
+            border-color: var(--theme-border) !important;
         }
     }
 
@@ -36,6 +39,7 @@ interface Props {
 }
 
 const PermissionRow = ({ permission, disabled }: Props) => {
+    const { t } = useTranslation();
     const [key, pkey] = permission.split('.', 2);
     const permissions = useStoreState((state) => state.permissions.data);
 
@@ -55,7 +59,9 @@ const PermissionRow = ({ permission, disabled }: Props) => {
                     {pkey}
                 </Label>
                 {permissions[key].keys[pkey].length > 0 && (
-                    <p css={tw`text-xs text-neutral-400 mt-1`}>{permissions[key].keys[pkey]}</p>
+                    <p css={tw`text-xs mt-1`} style={{ color: 'var(--theme-text-muted)' }}>
+                        {t(`users.permissions.${key}.${pkey}`, permissions[key].keys[pkey])}
+                    </p>
                 )}
             </div>
         </Container>

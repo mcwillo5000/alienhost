@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import tw from 'twin.macro';
-import Icon from '@/components/elements/Icon';
+import { Button } from '@/components/elements/button/index';
+import { Options } from '@/components/elements/button/types';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ServerContext } from '@/state/server';
 import deleteServerAllocation from '@/api/server/network/deleteServerAllocation';
 import getServerAllocations from '@/api/swr/getServerAllocations';
 import { useFlashKey } from '@/plugins/useFlash';
 import { Dialog } from '@/components/elements/dialog';
-import { Button } from '@/components/elements/button/index';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     allocation: number;
 }
 
 const DeleteAllocationButton = ({ allocation }: Props) => {
+    const { t } = useTranslation();
     const [confirm, setConfirm] = useState(false);
 
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
@@ -39,21 +42,20 @@ const DeleteAllocationButton = ({ allocation }: Props) => {
             <Dialog.Confirm
                 open={confirm}
                 onClose={() => setConfirm(false)}
-                title={'Remove Allocation'}
-                confirm={'Delete'}
+                title={t('network.deleteAllocation.title')}
+                confirm={t('network.deleteAllocation.confirm')}
                 onConfirmed={deleteAllocation}
             >
-                This allocation will be immediately removed from your server.
+                {t('network.deleteAllocation.description')}
             </Dialog.Confirm>
-            <Button.Danger
-                variant={Button.Variants.Secondary}
-                size={Button.Sizes.Small}
-                shape={Button.Shapes.IconSquare}
-                type={'button'}
+            <Button
+                variant={Options.Variant.Secondary}
+                size={Options.Size.Small}
                 onClick={() => setConfirm(true)}
+                css={tw`!bg-red-600 hover:!bg-red-700 !border-red-600 hover:!border-red-700 !text-white flex items-center justify-center w-8 h-8 p-0`}
             >
-                <Icon icon={faTrashAlt} css={tw`w-3 h-auto`} />
-            </Button.Danger>
+                <FontAwesomeIcon icon={faTrashAlt} css={tw`w-3 h-3`} />
+            </Button>
         </>
     );
 };

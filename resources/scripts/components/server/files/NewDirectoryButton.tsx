@@ -2,11 +2,12 @@ import React, { useContext, useEffect, useState } from 'react';
 import { ServerContext } from '@/state/server';
 import { Form, Formik, FormikHelpers } from 'formik';
 import Field from '@/components/elements/Field';
-import { join } from 'pathe';
+import { join } from '@/lib/path';
 import { object, string } from 'yup';
 import createDirectory from '@/api/server/files/createDirectory';
 import tw from 'twin.macro';
 import { Button } from '@/components/elements/button/index';
+import { Options } from '@/components/elements/button/types';
 import { FileObject } from '@/api/server/files/loadDirectory';
 import { useFlashKey } from '@/plugins/useFlash';
 import useFileManagerSwr from '@/plugins/useFileManagerSwr';
@@ -15,6 +16,9 @@ import FlashMessageRender from '@/components/FlashMessageRender';
 import { Dialog, DialogWrapperContext } from '@/components/elements/dialog';
 import Code from '@/components/elements/Code';
 import asDialog from '@/hoc/asDialog';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFolderPlus } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
 
 interface Values {
     directoryName: string;
@@ -42,6 +46,7 @@ const generateDirectoryData = (name: string): FileObject => ({
 const NewDirectoryDialog = asDialog({
     title: 'Create Directory',
 })(() => {
+    const { t } = useTranslation();
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
     const directory = ServerContext.useStoreState((state) => state.files.directory);
 
@@ -71,9 +76,9 @@ const NewDirectoryDialog = asDialog({
                 <>
                     <FlashMessageRender key={'files:directory-modal'} />
                     <Form css={tw`m-0`}>
-                        <Field autoFocus id={'directoryName'} name={'directoryName'} label={'Name'} />
+                        <Field autoFocus id={'directoryName'} name={'directoryName'} label={t('files.createDirectoryModal.name')} />
                         <p css={tw`mt-2 text-sm md:text-base break-all`}>
-                            <span css={tw`text-neutral-200`}>This directory will be created as&nbsp;</span>
+                            <span css={{ color: 'var(--theme-text-base)' }}>{t('files.createDirectoryModal.creating')}&nbsp;</span>
                             <Code>
                                 /home/container/
                                 <span css={tw`text-cyan-200`}>
@@ -84,10 +89,16 @@ const NewDirectoryDialog = asDialog({
                     </Form>
                     <Dialog.Footer>
                         <Button.Text className={'w-full sm:w-auto'} onClick={close}>
-                            Cancel
+                            {t('files.createDirectoryModal.cancel')}
                         </Button.Text>
-                        <Button className={'w-full sm:w-auto'} onClick={submitForm}>
-                            Create
+                        <Button 
+                            className={'w-full sm:w-auto'} 
+                            size={Options.Size.Compact}
+                            variant={Options.Variant.Primary}
+                            onClick={submitForm}
+                        >
+                            <FontAwesomeIcon icon={faFolderPlus} className="mr-1" />
+                            {t('files.createDirectoryModal.create')}
                         </Button>
                     </Dialog.Footer>
                 </>
@@ -97,14 +108,21 @@ const NewDirectoryDialog = asDialog({
 });
 
 export default ({ className }: WithClassname) => {
+    const { t } = useTranslation();
     const [open, setOpen] = useState(false);
 
     return (
         <>
             <NewDirectoryDialog open={open} onClose={setOpen.bind(this, false)} />
-            <Button.Text onClick={setOpen.bind(this, true)} className={className}>
-                Create Directory
-            </Button.Text>
+            <Button 
+                onClick={setOpen.bind(this, true)} 
+                className={className}
+                size={Options.Size.Compact}
+                variant={Options.Variant.Primary}
+            >
+                <FontAwesomeIcon icon={faFolderPlus} className="mr-1" />
+                {t('files.createDirectory')}
+            </Button>
         </>
     );
 };

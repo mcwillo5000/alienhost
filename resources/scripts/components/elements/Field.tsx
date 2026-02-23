@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
 import { Field as FormikField, FieldProps } from 'formik';
-import Input from '@/components/elements/Input';
+import FuturisticInput from '@/components/elements/rivion/FuturisticInput';
 import Label from '@/components/elements/Label';
 
 interface OwnProps {
@@ -23,11 +23,10 @@ const Field = forwardRef<HTMLInputElement, Props>(
                             {label}
                         </Label>
                     )}
-                    <Input
+                    <FuturisticInput
                         id={id}
                         {...field}
                         {...props}
-                        isLight={light}
                         hasError={!!(touched[field.name] && errors[field.name])}
                     />
                     {touched[field.name] && errors[field.name] ? (

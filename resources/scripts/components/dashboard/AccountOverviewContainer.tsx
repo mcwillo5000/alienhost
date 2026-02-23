@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ContentBox from '@/components/elements/ContentBox';
+import FuturisticContentBox from '@/components/elements/rivion/FuturisticContentBox';
 import UpdatePasswordForm from '@/components/dashboard/forms/UpdatePasswordForm';
 import UpdateEmailAddressForm from '@/components/dashboard/forms/UpdateEmailAddressForm';
 import ConfigureTwoFactorForm from '@/components/dashboard/forms/ConfigureTwoFactorForm';
@@ -9,6 +9,7 @@ import { breakpoint } from '@/theme';
 import styled from 'styled-components/macro';
 import MessageBox from '@/components/MessageBox';
 import { useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const Container = styled.div`
     ${tw`flex flex-wrap`};
@@ -28,25 +29,26 @@ const Container = styled.div`
 
 export default () => {
     const { state } = useLocation<undefined | { twoFactorRedirect?: boolean }>();
+    const { t } = useTranslation();
 
     return (
-        <PageContentBlock title={'Account Overview'}>
+        <PageContentBlock title={t('account.overview.title')}>
             {state?.twoFactorRedirect && (
-                <MessageBox title={'2-Factor Required'} type={'error'}>
-                    Your account must have two-factor authentication enabled in order to continue.
+                <MessageBox title={t('account.overview.twoFactorRequired.title')} type={'error'}>
+                    {t('account.overview.twoFactorRequired.message')}
                 </MessageBox>
             )}
 
             <Container css={[tw`lg:grid lg:grid-cols-3 mb-10`, state?.twoFactorRedirect ? tw`mt-4` : tw`mt-10`]}>
-                <ContentBox title={'Update Password'} showFlashes={'account:password'}>
+                <FuturisticContentBox title={t('account.password.title')} showFlashes={'account:password'}>
                     <UpdatePasswordForm />
-                </ContentBox>
-                <ContentBox css={tw`mt-8 sm:mt-0 sm:ml-8`} title={'Update Email Address'} showFlashes={'account:email'}>
+                </FuturisticContentBox>
+                <FuturisticContentBox css={tw`mt-8 sm:mt-0 sm:ml-8`} title={t('account.email.title')} showFlashes={'account:email'}>
                     <UpdateEmailAddressForm />
-                </ContentBox>
-                <ContentBox css={tw`md:ml-8 mt-8 md:mt-0`} title={'Two-Step Verification'}>
+                </FuturisticContentBox>
+                <FuturisticContentBox css={tw`md:ml-8 mt-8 md:mt-0`} title={t('account.twoFactor.title')}>
                     <ConfigureTwoFactorForm />
-                </ContentBox>
+                </FuturisticContentBox>
             </Container>
         </PageContentBlock>
     );

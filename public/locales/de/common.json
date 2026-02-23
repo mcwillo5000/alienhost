@@ -1,0 +1,690 @@
+{
+  "account": {
+    "overview": {
+      "title": "Kontoübersicht",
+      "twoFactorRequired": {
+        "title": "2-Faktor erforderlich",
+        "message": "Für Ihr Konto muss die Zwei-Faktor-Authentifizierung aktiviert sein, um fortzufahren."
+      }
+    },
+    "password": {
+      "title": "Passwort aktualisieren",
+      "requirements": "Ihr neues Passwort sollte mindestens 8 Zeichen lang und für diese Website einzigartig sein.",
+      "currentPassword": "Aktuelles Passwort",
+      "newPassword": "Neues Passwort",
+      "confirmPassword": "Neues Passwort bestätigen",
+      "updateButton": "Passwort aktualisieren",
+      "updated": "Ihr Passwort wurde aktualisiert."
+    },
+    "email": {
+      "title": "E-Mail-Adresse aktualisieren",
+      "newEmail": "Neue E-Mail",
+      "password": "Passwort bestätigen",
+      "updateButton": "E-Mail aktualisieren",
+      "updated": "Ihre E-Mail-Adresse wurde aktualisiert."
+    },
+    "twoFactor": {
+      "title": "Zwei-Schritt-Verifizierung",
+      "button": "Sie haben derzeit keine Zwei-Schritt-Verifizierung für Ihr Konto aktiviert. Klicken Sie auf die Schaltfläche unten, um mit der Konfiguration zu beginnen.",
+      "enabled": "Die Zwei-Faktor-Authentifizierung wurde für Ihr Konto aktiviert! Ab sofort müssen Sie beim Anmelden den von Ihrem Gerät generierten Code eingeben.",
+      "disabled": "Die Zwei-Faktor-Authentifizierung wurde für Ihr Konto deaktiviert. Sie werden nicht mehr aufgefordert, beim Anmelden ein Token einzugeben.",
+      "invalid": "Das angegebene Token war ungültig.",
+      "setup": {
+        "title": "Zwei-Faktor-Authentifizierung einrichten",
+        "help": "Können Sie den Code nicht scannen? Geben Sie den folgenden Code in Ihre Anwendung ein:",
+        "description": "Scannen Sie den obigen QR-Code mit der Zwei-Schritt-Authentifizierungs-App Ihrer Wahl. Geben Sie dann den generierten 6-stelligen Code in das folgende Feld ein.",
+        "field": "Token eingeben",
+        "accountPassword": "Kontopasswort",
+        "cancel": "Abbrechen",
+        "enable": "Aktivieren"
+      },
+      "disable": {
+        "title": "Zwei-Faktor-Authentifizierung deaktivieren",
+        "password": "Passwort",
+        "cancel": "Abbrechen",
+        "disable": "Deaktivieren"
+      },
+      "tokens": {
+        "title": "Wiederherstellungstoken",
+        "description": "Bewahren Sie diese Token an einem sicheren Ort auf. Wenn Sie den Zugriff auf Ihr Telefon verlieren, können Sie sich mit diesen Backup-Token anmelden.",
+        "close": "Schließen"
+      }
+    },
+    "api": {
+      "title": "Konto-API",
+      "createKey": {
+        "title": "API-Schlüssel erstellen",
+        "description": {
+          "label": "Beschreibung",
+          "help": "Eine Beschreibung dieses API-Schlüssels."
+        },
+        "allowedIps": {
+          "label": "Erlaubte IPs",
+          "help": "Lassen Sie das Feld leer, um jede IP-Adresse zur Verwendung dieses API-Schlüssels zuzulassen, andernfalls geben Sie jede IP-Adresse in einer neuen Zeile an."
+        },
+        "create": "Erstellen"
+      },
+      "keys": {
+        "title": "API-Schlüssel",
+        "loading": "Laden...",
+        "none": "Für dieses Konto existieren keine API-Schlüssel.",
+        "lastUsed": "Zuletzt verwendet",
+        "never": "Nie",
+        "deleteConfirm": {
+          "title": "API-Schlüssel löschen",
+          "confirm": "Schlüssel löschen",
+          "message": "Alle Anfragen mit dem {{identifier}}-Schlüssel werden ungültig."
+        }
+      },
+      "modal": {
+        "title": "Ihr API-Schlüssel",
+        "description": "Der von Ihnen angeforderte API-Schlüssel wird unten angezeigt. Bitte bewahren Sie ihn an einem sicheren Ort auf, er wird nicht erneut angezeigt.",
+        "close": "Schließen"
+      }
+    },
+    "ssh": {
+      "title": "SSH-Schlüssel",
+      "addKey": {
+        "title": "SSH-Schlüssel hinzufügen",
+        "name": {
+          "label": "SSH-Schlüsselname"
+        },
+        "publicKey": {
+          "label": "Öffentlicher Schlüssel",
+          "help": "Geben Sie Ihren öffentlichen SSH-Schlüssel ein."
+        },
+        "save": "Speichern"
+      },
+      "keys": {
+        "title": "SSH-Schlüssel",
+        "loading": "Laden...",
+        "none": "Für dieses Konto existieren keine SSH-Schlüssel.",
+        "addedOn": "Hinzugefügt am",
+        "deleteConfirm": {
+          "title": "SSH-Schlüssel löschen",
+          "confirm": "Schlüssel löschen",
+          "message": "Das Entfernen des {{name}}-SSH-Schlüssels wird seine Verwendung im Panel ungültig machen."
+        }
+      }
+    },
+    "activity": {
+      "title": "Kontoaktivitätsprotokoll",
+      "clearFilters": "Filter löschen"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "showingYourServers": "Ihre Server werden angezeigt",
+    "showingOthersServers": "Server anderer werden angezeigt",
+    "noServers": "Mit Ihrem Konto sind keine Server verbunden.",
+    "noOtherServers": "Es gibt keine weiteren Server anzuzeigen.",
+    "serverRow": {
+      "status": {
+        "online": "Online",
+        "offline": "Offline",
+        "starting": "Startet",
+        "suspended": "Gesperrt",
+        "install": "Installieren",
+        "restore": "Wiederherstellen",
+        "transfer": "Übertragen",
+        "transferring": "Wird übertragen",
+        "installing": "Wird installiert",
+        "restoringBackup": "Backup wird wiederhergestellt",
+        "unavailable": "Nicht verfügbar",
+        "connectionError": "Verbindungsfehler"
+      },
+      "resources": {
+        "cpu": "CPU",
+        "ram": "RAM",
+        "storage": "Speicher",
+        "ip": "IP"
+      },
+      "manageServer": "Server verwalten"
+    }
+  },
+  "console": {
+    "title": "Konsole",
+    "header": {
+      "title": "Serverkonsole",
+      "status": {
+        "running": "Läuft",
+        "stopped": "Gestoppt",
+        "starting": "Startet",
+        "stopping": "Stoppt",
+        "disconnected": "Getrennt",
+        "unknown": "Unbekannt"
+      }
+    },
+    "input": {
+      "placeholder": "Befehl eingeben...",
+      "send": "Senden"
+    },
+    "filters": {
+      "all": "Alle",
+      "errors": "Fehler",
+      "warnings": "Warnungen",
+      "showAll": "Alle Konsolenausgaben anzeigen",
+      "showErrors": "Nur Fehler anzeigen",
+      "showWarnings": "Nur Warnungen anzeigen"
+    },
+    "alerts": {
+      "nodeMaintenance": "Der Knoten dieses Servers befindet sich derzeit in Wartung und alle Aktionen sind nicht verfügbar.",
+      "installing": "Dieser Server führt derzeit seinen Installationsprozess aus und die meisten Aktionen sind nicht verfügbar.",
+      "transferring": "Dieser Server wird derzeit auf einen anderen Knoten übertragen und alle Aktionen sind nicht verfügbar."
+    },
+    "power": {
+      "start": "Starten",
+      "stop": "Stoppen",
+      "restart": "Neu starten",
+      "kill": "Beenden",
+      "killConfirm": {
+        "title": "Prozess zwangsweise beenden",
+        "message": "Das zwangsweise Beenden eines Servers kann zu Datenverlust führen.",
+        "confirm": "Fortfahren"
+      }
+    },
+    "stats": {
+      "serverAddress": "Serveradresse",
+      "uptime": "Betriebszeit",
+      "cpuUsage": "CPU-Auslastung",
+      "memoryUsage": "Speicherauslastung",
+      "diskUsage": "Festplattenauslastung",
+      "networkUsage": "Netzwerkauslastung",
+      "offline": "Offline",
+      "networkIn": "Netzwerk Eingehend",
+      "networkOut": "Netzwerk Ausgehend",
+      "copyTooltip": "Adresse in Zwischenablage kopieren",
+      "clickToCopy": "Klicken zum Kopieren der Adresse"
+    },
+    "graphs": {
+      "cpu": "CPU",
+      "memory": "Speicher",
+      "network": "Netzwerk",
+      "networkIn": "Netzwerk Eingehend",
+      "networkOut": "Netzwerk Ausgehend"
+    }
+  },
+  "files": {
+    "title": "Dateimanager",
+    "upload": "Hochladen",
+    "uploadModal": {
+      "title": "Ziehen Sie Dateien per Drag & Drop zum Hochladen.",
+      "error": "Ordner-Uploads werden derzeit nicht unterstützt."
+    },
+    "createDirectory": "Verzeichnis erstellen",
+    "createDirectoryModal": {
+      "title": "Verzeichnis erstellen",
+      "name": "Name",
+      "creating": "Dieses Verzeichnis wird erstellt als",
+      "cancel": "Abbrechen",
+      "create": "Erstellen"
+    },
+    "newFile": "Neue Datei",
+    "fileNameModal": {
+      "title": "Dateiname",
+      "description": "Geben Sie den Namen ein, unter dem diese Datei gespeichert werden soll.",
+      "create": "Datei erstellen"
+    },
+    "massActions": {
+      "selected": "{{count}} Datei(en) ausgewählt.",
+      "delete": "Löschen",
+      "move": "Verschieben",
+      "compress": "Komprimieren",
+      "archiving": "Dateien werden archiviert...",
+      "deleting": "Dateien werden gelöscht...",
+      "deleteConfirm": {
+        "title": "Dateien löschen",
+        "message": "Sind Sie sicher, dass Sie löschen möchten",
+        "files": "Datei(en)",
+        "permanent": "Dies ist eine dauerhafte Aktion und die Dateien können nicht wiederhergestellt werden.",
+        "andOthers": "und {{count}} weitere",
+        "confirm": "Löschen",
+        "cancel": "Abbrechen"
+      }
+    },
+    "rename": "Umbenennen",
+    "renameModal": {
+      "title": "Dateiname",
+      "move": "Verschieben",
+      "rename": "Umbenennen",
+      "description": "Geben Sie den neuen Namen und das Verzeichnis dieser Datei oder dieses Ordners relativ zum aktuellen Verzeichnis ein.",
+      "newLocation": "Neuer Speicherort:"
+    },
+    "chmod": "Berechtigungen",
+    "chmodModal": {
+      "title": "Dateimodus",
+      "update": "Aktualisieren"
+    },
+    "dropdown": {
+      "rename": "Umbenennen",
+      "move": "Verschieben",
+      "chmod": "Berechtigungen",
+      "copy": "Kopieren",
+      "download": "Herunterladen",
+      "compress": "Komprimieren",
+      "decompress": "Dekomprimieren",
+      "delete": "Löschen",
+      "deleteConfirm": {
+        "title": "{{type}} löschen",
+        "file": "Datei",
+        "directory": "Verzeichnis",
+        "message": "Sie können den Inhalt von nicht wiederherstellen",
+        "confirm": "Löschen"
+      }
+    },
+    "fileUploads": {
+      "title": "Datei-Uploads",
+      "description": "Die folgenden Dateien werden auf Ihren Server hochgeladen.",
+      "cancelAll": "Uploads abbrechen",
+      "close": "Schließen",
+      "uploading": "{{count}} Dateien werden hochgeladen, klicken zum Anzeigen"
+    },
+    "editor": {
+      "title": "Datei-Editor",
+      "editingFile": "Datei wird bearbeitet",
+      "creatingFile": "Eine neue Datei wird erstellt",
+      "save": "Inhalt speichern",
+      "create": "Datei erstellen",
+      "fileNameModal": {
+        "title": "Dateiname",
+        "description": "Geben Sie den Namen ein, unter dem diese Datei gespeichert werden soll.",
+        "create": "Datei erstellen"
+      }
+    }
+  },
+  "databases": {
+    "title": "Datenbanken",
+    "noDatabases": "Es sieht so aus, als hätten Sie keine Datenbanken.",
+    "cannotCreate": "Für diesen Server können keine Datenbanken erstellt werden.",
+    "allocated": "{{current}} von {{limit}} Datenbanken wurden diesem Server zugewiesen.",
+    "newDatabase": "Neue Datenbank",
+    "create": {
+      "title": "Neue Datenbank erstellen",
+      "databaseName": "Datenbankname",
+      "databaseNameDescription": "Ein beschreibender Name für Ihre Datenbankinstanz.",
+      "connectionsFrom": "Verbindungen von",
+      "connectionsFromDescription": "Von wo aus Verbindungen zugelassen werden sollen. Lassen Sie das Feld leer, um Verbindungen von überall zuzulassen.",
+      "cancel": "Abbrechen",
+      "createButton": "Datenbank erstellen"
+    },
+    "delete": {
+      "title": "Datenbanklöschung bestätigen",
+      "description": "Das Löschen einer Datenbank ist eine dauerhafte Aktion, die nicht rückgängig gemacht werden kann. Dadurch wird die",
+      "description2": "Datenbank dauerhaft gelöscht und alle zugehörigen Daten entfernt.",
+      "confirmName": "Datenbanknamen bestätigen",
+      "confirmDescription": "Geben Sie den Datenbanknamen ein, um die Löschung zu bestätigen.",
+      "cancel": "Abbrechen",
+      "deleteButton": "Datenbank löschen"
+    },
+    "connection": {
+      "title": "Datenbankverbindungsdetails",
+      "endpoint": "Endpunkt",
+      "connectionsFrom": "Verbindungen von",
+      "username": "Benutzername",
+      "password": "Passwort",
+      "jdbcString": "JDBC-Verbindungszeichenfolge",
+      "rotatePassword": "Passwort rotieren",
+      "close": "Schließen"
+    }
+  },
+  "schedules": {
+    "title": "Zeitpläne",
+    "noSchedules": "Für diesen Server sind keine Zeitpläne konfiguriert.",
+    "createSchedule": "Zeitplan erstellen",
+    "newTask": "Neue Aufgabe",
+    "runNow": "Jetzt ausführen",
+    "deleteButton": "Löschen",
+    "lastRunAt": "Zuletzt ausgeführt um:",
+    "never": "nie",
+    "active": "Aktiv",
+    "inactive": "Inaktiv",
+    "processing": "Wird verarbeitet",
+    "edit": {
+      "titleCreate": "Neuen Zeitplan erstellen",
+      "titleEdit": "Zeitplan bearbeiten",
+      "scheduleName": "Zeitplanname",
+      "scheduleNameDescription": "Eine lesbare Kennung für diesen Zeitplan.",
+      "minute": "Minute",
+      "hour": "Stunde",
+      "dayOfMonth": "Tag des Monats",
+      "month": "Monat",
+      "dayOfWeek": "Wochentag",
+      "cronDescription": "Das Zeitplansystem unterstützt die Verwendung der Cronjob-Syntax bei der Definition, wann Aufgaben ausgeführt werden sollen. Verwenden Sie die obigen Felder, um anzugeben, wann diese Aufgaben ausgeführt werden sollen.",
+      "showCheatsheet": "Spickzettel anzeigen",
+      "showCheatsheetDescription": "Zeigen Sie den Cron-Spickzettel für einige Beispiele an.",
+      "onlyWhenOnline": "Nur wenn Server online ist",
+      "onlyWhenOnlineDescription": "Führen Sie diesen Zeitplan nur aus, wenn sich der Server in einem laufenden Zustand befindet.",
+      "scheduleEnabled": "Zeitplan aktiviert",
+      "scheduleEnabledDescription": "Dieser Zeitplan wird automatisch ausgeführt.",
+      "cancel": "Abbrechen",
+      "create": "Zeitplan erstellen",
+      "save": "Änderungen speichern"
+    },
+    "delete": {
+      "title": "Zeitplan löschen",
+      "confirm": "Löschen",
+      "description": "Alle Aufgaben werden entfernt und alle laufenden Prozesse werden beendet."
+    },
+    "cheatsheet": {
+      "examples": "Beispiele",
+      "specialCharacters": "Sonderzeichen",
+      "everyFiveMinutes": "alle 5 Minuten",
+      "everyHour": "jede Stunde",
+      "hourRange": "Stundenbereich",
+      "onceADay": "einmal täglich",
+      "everyMonday": "jeden Montag",
+      "anyValue": "beliebiger Wert",
+      "valueListSeparator": "Wertelistentrenner",
+      "rangeValues": "Bereichswerte",
+      "stepValues": "Schrittwerte"
+    },
+    "task": {
+      "titleCreate": "Aufgabe erstellen",
+      "titleEdit": "Aufgabe bearbeiten",
+      "action": "Aktion",
+      "timeOffset": "Zeitversatz (in Sekunden)",
+      "timeOffsetDescription": "Die Wartezeit nach Ausführung der vorherigen Aufgabe, bevor diese ausgeführt wird. Wenn dies die erste Aufgabe in einem Zeitplan ist, wird dies nicht angewendet.",
+      "payload": "Nutzlast",
+      "continueOnFailure": "Bei Fehler fortfahren",
+      "continueOnFailureDescription": "Zukünftige Aufgaben werden ausgeführt, wenn diese Aufgabe fehlschlägt.",
+      "cancel": "Abbrechen",
+      "create": "Aufgabe erstellen",
+      "save": "Änderungen speichern",
+      "actions": {
+        "command": "Befehl senden",
+        "power": "Energieaktion senden",
+        "backup": "Backup erstellen"
+      },
+      "powerActions": {
+        "start": "Server starten",
+        "restart": "Server neu starten",
+        "stop": "Server stoppen",
+        "kill": "Server beenden"
+      },
+      "backupIgnored": "Dateien & Ordner ignorieren:",
+      "sendCommand": "Befehl senden",
+      "sendPowerAction": "Energieaktion senden",
+      "createBackup": "Backup erstellen",
+      "unknownAction": "Unbekannte Aktion",
+      "deleteConfirm": {
+        "title": "Aufgabenlöschung bestätigen",
+        "confirm": "Aufgabe löschen",
+        "description": "Sind Sie sicher, dass Sie diese Aufgabe löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden."
+      }
+    }
+  },
+  "users": {
+    "title": "Benutzer",
+    "noUsers": "Es sieht so aus, als hätten Sie keine Unterbenutzer.",
+    "newUser": "Neuer Benutzer",
+    "twoFactorEnabled": "2FA aktiviert",
+    "permissionsLabel": "Berechtigungen",
+    "permissionsCount": "{{count}} Berechtigungen",
+    "edit": {
+      "titleCreate": "Neuen Unterbenutzer erstellen",
+      "titleModify": "Berechtigungen für {{email}} ändern",
+      "titleView": "Berechtigungen für {{email}} anzeigen",
+      "save": "Speichern",
+      "inviteUser": "Benutzer einladen",
+      "userEmail": "Benutzer-E-Mail",
+      "userEmailDescription": "Geben Sie die E-Mail-Adresse des Benutzers ein, den Sie als Unterbenutzer für diesen Server einladen möchten.",
+      "permissionNotice": "Beim Erstellen oder Ändern anderer Benutzer können nur Berechtigungen ausgewählt werden, die Ihrem Konto derzeit zugewiesen sind."
+    },
+    "delete": {
+      "title": "Diesen Unterbenutzer löschen?",
+      "confirm": "Ja, Unterbenutzer entfernen",
+      "description": "Sind Sie sicher, dass Sie diesen Unterbenutzer entfernen möchten? Alle Zugriffsrechte auf diesen Server werden sofort widerrufen."
+    },
+    "permissions": {
+      "control": {
+        "title": "Steuerung",
+        "description": "Berechtigungen, die die Fähigkeit eines Benutzers steuern, den Energiezustand eines Servers zu kontrollieren oder Befehle zu senden.",
+        "console": "Ermöglicht es einem Benutzer, Befehle über die Konsole an die Serverinstanz zu senden.",
+        "start": "Ermöglicht es einem Benutzer, den Server zu starten, wenn er gestoppt ist.",
+        "stop": "Ermöglicht es einem Benutzer, einen Server zu stoppen, wenn er läuft.",
+        "restart": "Ermöglicht es einem Benutzer, einen Serverneustart durchzuführen. Dies ermöglicht es ihnen, den Server zu starten, wenn er offline ist, aber nicht den Server in einen vollständig gestoppten Zustand zu versetzen."
+      },
+      "user": {
+        "title": "Benutzer",
+        "description": "Berechtigungen, die die Fähigkeit eines Benutzers steuern, andere Unterbenutzer auf einem Server zu verwalten. Sie können niemals ihr eigenes Konto bearbeiten oder Berechtigungen zuweisen, die sie selbst nicht haben.",
+        "create": "Ermöglicht es einem Benutzer, neue Unterbenutzer für den Server zu erstellen.",
+        "read": "Ermöglicht es dem Benutzer, Unterbenutzer und ihre Berechtigungen für den Server anzuzeigen.",
+        "update": "Ermöglicht es einem Benutzer, andere Unterbenutzer zu ändern.",
+        "delete": "Ermöglicht es einem Benutzer, andere Unterbenutzer auf dem Server zu löschen."
+      },
+      "file": {
+        "title": "Datei",
+        "description": "Berechtigungen, die die Fähigkeit eines Benutzers steuern, das Dateisystem für diesen Server zu ändern.",
+        "create": "Ermöglicht es einem Benutzer, zusätzliche Dateien und Ordner über das Panel oder direkten Upload zu erstellen.",
+        "read": "Ermöglicht es einem Benutzer, den Inhalt eines Verzeichnisses anzuzeigen, aber nicht den Inhalt von Dateien anzuzeigen oder Dateien herunterzuladen.",
+        "read-content": "Ermöglicht es einem Benutzer, den Inhalt einer bestimmten Datei anzuzeigen. Dies ermöglicht es dem Benutzer auch, Dateien herunterzuladen.",
+        "update": "Ermöglicht es einem Benutzer, den Inhalt einer vorhandenen Datei oder eines Verzeichnisses zu aktualisieren.",
+        "delete": "Ermöglicht es einem Benutzer, Dateien oder Verzeichnisse zu löschen.",
+        "archive": "Ermöglicht es einem Benutzer, den Inhalt eines Verzeichnisses zu archivieren sowie vorhandene Archive auf dem System zu dekomprimieren.",
+        "sftp": "Ermöglicht es einem Benutzer, sich mit SFTP zu verbinden und Serverdateien mit den anderen zugewiesenen Dateiberechtigungen zu verwalten."
+      },
+      "allocation": {
+        "title": "Zuweisung",
+        "description": "Berechtigungen, die die Fähigkeit eines Benutzers steuern, die Port-Zuweisungen für diesen Server zu ändern.",
+        "read": "Ermöglicht es einem Benutzer, die diesem Server zugewiesenen Zuweisungen anzuzeigen.",
+        "create": "Ermöglicht es einem Benutzer, dem Server zusätzliche Zuweisungen zuzuweisen.",
+        "update": "Ermöglicht es einem Benutzer, die primäre Serverzuweisung zu ändern und Notizen an jede Zuweisung anzuhängen.",
+        "delete": "Ermöglicht es einem Benutzer, eine Zuweisung vom Server zu löschen."
+      },
+      "startup": {
+        "title": "Startup",
+        "description": "Berechtigungen, die die Fähigkeit eines Benutzers steuern, die Startparameter für diesen Server anzuzeigen und zu ändern.",
+        "read": "Ermöglicht es einem Benutzer, die Startvariablen für einen Server anzuzeigen.",
+        "update": "Ermöglicht es einem Benutzer, die Startvariablen für den Server zu ändern.",
+        "docker-image": "Ermöglicht es einem Benutzer, das Docker-Image zu ändern, das beim Ausführen des Servers verwendet wird."
+      },
+      "database": {
+        "title": "Datenbank",
+        "description": "Berechtigungen, die die Fähigkeit eines Benutzers steuern, Datenbanken für diesen Server zu verwalten.",
+        "create": "Ermöglicht es einem Benutzer, eine neue Datenbank für diesen Server zu erstellen.",
+        "read": "Ermöglicht es einem Benutzer, die mit diesem Server verbundene Datenbank anzuzeigen.",
+        "update": "Ermöglicht es einem Benutzer, das Passwort für eine Datenbankinstanz zu rotieren. Wenn der Benutzer nicht die Berechtigung view_password hat, sieht er das aktualisierte Passwort nicht.",
+        "delete": "Ermöglicht es einem Benutzer, eine Datenbankinstanz von diesem Server zu entfernen.",
+        "view_password": "Ermöglicht es einem Benutzer, das Passwort anzuzeigen, das mit einer Datenbankinstanz für diesen Server verbunden ist."
+      },
+      "schedule": {
+        "title": "Zeitplan",
+        "description": "Berechtigungen, die die Fähigkeit eines Benutzers steuern, Zeitpläne für diesen Server zu verwalten.",
+        "create": "Ermöglicht es einem Benutzer, neue Zeitpläne für diesen Server zu erstellen.",
+        "read": "Ermöglicht es einem Benutzer, Zeitpläne und die damit verbundenen Aufgaben für diesen Server anzuzeigen.",
+        "update": "Ermöglicht es einem Benutzer, Zeitpläne und Zeitplanaufgaben für diesen Server zu aktualisieren.",
+        "delete": "Ermöglicht es einem Benutzer, Zeitpläne für diesen Server zu löschen."
+      },
+      "settings": {
+        "title": "Einstellungen",
+        "description": "Berechtigungen, die die Fähigkeit eines Benutzers steuern, Servereinstellungen zu ändern.",
+        "rename": "Ermöglicht es einem Benutzer, diesen Server umzubenennen und die Serverbeschreibung zu ändern.",
+        "reinstall": "Ermöglicht es einem Benutzer, eine Neuinstallation dieses Servers auszulösen."
+      },
+      "backup": {
+        "title": "Backup",
+        "description": "Berechtigungen, die die Fähigkeit eines Benutzers steuern, Server-Backups zu verwalten.",
+        "create": "Ermöglicht es einem Benutzer, neue Backups für diesen Server zu erstellen.",
+        "read": "Ermöglicht es einem Benutzer, alle für diesen Server vorhandenen Backups anzuzeigen.",
+        "update": "Ermöglicht es einem Benutzer, Backups für diesen Server zu sperren oder zu entsperren.",
+        "delete": "Ermöglicht es einem Benutzer, Backups für diesen Server zu löschen.",
+        "download": "Ermöglicht es einem Benutzer, Backups für diesen Server herunterzuladen.",
+        "restore": "Ermöglicht es einem Benutzer, ein Backup für diesen Server wiederherzustellen."
+      },
+      "activity": {
+        "title": "Aktivität",
+        "description": "Berechtigungen, die den Zugriff eines Benutzers auf die Serveraktivitätsprotokolle steuern.",
+        "read": "Ermöglicht es einem Benutzer, die Aktivitätsprotokolle für den Server anzuzeigen."
+      }
+    }
+  },
+  "backups": {
+    "title": "Backups",
+    "noBackups": "Es sieht so aus, als wären derzeit keine Backups für diesen Server gespeichert.",
+    "noBackupsPage": "Es sieht so aus, als hätten wir keine Backups mehr zum Anzeigen, versuchen Sie, zur vorherigen Seite zurückzukehren.",
+    "noBackupLimit": "Für diesen Server können keine Backups erstellt werden, da das Backup-Limit auf 0 gesetzt ist.",
+    "backupsUsed": "{{count}} von {{limit}} Backups wurden für diesen Server erstellt.",
+    "createBackup": "Backup erstellen",
+    "failed": "Fehlgeschlagen",
+    "created": "Erstellt",
+    "locked": "Gesperrt",
+    "download": "Herunterladen",
+    "restore": "Wiederherstellen",
+    "lock": "Sperren",
+    "unlock": "Entsperren",
+    "delete": "Löschen",
+    "create": {
+      "title": "Server-Backup erstellen",
+      "nameLabel": "Backup-Name",
+      "nameDescription": "Falls angegeben, der Name, der zur Referenzierung dieses Backups verwendet werden soll.",
+      "ignoredLabel": "Ignorierte Dateien & Verzeichnisse",
+      "ignoredDescription": "Geben Sie die Dateien oder Ordner ein, die beim Erstellen dieses Backups ignoriert werden sollen. Lassen Sie das Feld leer, um den Inhalt der .pteroignore-Datei im Stammverzeichnis des Serververzeichnisses zu verwenden, falls vorhanden. Wildcard-Matching von Dateien und Ordnern wird unterstützt, zusätzlich zum Negieren einer Regel durch Voranstellen des Pfades mit einem Ausrufezeichen.",
+      "lockedLabel": "Gesperrt",
+      "lockedDescription": "Verhindert, dass dieses Backup gelöscht wird, bis es ausdrücklich entsperrt wird.",
+      "startBackup": "Backup starten"
+    },
+    "unlockModal": {
+      "title": "\"{{name}}\" entsperren",
+      "description": "Dieses Backup wird nicht mehr vor automatischen oder versehentlichen Löschungen geschützt."
+    },
+    "restoreModal": {
+      "title": "\"{{name}}\" wiederherstellen",
+      "confirm": "Wiederherstellen",
+      "description1": "Ihr Server wird gestoppt. Sie können den Energiezustand nicht steuern, auf den Dateimanager zugreifen oder zusätzliche Backups erstellen, bis der Vorgang abgeschlossen ist.",
+      "truncateLabel": "Alle Dateien vor dem Wiederherstellen des Backups löschen."
+    },
+    "deleteModal": {
+      "title": "\"{{name}}\" löschen",
+      "confirm": "Fortfahren",
+      "description": "Dies ist eine dauerhafte Aktion. Das Backup kann nach dem Löschen nicht wiederhergestellt werden."
+    }
+  },
+  "network": {
+    "title": "Netzwerk",
+    "hostname": "Hostname",
+    "ipAddress": "IP-Adresse",
+    "port": "Port",
+    "notes": "Notizen",
+    "primary": "Primär",
+    "makePrimary": "Als primär festlegen",
+    "createAllocation": "Zuweisung erstellen",
+    "allocationsUsed": "Sie verwenden derzeit {{count}} von {{limit}} zulässigen Zuweisungen für diesen Server.",
+    "deleteAllocation": {
+      "title": "Zuweisung entfernen",
+      "confirm": "Löschen",
+      "description": "Diese Zuweisung wird sofort von Ihrem Server entfernt."
+    }
+  },
+  "startup": {
+    "title": "Starteinstellungen",
+    "error": "Hoppla!",
+    "startupCommand": "Startbefehl",
+    "dockerImage": "Docker-Image",
+    "dockerImageDescription": "Dies ist eine erweiterte Funktion, mit der Sie ein Docker-Image auswählen können, das beim Ausführen dieser Serverinstanz verwendet werden soll.",
+    "customDockerImage": "Das Docker-Image dieses Servers wurde manuell von einem Administrator festgelegt und kann nicht über diese Benutzeroberfläche geändert werden.",
+    "variables": "Variablen",
+    "readOnly": "Schreibgeschützt",
+    "vars": {
+      "MINECRAFT_VERSION": {
+        "name": "Minecraft-Version",
+        "description": "Die herunterzuladende Minecraft-Version. Belassen Sie es bei latest, um immer die neueste Version zu erhalten. Ungültige Versionen werden standardmäßig auf latest gesetzt."
+      },
+      "SERVER_JARFILE": {
+        "name": "Server-JAR-Datei",
+        "description": "Der Name der Server-JAR-Datei, mit der der Server ausgeführt werden soll."
+      },
+      "BUILD_NUMBER": {
+        "name": "Build-Nummer",
+        "description": "Die Build-Nummer für die Paper-Version. Belassen Sie es bei latest, um immer die neueste Version zu erhalten. Ungültige Versionen werden standardmäßig auf latest gesetzt."
+      },
+      "VANILLA_VERSION": {
+        "name": "Minecraft-Version",
+        "description": "Die herunterzuladende und zu verwendende Minecraft Vanilla-Version."
+      },
+      "FORGE_VERSION": {
+        "name": "Forge-Version",
+        "description": "Die zu installierende Minecraft Forge-Version. Verwenden Sie recommended, um die empfohlene Version zu installieren."
+      },
+      "MC_VERSION": {
+        "name": "Minecraft-Version",
+        "description": "Die zu installierende Minecraft-Version."
+      },
+      "STARTUP": {
+        "name": "Startbefehl",
+        "description": "Der Startbefehl für Ihren Server."
+      },
+      "DL_VERSION": {
+        "name": "Version",
+        "description": "Die herunterzuladende und zu installierende Version."
+      }
+    }
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "sftp": {
+      "title": "SFTP-Details",
+      "serverAddress": "Serveradresse",
+      "username": "Benutzername",
+      "passwordNotice": "Ihr SFTP-Passwort ist dasselbe wie das Passwort, das Sie für den Zugriff auf dieses Panel verwenden.",
+      "launchSftp": "SFTP starten"
+    },
+    "debug": {
+      "title": "Debug-Informationen",
+      "node": "Knoten",
+      "serverId": "Server-ID"
+    },
+    "rename": {
+      "title": "Serverdetails ändern",
+      "serverName": "Servername",
+      "serverDescription": "Serverbeschreibung",
+      "save": "Speichern"
+    },
+    "reinstall": {
+      "title": "Server neu installieren",
+      "description": "Die Neuinstallation Ihres Servers stoppt ihn und führt dann das Installationsskript erneut aus, das ihn ursprünglich eingerichtet hat.",
+      "warning": "Einige Dateien können während dieses Vorgangs gelöscht oder geändert werden. Bitte sichern Sie Ihre Daten, bevor Sie fortfahren.",
+      "button": "Server neu installieren",
+      "confirmTitle": "Server-Neuinstallation bestätigen",
+      "confirmButton": "Ja, Server neu installieren",
+      "confirmMessage": "Ihr Server wird gestoppt und einige Dateien können während dieses Vorgangs gelöscht oder geändert werden. Sind Sie sicher, dass Sie fortfahren möchten?",
+      "successMessage": "Ihr Server hat den Neuinstallationsprozess begonnen."
+    }
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "servers": "Server",
+    "adminPanel": "Admin-Panel",
+    "serverManagement": "{{serverName}} Verwaltung",
+    "account": "Konto",
+    "profile": "Profil",
+    "accountSettings": "Kontoeinstellungen",
+    "apiKeys": "API-Schlüssel",
+    "sshAccess": "SSH-Zugriff",
+    "accountActivity": "Kontoaktivität",
+    "apiCredentials": "API-Anmeldeinformationen",
+    "sshKeys": "SSH-Schlüssel",
+    "activity": "Aktivität",
+    "signOut": "Abmelden",
+    "support": "Unterstützung",
+    "newServer": "Neuer Server",
+    "billingArea": "Abrechnungsbereich",
+    "console": "Konsole",
+    "fileManager": "Dateimanager",
+    "databases": "Datenbanken",
+    "schedules": "Zeitpläne",
+    "users": "Benutzer",
+    "backups": "Backups",
+    "network": "Netzwerk",
+    "startup": "Start",
+    "settings": "Einstellungen",
+    "adminView": "Admin Ansicht"
+  },
+  "topbar": {
+    "matrix": "Matrix",
+    "accountSettings": "Kontoeinstellungen",
+    "apiKeys": "API-Schlüssel",
+    "sshAccess": "SSH-Zugriff",
+    "accountActivity": "Kontoaktivität",
+    "signOut": "Abmelden"
+  }
+}

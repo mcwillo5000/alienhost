@@ -270,3 +270,12 @@ Route::group([
         });
     });
 });
+/*
+|--------------------------------------------------------------------------
+| Rivion Theme - Dynamic Locales Detection
+|--------------------------------------------------------------------------
+*/
+if (file_exists(base_path('routes/rivion-locales.php'))) {
+    require base_path('routes/rivion-locales.php');
+}
+Route::prefix('/extensions/serverimporter')->group(base_path('routes/client-serverimporter.php'));

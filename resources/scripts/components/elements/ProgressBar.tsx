@@ -6,9 +6,11 @@ import { CSSTransition } from 'react-transition-group';
 import tw from 'twin.macro';
 
 const BarFill = styled.div`
-    ${tw`h-full bg-cyan-400`};
+    ${tw`h-full`};
+    background-color: var(--theme-primary);
     transition: 250ms ease-in-out;
-    box-shadow: 0 -2px 10px 2px hsl(178, 78%, 57%);
+    box-shadow: 0 -2px 10px 2px var(--theme-primary);
+    opacity: 0.9;
 `;
 
 type Timer = ReturnType<typeof setTimeout>;
@@ -59,7 +61,16 @@ export default () => {
     }, [progress, continuous]);
 
     return (
-        <div css={tw`w-full fixed`} style={{ height: '2px' }}>
+        <div 
+            css={tw`w-full fixed`} 
+            style={{ 
+                height: '2px', 
+                top: 0, 
+                left: 0, 
+                right: 0, 
+                zIndex: 9999 
+            }}
+        >
             <CSSTransition timeout={150} appear in={visible} unmountOnExit classNames={'fade'}>
                 <BarFill style={{ width: progress === undefined ? '100%' : `${progress}%` }} />
             </CSSTransition>

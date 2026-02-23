@@ -6,11 +6,13 @@ import { useFlashKey } from '@/plugins/useFlash';
 import { deleteSSHKey, useSSHKeys } from '@/api/account/ssh-keys';
 import { Dialog } from '@/components/elements/dialog';
 import Code from '@/components/elements/Code';
+import { useTranslation } from 'react-i18next';
 
 export default ({ name, fingerprint }: { name: string; fingerprint: string }) => {
     const { clearAndAddHttpError } = useFlashKey('account');
     const [visible, setVisible] = useState(false);
     const { mutate } = useSSHKeys();
+    const { t } = useTranslation();
 
     const onClick = () => {
         clearAndAddHttpError();
@@ -28,18 +30,21 @@ export default ({ name, fingerprint }: { name: string; fingerprint: string }) =>
         <>
             <Dialog.Confirm
                 open={visible}
-                title={'Delete SSH Key'}
-                confirm={'Delete Key'}
+                title={t('account.ssh.keys.deleteConfirm.title')}
+                confirm={t('account.ssh.keys.deleteConfirm.confirm')}
                 onConfirmed={onClick}
                 onClose={() => setVisible(false)}
             >
-                Removing the <Code>{name}</Code> SSH key will invalidate its usage across the Panel.
+                {t('account.ssh.keys.deleteConfirm.message', { name })}
             </Dialog.Confirm>
-            <button css={tw`ml-4 p-2 text-sm`} onClick={() => setVisible(true)}>
-                <FontAwesomeIcon
-                    icon={faTrashAlt}
-                    css={tw`text-neutral-400 hover:text-red-400 transition-colors duration-150`}
-                />
+            <button 
+                css={tw`ml-4 p-2 text-sm transition-colors duration-150`} 
+                onClick={() => setVisible(true)}
+                style={{ color: 'var(--theme-text-muted)' }}
+                onMouseEnter={(e) => e.currentTarget.style.color = 'var(--theme-danger)'}
+                onMouseLeave={(e) => e.currentTarget.style.color = 'var(--theme-text-muted)'}
+            >
+                <FontAwesomeIcon icon={faTrashAlt} />
             </button>
         </>
     );

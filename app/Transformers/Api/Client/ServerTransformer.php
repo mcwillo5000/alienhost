@@ -25,33 +25,26 @@ class ServerTransformer extends BaseClientTransformer
         return Server::RESOURCE_NAME;
     }
 
-    /**
-     * Transform a server model into a representation that can be returned
-     * to a client.
-     */
     public function transform(Server $server): array
     {
-        /** @var StartupCommandService $service */
+        /** @var \Pterodactyl\Services\Servers\StartupCommandService $service */
         $service = Container::getInstance()->make(StartupCommandService::class);
 
         $user = $this->request->user();
 
         return [
             'server_owner' => $user->id === $server->owner_id,
-            'identifier' => config('pterodactyl.features.new_server_identifiers')
-                ? $server->identifier
-                : $server->uuidShort,
-            '__deprecated_uuid_short' => $server->uuidShort,
-            // In Pterodactyl 2.0 we'll be replacing `identifier` above with the actual
-            // "identifier" used internally. This is a completely different value compared
-            // to the current however, and would be quite a breaking change to URLs.
-            'server_identifier' => $server->identifier,
+            'identifier' => $server->uuidShort,
             'internal_id' => $server->id,
-            'egg_id' => $server->egg_id,
             'uuid' => $server->uuid,
             'name' => $server->name,
-            'crash_webhook' => $server->crash_webhook,
             'node' => $server->node->name,
+            'node_alert' => $server->node->alert,
+            'daemon_text' => $server->node->daemon_text,
+            'container_text' => $server->node->container_text,
+            'egg_image' => $server->egg->image,
+            'nest_id' => $server->nest_id,
+            'egg_id' => $server->egg_id,
             'is_node_under_maintenance' => $server->node->isUnderMaintenance(),
             'sftp_details' => [
                 'ip' => $server->node->fqdn,
@@ -76,16 +69,15 @@ class ServerTransformer extends BaseClientTransformer
                 'backups' => $server->backup_limit,
             ],
             'status' => $server->status,
-            // This field is deprecated, please use "status".
+            
             'is_suspended' => $server->isSuspended(),
-            // This field is deprecated, please use "status".
+            
             'is_installing' => !$server->isInstalled(),
             'is_transferring' => !is_null($server->transfer),
         ];
     }
 
     /**
-     * Returns the allocations associated with this server.
      *
      * @throws \Pterodactyl\Exceptions\Transformer\InvalidTransformerLevelException
      */
@@ -94,13 +86,6 @@ class ServerTransformer extends BaseClientTransformer
         $transformer = $this->makeTransformer(AllocationTransformer::class);
 
         $user = $this->request->user();
-        // While we include this permission, we do need to actually handle it slightly different here
-        // for the purpose of keeping things functionally working. If the user doesn't have read permissions
-        // for the allocations we'll only return the primary server allocation, and any notes associated
-        // with it will be hidden.
-        //
-        // This allows us to avoid too much permission regression, without also hiding information that
-        // is generally needed for the frontend to make sense when browsing or searching results.
         if (!$user->can(Permission::ACTION_ALLOCATION_READ, $server)) {
             $primary = clone $server->allocation;
             $primary->notes = null;
@@ -128,7 +113,6 @@ class ServerTransformer extends BaseClientTransformer
     }
 
     /**
-     * Returns the egg associated with this server.
      *
      * @throws \Pterodactyl\Exceptions\Transformer\InvalidTransformerLevelException
      */
@@ -138,7 +122,6 @@ class ServerTransformer extends BaseClientTransformer
     }
 
     /**
-     * Returns the subusers associated with this server.
      *
      * @throws \Pterodactyl\Exceptions\Transformer\InvalidTransformerLevelException
      */

@@ -34,8 +34,6 @@ function Pagination<T>({ data: { items, pagination }, onPageSelect, children }: 
 
     const pages = [];
 
-    // Start two spaces before the current page. If that puts us before the starting page default
-    // to the first page as the starting point.
     const start = Math.max(pagination.currentPage - 2, 1);
     const end = Math.min(pagination.totalPages, pagination.currentPage + 5);
 

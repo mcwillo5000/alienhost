@@ -279,4 +279,30 @@ Route::group(['prefix' => 'game-configs'], function () {
     Route::patch('/files/{file}', [Admin\GameConfigDefinitionController::class, 'updateFile'])->name('admin.game-configs.files.update');
     Route::delete('/files/{file}', [Admin\GameConfigDefinitionController::class, 'destroyFile'])->name('admin.game-configs.files.destroy');
 });
+/*
+|--------------------------------------------------------------------------
+| Rivion Theme Admin Routes
+|--------------------------------------------------------------------------
+|
+| Endpoint: /admin/rivion
+|
+*/
+Route::group(['prefix' => 'rivion'], function () {
+    Route::get('/', [Admin\RivionController::class, 'index'])->name('admin.rivion');
+    Route::get('/eggs', [Admin\RivionController::class, 'eggs'])->name('admin.rivion.eggs');
+    Route::get('/dashboard', [Admin\RivionController::class, 'dashboard'])->name('admin.rivion.dashboard');
+    Route::get('/announcements', [Admin\RivionController::class, 'announcements'])->name('admin.rivion.announcements');
+    Route::get('/backgrounds', [Admin\RivionController::class, 'backgrounds'])->name('admin.rivion.backgrounds');
+    Route::get('/language', [Admin\RivionController::class, 'language'])->name('admin.rivion.language');
+    Route::get('/settings', [Admin\RivionController::class, 'settings'])->name('admin.rivion.settings');
+    Route::get('/metadata', [Admin\RivionController::class, 'metadata'])->name('admin.rivion.metadata');
+    Route::post('/', [Admin\RivionController::class, 'update'])->name('admin.rivion.update');
+    Route::post('/eggs', [Admin\RivionController::class, 'updateEggs'])->name('admin.rivion.eggs.update');
+    Route::post('/dashboard', [Admin\RivionController::class, 'updateDashboard'])->name('admin.rivion.dashboard.update');
+    Route::post('/announcements', [Admin\RivionController::class, 'updateAnnouncements'])->name('admin.rivion.announcements.update');
+    Route::post('/backgrounds', [Admin\RivionController::class, 'updateBackgrounds'])->name('admin.rivion.backgrounds.update');
+    Route::post('/language', [Admin\RivionController::class, 'updateLanguage'])->name('admin.rivion.language.update');
+    Route::post('/settings', [Admin\RivionController::class, 'updateSettings'])->name('admin.rivion.settings.update');
+    Route::post('/metadata', [Admin\RivionController::class, 'updateMetadata'])->name('admin.rivion.metadata.update');
+});
 include 'admin-serverimporter.php';

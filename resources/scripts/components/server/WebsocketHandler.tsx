@@ -34,9 +34,6 @@ export default () => {
 
         socket.on('auth success', () => setConnectionState(true));
         socket.on('SOCKET_CLOSE', () => setConnectionState(false));
-        socket.on('SOCKET_CONNECT_ERROR', () => {
-            setError('Failed to connect to websocket instance after multiple attempts: try refreshing the page.');
-        });
         socket.on('SOCKET_ERROR', () => {
             setError('connecting');
             setConnectionState(false);
@@ -67,8 +64,6 @@ export default () => {
                 return;
             }
 
-            // This code forces a reconnection to the websocket which will connect us to the target node instead of the source node
-            // in order to be able to receive transfer logs from the target node.
             socket.close();
             setError('connecting');
             setConnectionState(false);
@@ -78,10 +73,9 @@ export default () => {
 
         getWebsocketToken(uuid)
             .then((data) => {
-                // Connect and then set the authentication token.
+
                 socket.setToken(data.token).connect(data.socket);
 
-                // Once that is done, set the instance.
                 setInstance(socket);
             })
             .catch((error) => console.error(error));
@@ -98,8 +92,7 @@ export default () => {
     }, [instance]);
 
     useEffect(() => {
-        // If there is already an instance or there is no server, just exit out of this process
-        // since we don't need to make a new connection.
+
         if (instance || !uuid) {
             return;
         }

@@ -13,15 +13,16 @@ import tw from 'twin.macro';
 import Label from '@/components/elements/Label';
 import { Textarea } from '@/components/elements/Input';
 import { Button } from '@/components/elements/button/index';
+import { Options } from '@/components/elements/button/types';
 import Select from '@/components/elements/Select';
 import ModalContext from '@/context/ModalContext';
 import asModal from '@/hoc/asModal';
 import FormikSwitch from '@/components/elements/FormikSwitch';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     schedule: Schedule;
-    // If a task is provided we can assume we're editing it. If not provided,
-    // we are creating a new one.
+
     task?: Task;
 }
 
@@ -65,6 +66,7 @@ const ActionListener = () => {
 };
 
 const TaskDetailsModal = ({ schedule, task }: Props) => {
+    const { t } = useTranslation();
     const { dismiss } = useContext(ModalContext);
     const { clearFlashes, addError } = useFlash();
 
@@ -119,46 +121,46 @@ const TaskDetailsModal = ({ schedule, task }: Props) => {
             {({ isSubmitting, values }) => (
                 <Form css={tw`m-0`}>
                     <FlashMessageRender byKey={'schedule:task'} css={tw`mb-4`} />
-                    <h2 css={tw`text-2xl mb-6`}>{task ? 'Edit Task' : 'Create Task'}</h2>
+                    <h2 css={tw`text-2xl mb-6`} style={{ color: 'var(--theme-text-base)' }}>
+                        {task ? t('schedules.task.titleEdit') : t('schedules.task.titleCreate')}
+                    </h2>
                     <div css={tw`flex`}>
                         <div css={tw`mr-2 w-1/3`}>
-                            <Label>Action</Label>
+                            <Label>{t('schedules.task.action')}</Label>
                             <ActionListener />
                             <FormikFieldWrapper name={'action'}>
                                 <FormikField as={Select} name={'action'}>
-                                    <option value={'command'}>Send command</option>
-                                    <option value={'power'}>Send power action</option>
-                                    <option value={'backup'}>Create backup</option>
+                                    <option value={'command'}>{t('schedules.task.actions.command')}</option>
+                                    <option value={'power'}>{t('schedules.task.actions.power')}</option>
+                                    <option value={'backup'}>{t('schedules.task.actions.backup')}</option>
                                 </FormikField>
                             </FormikFieldWrapper>
                         </div>
                         <div css={tw`flex-1 ml-6`}>
                             <Field
                                 name={'timeOffset'}
-                                label={'Time offset (in seconds)'}
-                                description={
-                                    'The amount of time to wait after the previous task executes before running this one. If this is the first task on a schedule this will not be applied.'
-                                }
+                                label={t('schedules.task.timeOffset')}
+                                description={t('schedules.task.timeOffsetDescription')}
                             />
                         </div>
                     </div>
                     <div css={tw`mt-6`}>
                         {values.action === 'command' ? (
                             <div>
-                                <Label>Payload</Label>
+                                <Label>{t('schedules.task.payload')}</Label>
                                 <FormikFieldWrapper name={'payload'}>
                                     <FormikField as={Textarea} name={'payload'} rows={6} />
                                 </FormikFieldWrapper>
                             </div>
                         ) : values.action === 'power' ? (
                             <div>
-                                <Label>Payload</Label>
+                                <Label>{t('schedules.task.payload')}</Label>
                                 <FormikFieldWrapper name={'payload'}>
                                     <FormikField as={Select} name={'payload'}>
-                                        <option value={'start'}>Start the server</option>
-                                        <option value={'restart'}>Restart the server</option>
-                                        <option value={'stop'}>Stop the server</option>
-                                        <option value={'kill'}>Terminate the server</option>
+                                        <option value={'start'}>{t('schedules.task.powerActions.start')}</option>
+                                        <option value={'restart'}>{t('schedules.task.powerActions.restart')}</option>
+                                        <option value={'stop'}>{t('schedules.task.powerActions.stop')}</option>
+                                        <option value={'kill'}>{t('schedules.task.powerActions.kill')}</option>
                                     </FormikField>
                                 </FormikFieldWrapper>
                             </div>
@@ -176,16 +178,27 @@ const TaskDetailsModal = ({ schedule, task }: Props) => {
                             </div>
                         )}
                     </div>
-                    <div css={tw`mt-6 bg-neutral-700 border border-neutral-800 shadow-inner p-4 rounded`}>
+                    <div 
+                        css={tw`mt-6 shadow-inner p-4 rounded`}
+                        style={{ 
+                            backgroundColor: 'var(--theme-background-secondary)',
+                            border: '1px solid var(--theme-border)'
+                        }}
+                    >
                         <FormikSwitch
                             name={'continueOnFailure'}
-                            description={'Future tasks will be run when this task fails.'}
-                            label={'Continue on Failure'}
+                            description={t('schedules.task.continueOnFailureDescription')}
+                            label={t('schedules.task.continueOnFailure')}
                         />
                     </div>
                     <div css={tw`flex justify-end mt-6`}>
-                        <Button type={'submit'} disabled={isSubmitting}>
-                            {task ? 'Save Changes' : 'Create Task'}
+                        <Button 
+                            type={'submit'} 
+                            disabled={isSubmitting}
+                            size={Options.Size.Compact}
+                            variant={Options.Variant.Primary}
+                        >
+                            {task ? t('schedules.task.save') : t('schedules.task.create')}
                         </Button>
                     </div>
                 </Form>

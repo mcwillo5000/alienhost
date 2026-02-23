@@ -12,6 +12,7 @@ import GreyRowBox from '@/components/elements/GreyRowBox';
 import getServerBackups from '@/api/swr/getServerBackups';
 import { ServerBackup } from '@/api/server/types';
 import { SocketEvent } from '@/components/server/events';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     backup: ServerBackup;
@@ -19,6 +20,7 @@ interface Props {
 }
 
 export default ({ backup, className }: Props) => {
+    const { t } = useTranslation();
     const { mutate } = getServerBackups();
 
     useWebsocketEvent(`${SocketEvent.BACKUP_COMPLETED}:${backup.uuid}` as SocketEvent, (data) => {
@@ -55,7 +57,7 @@ export default ({ backup, className }: Props) => {
                         backup.isLocked ? (
                             <FontAwesomeIcon icon={faLock} css={tw`text-yellow-500`} />
                         ) : (
-                            <FontAwesomeIcon icon={faArchive} css={tw`text-neutral-300`} />
+                            <FontAwesomeIcon icon={faArchive} style={{ color: 'var(--theme-text-muted)' }} />
                         )
                     ) : (
                         <Spinner size={'small'} />
@@ -67,24 +69,24 @@ export default ({ backup, className }: Props) => {
                             <span
                                 css={tw`bg-red-500 py-px px-2 rounded-full text-white text-xs uppercase border border-red-600 mr-2`}
                             >
-                                Failed
+                                {t('backups.failed')}
                             </span>
                         )}
-                        <p css={tw`break-words truncate`}>{backup.name}</p>
+                        <p css={tw`break-words truncate`} style={{ color: 'var(--theme-primary)' }}>{backup.name}</p>
                         {backup.completedAt !== null && backup.isSuccessful && (
-                            <span css={tw`ml-3 text-neutral-300 text-xs font-extralight hidden sm:inline`}>
+                            <span css={tw`ml-3 text-xs font-extralight hidden sm:inline`} style={{ color: 'var(--theme-text-muted)' }}>
                                 {bytesToString(backup.bytes)}
                             </span>
                         )}
                     </div>
-                    <p css={tw`mt-1 md:mt-0 text-xs text-neutral-400 font-mono truncate`}>{backup.checksum}</p>
+                    <p css={tw`mt-1 md:mt-0 text-xs font-mono truncate`} style={{ color: 'var(--theme-text-muted)' }}>{backup.checksum}</p>
                 </div>
             </div>
             <div css={tw`flex-1 md:flex-none md:w-48 mt-4 md:mt-0 md:ml-8 md:text-center`}>
-                <p title={format(backup.createdAt, 'ddd, MMMM do, yyyy HH:mm:ss')} css={tw`text-sm`}>
+                <p title={format(backup.createdAt, 'ddd, MMMM do, yyyy HH:mm:ss')} css={tw`text-sm`} style={{ color: 'var(--theme-text-base)' }}>
                     {formatDistanceToNow(backup.createdAt, { includeSeconds: true, addSuffix: true })}
                 </p>
-                <p css={tw`text-2xs text-neutral-500 uppercase mt-1`}>Created</p>
+                <p css={tw`text-2xs uppercase mt-1`} style={{ color: 'var(--theme-text-muted)' }}>{t('backups.created')}</p>
             </div>
             <Can action={['backup.download', 'backup.restore', 'backup.delete']} matchAny>
                 <div css={tw`mt-4 md:mt-0 ml-6`} style={{ marginRight: '-0.5rem' }}>

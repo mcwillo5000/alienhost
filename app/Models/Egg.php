@@ -2,9 +2,7 @@
 
 namespace Pterodactyl\Models;
 
-use Pterodactyl\Contracts\Models\Identifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Pterodactyl\Models\Traits\HasRealtimeIdentifier;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -16,7 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string $name
  * @property string|null $description
  * @property array|null $features
- * @property string $docker_image -- deprecated, use $docker_images
+ * @property string $docker_image 
  * @property array<string, string> $docker_images
  * @property string $update_url
  * @property bool $force_outgoing_ip
@@ -43,50 +41,31 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property string|null $inherit_config_stop
  * @property string $inherit_file_denylist
  * @property array|null $inherit_features
+ * @property string|null $image 
  * @property Nest $nest
  * @property \Illuminate\Database\Eloquent\Collection|\Pterodactyl\Models\Server[] $servers
  * @property \Illuminate\Database\Eloquent\Collection|\Pterodactyl\Models\EggVariable[] $variables
  * @property Egg|null $scriptFrom
  * @property Egg|null $configFrom
  */
-#[Attributes\Identifiable('eegg')]
-class Egg extends Model implements Identifiable
+class Egg extends Model
 {
     /** @use HasFactory<\Database\Factories\EggFactory> */
     use HasFactory;
-    use HasRealtimeIdentifier;
 
-    /**
-     * The resource name for this model when it is transformed into an
-     * API representation using fractal.
-     */
+
     public const RESOURCE_NAME = 'egg';
 
-    /**
-     * Defines the current egg export version.
-     */
+
     public const EXPORT_VERSION = 'PTDL_v2';
 
-    /**
-     * Different features that can be enabled on any given egg. These are used internally
-     * to determine which types of frontend functionality should be shown to the user. Eggs
-     * will automatically inherit features from a parent egg if they are already configured
-     * to copy configuration values from said egg.
-     *
-     * To skip copying the features, an empty array value should be passed in ("[]") rather
-     * than leaving it null.
-     */
     public const FEATURE_EULA_POPUP = 'eula';
     public const FEATURE_FASTDL = 'fastdl';
 
-    /**
-     * The table associated with the model.
-     */
+
     protected $table = 'eggs';
 
-    /**
-     * Fields that are not mass assignable.
-     */
+
     protected $fillable = [
         'name',
         'description',
@@ -105,11 +84,10 @@ class Egg extends Model implements Identifiable
         'script_entry',
         'script_container',
         'copy_script_from',
+        'image', 
     ];
 
-    /**
-     * Cast values to correct type.
-     */
+
     protected $casts = [
         'nest_id' => 'integer',
         'config_from' => 'integer',
@@ -140,6 +118,7 @@ class Egg extends Model implements Identifiable
         'config_files' => 'required_without:config_from|nullable|json',
         'update_url' => 'sometimes|nullable|string',
         'force_outgoing_ip' => 'sometimes|boolean',
+        'image' => 'nullable|url', 
     ];
 
     protected $attributes = [
@@ -150,12 +129,10 @@ class Egg extends Model implements Identifiable
         'config_logs' => null,
         'config_files' => null,
         'update_url' => null,
+        'image' => null, 
     ];
 
-    /**
-     * Returns the install script for the egg; if egg is copying from another
-     * it will return the copied script.
-     */
+
     public function getCopyScriptInstallAttribute(): ?string
     {
         if (!is_null($this->script_install) || is_null($this->copy_script_from)) {
@@ -165,35 +142,27 @@ class Egg extends Model implements Identifiable
         return $this->scriptFrom->script_install;
     }
 
-    /**
-     * Returns the entry command for the egg; if egg is copying from another
-     * it will return the copied entry command.
-     */
+
     public function getCopyScriptEntryAttribute(): string
     {
-        if (is_null($this->copy_script_from)) {
+        if (!is_null($this->script_entry) || is_null($this->copy_script_from)) {
             return $this->script_entry;
         }
 
         return $this->scriptFrom->script_entry;
     }
 
-    /**
-     * Returns the install container for the egg; if egg is copying from another
-     * it will return the copied install container.
-     */
+
     public function getCopyScriptContainerAttribute(): string
     {
-        if (is_null($this->copy_script_from)) {
+        if (!is_null($this->script_container) || is_null($this->copy_script_from)) {
             return $this->script_container;
         }
 
         return $this->scriptFrom->script_container;
     }
 
-    /**
-     * Return the file configuration for an egg.
-     */
+
     public function getInheritConfigFilesAttribute(): ?string
     {
         if (!is_null($this->config_files) || is_null($this->config_from)) {
@@ -203,9 +172,7 @@ class Egg extends Model implements Identifiable
         return $this->configFrom->config_files;
     }
 
-    /**
-     * Return the startup configuration for an egg.
-     */
+
     public function getInheritConfigStartupAttribute(): ?string
     {
         if (!is_null($this->config_startup) || is_null($this->config_from)) {
@@ -215,9 +182,7 @@ class Egg extends Model implements Identifiable
         return $this->configFrom->config_startup;
     }
 
-    /**
-     * Return the log reading configuration for an egg.
-     */
+
     public function getInheritConfigLogsAttribute(): ?string
     {
         if (!is_null($this->config_logs) || is_null($this->config_from)) {
@@ -227,9 +192,7 @@ class Egg extends Model implements Identifiable
         return $this->configFrom->config_logs;
     }
 
-    /**
-     * Return the stop command configuration for an egg.
-     */
+
     public function getInheritConfigStopAttribute(): ?string
     {
         if (!is_null($this->config_stop) || is_null($this->config_from)) {
@@ -239,10 +202,7 @@ class Egg extends Model implements Identifiable
         return $this->configFrom->config_stop;
     }
 
-    /**
-     * Returns the features available to this egg from the parent configuration if there are
-     * no features defined for this egg specifically and there is a parent egg configured.
-     */
+
     public function getInheritFeaturesAttribute(): ?array
     {
         if (!is_null($this->features) || is_null($this->config_from)) {
@@ -252,10 +212,7 @@ class Egg extends Model implements Identifiable
         return $this->configFrom->features;
     }
 
-    /**
-     * Returns the features available to this egg from the parent configuration if there are
-     * no features defined for this egg specifically and there is a parent egg configured.
-     */
+
     public function getInheritFileDenylistAttribute(): ?array
     {
         if (is_null($this->config_from)) {
@@ -265,51 +222,31 @@ class Egg extends Model implements Identifiable
         return $this->configFrom->file_denylist;
     }
 
-    /**
-     * Gets nest associated with an egg.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<\Pterodactyl\Models\Nest, $this>
-     */
+
     public function nest(): BelongsTo
     {
         return $this->belongsTo(Nest::class);
     }
 
-    /**
-     * Gets all servers associated with this egg.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\Pterodactyl\Models\Server, $this>
-     */
+
     public function servers(): HasMany
     {
         return $this->hasMany(Server::class, 'egg_id');
     }
 
-    /**
-     * Gets all variables associated with this egg.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\Pterodactyl\Models\EggVariable, $this>
-     */
+
     public function variables(): HasMany
     {
         return $this->hasMany(EggVariable::class, 'egg_id');
     }
 
-    /**
-     * Get the parent egg from which to copy scripts.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<self, $this>
-     */
+
     public function scriptFrom(): BelongsTo
     {
         return $this->belongsTo(self::class, 'copy_script_from');
     }
 
-    /**
-     * Get the parent egg from which to copy configuration settings.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<self, $this>
-     */
+
     public function configFrom(): BelongsTo
     {
         return $this->belongsTo(self::class, 'config_from');

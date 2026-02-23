@@ -7,13 +7,18 @@ export interface Props {
 }
 
 const light = css<Props>`
-    ${tw`bg-white border-neutral-200 text-neutral-800`};
+    background-color: var(--theme-background);
+    border-color: var(--theme-border);
+    color: var(--theme-text-base);
+    
     &:focus {
-        ${tw`border-primary-400`}
+        border-color: var(--theme-primary);
     }
 
     &:disabled {
-        ${tw`bg-neutral-100 border-neutral-200`};
+        background-color: var(--theme-background-secondary);
+        border-color: var(--theme-border);
+        opacity: 0.6;
     }
 `;
 
@@ -40,12 +45,24 @@ const inputStyle = css<Props>`
     // Reset to normal styling.
     resize: none;
     ${tw`appearance-none outline-none w-full min-w-0`};
-    ${tw`p-3 border-2 rounded text-sm transition-all duration-150`};
-    ${tw`bg-neutral-600 border-neutral-500 hover:border-neutral-400 text-neutral-200 shadow-none focus:ring-0`};
+    ${tw`text-sm transition-all duration-150`};
+    padding: 0.5rem 0.75rem;
+    background-color: var(--theme-background);
+    border: 1px solid var(--theme-border);
+    color: var(--theme-text-base);
+    border-radius: 0;
+    font-family: 'Electrolize', sans-serif;
+    line-height: 1.25;
+    /* Futuristic clip-path matching search bar - TL/BR angled */
+    clip-path: polygon(0px 8px, 8px 0px, 100% 0px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0px 100%);
+    
+    &:hover {
+        border-color: var(--theme-primary);
+    }
 
     & + .input-help {
         ${tw`mt-1 text-xs`};
-        ${(props) => (props.hasError ? tw`text-red-200` : tw`text-neutral-200`)};
+        ${(props) => (props.hasError ? tw`text-red-200` : 'color: var(--theme-text-muted);')};
     }
 
     &:required,
@@ -54,8 +71,8 @@ const inputStyle = css<Props>`
     }
 
     &:not(:disabled):not(:read-only):focus {
-        ${tw`shadow-md border-primary-300 ring-2 ring-primary-400 ring-opacity-50`};
-        ${(props) => props.hasError && tw`border-red-300 ring-red-200`};
+        border-color: var(--theme-primary);
+        ${(props) => props.hasError && 'border-color: #DC2626;'};
     }
 
     &:disabled {

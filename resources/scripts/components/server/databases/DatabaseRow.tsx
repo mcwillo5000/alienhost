@@ -15,10 +15,13 @@ import { ServerDatabase } from '@/api/server/databases/getServerDatabases';
 import useFlash from '@/plugins/useFlash';
 import tw from 'twin.macro';
 import Button from '@/components/elements/Button';
+import { Button as NewButton } from '@/components/elements/button/index';
+import { Options } from '@/components/elements/button/types';
 import Label from '@/components/elements/Label';
 import Input from '@/components/elements/Input';
 import GreyRowBox from '@/components/elements/GreyRowBox';
 import CopyOnClick from '@/components/elements/CopyOnClick';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     database: ServerDatabase;
@@ -26,6 +29,7 @@ interface Props {
 }
 
 export default ({ database, className }: Props) => {
+    const { t } = useTranslation();
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
     const { addError, clearFlashes } = useFlash();
     const [visible, setVisible] = useState(false);
@@ -72,26 +76,36 @@ export default ({ database, className }: Props) => {
                         }}
                     >
                         <FlashMessageRender byKey={'database:delete'} css={tw`mb-6`} />
-                        <h2 css={tw`text-2xl mb-6`}>Confirm database deletion</h2>
-                        <p css={tw`text-sm`}>
-                            Deleting a database is a permanent action, it cannot be undone. This will permanently delete
-                            the <strong>{database.name}</strong> database and remove all associated data.
+                        <h2 css={tw`text-2xl mb-6`} style={{ color: 'var(--theme-text-base)' }}>{t('databases.delete.title')}</h2>
+                        <p css={tw`text-sm`} style={{ color: 'var(--theme-text-base)' }}>
+                            {t('databases.delete.description')} <strong>{database.name}</strong> {t('databases.delete.description2')}
                         </p>
                         <Form css={tw`m-0 mt-6`}>
                             <Field
                                 type={'text'}
                                 id={'confirm_name'}
                                 name={'confirm'}
-                                label={'Confirm Database Name'}
-                                description={'Enter the database name to confirm deletion.'}
+                                label={t('databases.delete.confirmName')}
+                                description={t('databases.delete.confirmDescription')}
                             />
                             <div css={tw`mt-6 text-right`}>
-                                <Button type={'button'} isSecondary css={tw`mr-2`} onClick={() => setVisible(false)}>
-                                    Cancel
-                                </Button>
-                                <Button type={'submit'} color={'red'} disabled={!isValid}>
-                                    Delete Database
-                                </Button>
+                                <NewButton 
+                                    type={'button'} 
+                                    variant={Options.Variant.Secondary}
+                                    size={Options.Size.Compact}
+                                    css={tw`mr-2`} 
+                                    onClick={() => setVisible(false)}
+                                >
+                                    {t('databases.delete.cancel')}
+                                </NewButton>
+                                <NewButton 
+                                    type={'submit'} 
+                                    variant={Options.Variant.Primary}
+                                    size={Options.Size.Compact}
+                                    disabled={!isValid}
+                                >
+                                    {t('databases.delete.deleteButton')}
+                                </NewButton>
                             </div>
                         </Form>
                     </Modal>
@@ -99,33 +113,33 @@ export default ({ database, className }: Props) => {
             </Formik>
             <Modal visible={connectionVisible} onDismissed={() => setConnectionVisible(false)}>
                 <FlashMessageRender byKey={'database-connection-modal'} css={tw`mb-6`} />
-                <h3 css={tw`mb-6 text-2xl`}>Database connection details</h3>
+                <h3 css={tw`mb-6 text-2xl`} style={{ color: 'var(--theme-text-base)' }}>{t('databases.connection.title')}</h3>
                 <div>
-                    <Label>Endpoint</Label>
+                    <Label>{t('databases.connection.endpoint')}</Label>
                     <CopyOnClick text={database.connectionString}>
                         <Input type={'text'} readOnly value={database.connectionString} />
                     </CopyOnClick>
                 </div>
                 <div css={tw`mt-6`}>
-                    <Label>Connections from</Label>
+                    <Label>{t('databases.connection.connectionsFrom')}</Label>
                     <Input type={'text'} readOnly value={database.allowConnectionsFrom} />
                 </div>
                 <div css={tw`mt-6`}>
-                    <Label>Username</Label>
+                    <Label>{t('databases.connection.username')}</Label>
                     <CopyOnClick text={database.username}>
                         <Input type={'text'} readOnly value={database.username} />
                     </CopyOnClick>
                 </div>
                 <Can action={'database.view_password'}>
                     <div css={tw`mt-6`}>
-                        <Label>Password</Label>
+                        <Label>{t('databases.connection.password')}</Label>
                         <CopyOnClick text={database.password} showInNotification={false}>
                             <Input type={'text'} readOnly value={database.password} />
                         </CopyOnClick>
                     </div>
                 </Can>
                 <div css={tw`mt-6`}>
-                    <Label>JDBC Connection String</Label>
+                    <Label>{t('databases.connection.jdbcString')}</Label>
                     <CopyOnClick text={jdbcConnectionString} showInNotification={false}>
                         <Input type={'text'} readOnly value={jdbcConnectionString} />
                     </CopyOnClick>
@@ -134,9 +148,13 @@ export default ({ database, className }: Props) => {
                     <Can action={'database.update'}>
                         <RotatePasswordButton databaseId={database.id} onUpdate={appendDatabase} />
                     </Can>
-                    <Button isSecondary onClick={() => setConnectionVisible(false)}>
-                        Close
-                    </Button>
+                    <NewButton 
+                        variant={Options.Variant.Secondary}
+                        size={Options.Size.Compact}
+                        onClick={() => setConnectionVisible(false)}
+                    >
+                        {t('databases.connection.close')}
+                    </NewButton>
                 </div>
             </Modal>
             <GreyRowBox $hoverable={false} className={className} css={tw`mb-2`}>
@@ -145,33 +163,42 @@ export default ({ database, className }: Props) => {
                 </div>
                 <div css={tw`flex-1 ml-4`}>
                     <CopyOnClick text={database.name}>
-                        <p css={tw`text-lg`}>{database.name}</p>
+                        <p css={tw`text-lg`} style={{ color: 'var(--theme-text-base)' }}>{database.name}</p>
                     </CopyOnClick>
                 </div>
                 <div css={tw`ml-8 text-center hidden md:block`}>
                     <CopyOnClick text={database.connectionString}>
-                        <p css={tw`text-sm`}>{database.connectionString}</p>
+                        <p css={tw`text-sm`} style={{ color: 'var(--theme-text-base)' }}>{database.connectionString}</p>
                     </CopyOnClick>
-                    <p css={tw`mt-1 text-2xs text-neutral-500 uppercase select-none`}>Endpoint</p>
+                    <p css={tw`mt-1 text-2xs uppercase select-none`} style={{ color: 'var(--theme-text-muted)' }}>{t('databases.connection.endpoint')}</p>
                 </div>
                 <div css={tw`ml-8 text-center hidden md:block`}>
-                    <p css={tw`text-sm`}>{database.allowConnectionsFrom}</p>
-                    <p css={tw`mt-1 text-2xs text-neutral-500 uppercase select-none`}>Connections from</p>
+                    <p css={tw`text-sm`} style={{ color: 'var(--theme-text-base)' }}>{database.allowConnectionsFrom}</p>
+                    <p css={tw`mt-1 text-2xs uppercase select-none`} style={{ color: 'var(--theme-text-muted)' }}>{t('databases.connection.connectionsFrom')}</p>
                 </div>
                 <div css={tw`ml-8 text-center hidden md:block`}>
                     <CopyOnClick text={database.username}>
-                        <p css={tw`text-sm`}>{database.username}</p>
+                        <p css={tw`text-sm`} style={{ color: 'var(--theme-text-base)' }}>{database.username}</p>
                     </CopyOnClick>
-                    <p css={tw`mt-1 text-2xs text-neutral-500 uppercase select-none`}>Username</p>
+                    <p css={tw`mt-1 text-2xs uppercase select-none`} style={{ color: 'var(--theme-text-muted)' }}>{t('databases.connection.username')}</p>
                 </div>
                 <div css={tw`ml-8`}>
-                    <Button isSecondary css={tw`mr-2`} onClick={() => setConnectionVisible(true)}>
+                    <NewButton 
+                        variant={Options.Variant.Secondary}
+                        size={Options.Size.Compact}
+                        css={tw`mr-2`} 
+                        onClick={() => setConnectionVisible(true)}
+                    >
                         <FontAwesomeIcon icon={faEye} fixedWidth />
-                    </Button>
+                    </NewButton>
                     <Can action={'database.delete'}>
-                        <Button color={'red'} isSecondary onClick={() => setVisible(true)}>
+                        <NewButton 
+                            variant={Options.Variant.Primary}
+                            size={Options.Size.Compact}
+                            onClick={() => setVisible(true)}
+                        >
                             <FontAwesomeIcon icon={faTrashAlt} fixedWidth />
-                        </Button>
+                        </NewButton>
                     </Can>
                 </div>
             </GreyRowBox>

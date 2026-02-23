@@ -1,12 +1,15 @@
 import React, { useCallback, useState } from 'react';
 import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import { Button } from '@/components/elements/button/index';
+import { Options } from '@/components/elements/button/types';
 import triggerScheduleExecution from '@/api/server/schedules/triggerScheduleExecution';
 import { ServerContext } from '@/state/server';
 import useFlash from '@/plugins/useFlash';
 import { Schedule } from '@/api/server/schedules/getServerSchedules';
+import { useTranslation } from 'react-i18next';
 
 const RunScheduleButton = ({ schedule }: { schedule: Schedule }) => {
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const { clearFlashes, clearAndAddHttpError } = useFlash();
 
@@ -32,12 +35,13 @@ const RunScheduleButton = ({ schedule }: { schedule: Schedule }) => {
         <>
             <SpinnerOverlay visible={loading} size={'large'} />
             <Button
-                variant={Button.Variants.Secondary}
+                size={Options.Size.Compact}
+                variant={Options.Variant.Secondary}
                 className={'flex-1 sm:flex-none'}
                 disabled={schedule.isProcessing}
                 onClick={onTriggerExecute}
             >
-                Run Now
+                {t('schedules.runNow')}
             </Button>
         </>
     );

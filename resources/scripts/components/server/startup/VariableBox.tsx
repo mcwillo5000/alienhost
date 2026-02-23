@@ -13,12 +13,14 @@ import getServerStartup from '@/api/swr/getServerStartup';
 import Select from '@/components/elements/Select';
 import isEqual from 'react-fast-compare';
 import { ServerContext } from '@/state/server';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     variable: ServerEggVariable;
 }
 
 const VariableBox = ({ variable }: Props) => {
+    const { t } = useTranslation();
     const FLASH_KEY = `server:startup:${variable.envVariable}`;
 
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
@@ -60,15 +62,24 @@ const VariableBox = ({ variable }: Props) => {
     return (
         <TitledGreyBox
             title={
-                <p className='text-sm uppercase'>
+                <p className="text-sm uppercase" style={{ color: 'var(--theme-text-base)' }}>
                     {!variable.isEditable && (
-                        <span className='bg-neutral-700 text-xs py-1 px-2 rounded-full mr-2 mb-1'>Read Only</span>
+                        <span 
+                            className="text-xs py-1 px-2 rounded-full mr-2 mb-1"
+                            style={{ 
+                                backgroundColor: 'var(--theme-background-secondary)', 
+                                color: 'var(--theme-text-muted)',
+                                border: '1px solid var(--theme-border)'
+                            }}
+                        >
+                            {t('startup.readOnly')}
+                        </span>
                     )}
-                    {variable.name}
+                    {t(`startup.vars.${variable.envVariable}.name`, variable.name)}
                 </p>
             }
         >
-            <FlashMessageRender byKey={FLASH_KEY} className='mb-2 md:mb-4' />
+            <FlashMessageRender byKey={FLASH_KEY} className="mb-2 md:mb-4" />
             <InputSpinner visible={loading}>
                 {useSwitch ? (
                     <>
@@ -128,7 +139,9 @@ const VariableBox = ({ variable }: Props) => {
                 )}
             </InputSpinner>
 
-            <p className='mt-1 text-xs text-neutral-300'>{variable.description}</p>
+            <p className="mt-2 text-xs" style={{ color: 'var(--theme-text-muted)' }}>
+                {t(`startup.vars.${variable.envVariable}.description`, variable.description)}
+            </p>
         </TitledGreyBox>
     );
 };

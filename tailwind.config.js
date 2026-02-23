@@ -20,12 +20,11 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: {
-                header: ['"IBM Plex Sans"', '"Roboto"', 'system-ui', 'sans-serif'],
+                sans: ['"Electrolize"', 'system-ui', 'sans-serif'],
+                header: ['"Orbitron"', '"Electrolize"', 'system-ui', 'sans-serif'],
             },
             colors: {
                 black: '#131a20',
-                // "primary" and "neutral" are deprecated, prefer the use of "blue" and "gray"
-                // in new code.
                 primary: colors.blue,
                 gray: gray,
                 neutral: gray,

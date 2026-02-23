@@ -56,7 +56,7 @@ export default ({ ...props }: Props) => {
     const search = debounce(({ term }: Values, { setSubmitting }: FormikHelpers<Values>) => {
         clearFlashes('search');
 
-        // if (ref.current) ref.current.focus();
+        
         getServers({ query: term, type: isAdmin ? 'admin-all' : undefined })
             .then((servers) => setServers(servers.items.filter((_, index) => index < 5)))
             .catch((error) => {
@@ -73,7 +73,7 @@ export default ({ ...props }: Props) => {
         }
     }, [props.visible]);
 
-    // Formik does not support an innerRef on custom components.
+    
     const InputWithRef = (props: any) => <Input autoFocus {...props} ref={ref} />;
 
     return (

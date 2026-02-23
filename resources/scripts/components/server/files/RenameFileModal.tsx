@@ -2,13 +2,14 @@ import React from 'react';
 import Modal, { RequiredModalProps } from '@/components/elements/Modal';
 import { Form, Formik, FormikHelpers } from 'formik';
 import Field from '@/components/elements/Field';
-import { join } from 'pathe';
+import { join } from '@/lib/path';
 import renameFiles from '@/api/server/files/renameFiles';
 import { ServerContext } from '@/state/server';
 import tw from 'twin.macro';
 import Button from '@/components/elements/Button';
 import useFileManagerSwr from '@/plugins/useFileManagerSwr';
 import useFlash from '@/plugins/useFlash';
+import { useTranslation } from 'react-i18next';
 
 interface FormikValues {
     name: string;
@@ -17,6 +18,7 @@ interface FormikValues {
 type OwnProps = RequiredModalProps & { files: string[]; useMoveTerminology?: boolean };
 
 const RenameFileModal = ({ files, useMoveTerminology, ...props }: OwnProps) => {
+    const { t } = useTranslation();
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
     const { mutate } = useFileManagerSwr();
     const { clearFlashes, clearAndAddHttpError } = useFlash();
@@ -29,10 +31,10 @@ const RenameFileModal = ({ files, useMoveTerminology, ...props }: OwnProps) => {
         const len = name.split('/').length;
         if (files.length === 1) {
             if (!useMoveTerminology && len === 1) {
-                // Rename the file within this directory.
+                
                 mutate((data) => data.map((f) => (f.name === files[0] ? { ...f, name } : f)), false);
             } else if (useMoveTerminology || len > 1) {
-                // Remove the file from this directory since they moved it elsewhere.
+                
                 mutate((data) => data.filter((f) => f.name !== files[0]), false);
             }
         }
@@ -66,22 +68,22 @@ const RenameFileModal = ({ files, useMoveTerminology, ...props }: OwnProps) => {
                                     type={'string'}
                                     id={'file_name'}
                                     name={'name'}
-                                    label={'File Name'}
+                                    label={t('files.renameModal.title')}
                                     description={
                                         useMoveTerminology
-                                            ? 'Enter the new name and directory of this file or folder, relative to the current directory.'
+                                            ? t('files.renameModal.description')
                                             : undefined
                                     }
                                     autoFocus
                                 />
                             </div>
                             <div css={tw`w-full sm:w-auto mt-4 sm:mt-0`}>
-                                <Button css={tw`w-full`}>{useMoveTerminology ? 'Move' : 'Rename'}</Button>
+                                <Button css={tw`w-full`}>{useMoveTerminology ? t('files.renameModal.move') : t('files.renameModal.rename')}</Button>
                             </div>
                         </div>
                         {useMoveTerminology && (
-                            <p css={tw`text-xs mt-2 text-neutral-400`}>
-                                <strong css={tw`text-neutral-200`}>New location:</strong>
+                            <p css={[tw`text-xs mt-2`, { color: 'var(--theme-text-muted)' }]}>
+                                <strong css={{ color: 'var(--theme-text-base)' }}>{t('files.renameModal.newLocation')}</strong>
                                 &nbsp;/home/container/{join(directory, values.name).replace(/^(\.\.\/|\/)+/, '')}
                             </p>
                         )}

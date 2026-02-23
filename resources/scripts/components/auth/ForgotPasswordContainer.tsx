@@ -31,8 +31,6 @@ export default () => {
     const handleSubmission = ({ email }: Values, { setSubmitting, resetForm }: FormikHelpers<Values>) => {
         clearFlashes();
 
-        // If there is no token in the state yet, request the token and then abort this submit request
-        // since it will be re-submitted when the recaptcha data is returned by the component.
         if (recaptchaEnabled && !token) {
             ref.current!.execute().catch((error) => {
                 console.error(error);
@@ -83,7 +81,7 @@ export default () => {
                         type={'email'}
                     />
                     <div css={tw`mt-6`}>
-                        <Button type={'submit'} size={'xlarge'} disabled={isSubmitting} isLoading={isSubmitting}>
+                        <Button type={'submit'} disabled={isSubmitting} isLoading={isSubmitting} css={tw`w-full py-2`}>
                             Send Email
                         </Button>
                     </div>
@@ -105,7 +103,10 @@ export default () => {
                     <div css={tw`mt-6 text-center`}>
                         <Link
                             to={'/auth/login'}
-                            css={tw`text-xs text-neutral-500 tracking-wide uppercase no-underline hover:text-neutral-700`}
+                            css={tw`text-xs tracking-wide uppercase no-underline transition-colors duration-200`}
+                            style={{ color: 'var(--theme-text-muted)' }}
+                            onMouseEnter={(e) => e.currentTarget.style.color = 'var(--theme-text-base)'}
+                            onMouseLeave={(e) => e.currentTarget.style.color = 'var(--theme-text-muted)'}
                         >
                             Return to Login
                         </Link>

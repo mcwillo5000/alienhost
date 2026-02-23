@@ -89,6 +89,11 @@
                                 <i class="fa fa-gamepad"></i> <span>Application API</span>
                             </a>
                         </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.rivion') ?: 'active' }}">
+                            <a href="{{ route('admin.rivion') }}">
+                                <i class="fa fa-paint-brush"></i> <span>Rivion Theme</span>
+                            </a>
+                        </li>
                         <li class="header">MANAGEMENT</li>
                         <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.databases') ?: 'active' }}">
                             <a href="{{ route('admin.databases') }}">
@@ -172,7 +177,7 @@
                             @foreach (Alert::getMessages() as $type => $messages)
                                 @foreach ($messages as $message)
                                     <div class="alert alert-{{ $type }} alert-dismissable" role="alert">
-                                        {{ $message }}
+                                        {!! $message !!}
                                     </div>
                                 @endforeach
                             @endforeach
@@ -231,6 +236,7 @@
                 </script>
             @endif
 
+            <script>
             <script>
                 $(function () {
                     $('[data-toggle="tooltip"]').tooltip();

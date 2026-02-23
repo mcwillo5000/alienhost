@@ -19,11 +19,11 @@ export default () => {
     return (
         <>
             {visible && <SearchModal appear visible={visible} onDismissed={() => setVisible(false)} />}
-            <Tooltip placement={'bottom'} content={'Search'}>
-                <div className={'navigation-link'} onClick={() => setVisible(true)}>
-                    <FontAwesomeIcon icon={faSearch} />
-                </div>
-            </Tooltip>
+            <div className="rivion-search-bar" onClick={() => setVisible(true)}>
+                <FontAwesomeIcon icon={faSearch} className="rivion-search-icon" />
+                <span className="rivion-search-placeholder">Search servers...</span>
+                <div className="rivion-search-shortcut">⌘/</div>
+            </div>
         </>
     );
 };

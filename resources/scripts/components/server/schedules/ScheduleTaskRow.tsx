@@ -20,32 +20,34 @@ import { ServerContext } from '@/state/server';
 import tw from 'twin.macro';
 import ConfirmationModal from '@/components/elements/ConfirmationModal';
 import Icon from '@/components/elements/Icon';
+import { useTranslation } from 'react-i18next';
 
 interface Props {
     schedule: Schedule;
     task: Task;
 }
 
-const getActionDetails = (action: string): [string, any] => {
-    switch (action) {
-        case 'command':
-            return ['Send Command', faCode];
-        case 'power':
-            return ['Send Power Action', faToggleOn];
-        case 'backup':
-            return ['Create Backup', faFileArchive];
-        default:
-            return ['Unknown Action', faCode];
-    }
-};
-
 export default ({ schedule, task }: Props) => {
+    const { t } = useTranslation();
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
     const { clearFlashes, addError } = useFlash();
     const [visible, setVisible] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const appendSchedule = ServerContext.useStoreActions((actions) => actions.schedules.appendSchedule);
+
+    const getActionDetails = (action: string): [string, any] => {
+        switch (action) {
+            case 'command':
+                return [t('schedules.task.sendCommand'), faCode];
+            case 'power':
+                return [t('schedules.task.sendPowerAction'), faToggleOn];
+            case 'backup':
+                return [t('schedules.task.createBackup'), faFileArchive];
+            default:
+                return [t('schedules.task.unknownAction'), faCode];
+        }
+    };
 
     const onConfirmDeletion = () => {
         setIsLoading(true);
@@ -67,7 +69,10 @@ export default ({ schedule, task }: Props) => {
     const [title, icon] = getActionDetails(task.action);
 
     return (
-        <div css={tw`sm:flex items-center p-3 sm:p-6 border-b border-neutral-800`}>
+        <div 
+            css={tw`sm:flex items-center p-3 sm:p-6 border-b`}
+            style={{ borderBottomColor: 'var(--theme-border)' }}
+        >
             <SpinnerOverlay visible={isLoading} fixed size={'large'} />
             <TaskDetailsModal
                 schedule={schedule}
@@ -76,24 +81,42 @@ export default ({ schedule, task }: Props) => {
                 onModalDismissed={() => setIsEditing(false)}
             />
             <ConfirmationModal
-                title={'Confirm task deletion'}
-                buttonText={'Delete Task'}
+                title={t('schedules.task.deleteConfirm.title')}
+                buttonText={t('schedules.task.deleteConfirm.confirm')}
                 onConfirmed={onConfirmDeletion}
                 visible={visible}
                 onModalDismissed={() => setVisible(false)}
             >
-                Are you sure you want to delete this task? This action cannot be undone.
+                {t('schedules.task.deleteConfirm.description')}
             </ConfirmationModal>
-            <FontAwesomeIcon icon={icon} css={tw`text-lg text-white hidden md:block`} />
+            <FontAwesomeIcon 
+                icon={icon} 
+                css={tw`text-lg hidden md:block`}
+                style={{ color: 'var(--theme-text-base)' }}
+            />
             <div css={tw`flex-none sm:flex-1 w-full sm:w-auto overflow-x-auto`}>
-                <p css={tw`md:ml-6 text-neutral-200 uppercase text-sm`}>{title}</p>
+                <p 
+                    css={tw`md:ml-6 uppercase text-sm`}
+                    style={{ color: 'var(--theme-text-base)' }}
+                >
+                    {title}
+                </p>
                 {task.payload && (
                     <div css={tw`md:ml-6 mt-2`}>
                         {task.action === 'backup' && (
-                            <p css={tw`text-xs uppercase text-neutral-400 mb-1`}>Ignoring files & folders:</p>
+                            <p 
+                                css={tw`text-xs uppercase mb-1`}
+                                style={{ color: 'var(--theme-text-muted)' }}
+                            >
+                                {t('schedules.task.backupIgnored')}
+                            </p>
                         )}
                         <div
-                            css={tw`font-mono bg-neutral-800 rounded py-1 px-2 text-sm w-auto inline-block whitespace-pre-wrap break-all`}
+                            css={tw`font-mono rounded py-1 px-2 text-sm w-auto inline-block whitespace-pre-wrap break-all`}
+                            style={{ 
+                                backgroundColor: 'var(--theme-background-secondary)',
+                                color: 'var(--theme-text-base)'
+                            }}
                         >
                             {task.payload}
                         </div>
@@ -121,7 +144,16 @@ export default ({ schedule, task }: Props) => {
                     <button
                         type={'button'}
                         aria-label={'Edit scheduled task'}
-                        css={tw`block text-sm p-2 text-neutral-500 hover:text-neutral-100 transition-colors duration-150 mr-4 ml-auto sm:ml-0`}
+                        css={tw`block text-sm p-2 transition-colors duration-150 mr-4 ml-auto sm:ml-0`}
+                        style={{ 
+                            color: 'var(--theme-text-muted)'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.color = 'var(--theme-text-base)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.color = 'var(--theme-text-muted)';
+                        }}
                         onClick={() => setIsEditing(true)}
                     >
                         <FontAwesomeIcon icon={faPencilAlt} />
@@ -131,7 +163,16 @@ export default ({ schedule, task }: Props) => {
                     <button
                         type={'button'}
                         aria-label={'Delete scheduled task'}
-                        css={tw`block text-sm p-2 text-neutral-500 hover:text-red-600 transition-colors duration-150`}
+                        css={tw`block text-sm p-2 transition-colors duration-150`}
+                        style={{ 
+                            color: 'var(--theme-text-muted)'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.color = '#ef4444'; 
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.color = 'var(--theme-text-muted)';
+                        }}
                         onClick={() => setVisible(true)}
                     >
                         <FontAwesomeIcon icon={faTrashAlt} />

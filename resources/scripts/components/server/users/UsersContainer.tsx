@@ -11,8 +11,10 @@ import { httpErrorToHuman } from '@/api/http';
 import Can from '@/components/elements/Can';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
 import tw from 'twin.macro';
+import { useTranslation } from 'react-i18next';
 
 export default () => {
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(true);
 
     const uuid = ServerContext.useStoreState((state) => state.server.data!.uuid);
@@ -48,10 +50,10 @@ export default () => {
     }
 
     return (
-        <ServerContentBlock title={'Users'}>
+        <ServerContentBlock title={t('users.title')}>
             <FlashMessageRender byKey={'users'} css={tw`mb-4`} />
             {!subusers.length ? (
-                <p css={tw`text-center text-sm text-neutral-300`}>It looks like you don&apos;t have any subusers.</p>
+                <p css={tw`text-center text-sm`} style={{ color: 'var(--theme-text-muted)' }}>{t('users.noUsers')}</p>
             ) : (
                 subusers.map((subuser) => <UserRow key={subuser.uuid} subuser={subuser} />)
             )}

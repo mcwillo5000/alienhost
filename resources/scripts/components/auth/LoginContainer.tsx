@@ -7,7 +7,8 @@ import { Formik, FormikHelpers } from 'formik';
 import { object, string } from 'yup';
 import Field from '@/components/elements/Field';
 import tw from 'twin.macro';
-import Button from '@/components/elements/Button';
+import { Button } from '@/components/elements/button/index';
+import { Options } from '@/components/elements/button/types';
 import Reaptcha from 'reaptcha';
 import useFlash from '@/plugins/useFlash';
 
@@ -30,8 +31,6 @@ const LoginContainer = ({ history }: RouteComponentProps) => {
     const onSubmit = (values: Values, { setSubmitting }: FormikHelpers<Values>) => {
         clearFlashes();
 
-        // If there is no token in the state yet, request the token and then abort this submit request
-        // since it will be re-submitted when the recaptcha data is returned by the component.
         if (recaptchaEnabled && !token) {
             ref.current!.execute().catch((error) => {
                 console.error(error);
@@ -46,7 +45,6 @@ const LoginContainer = ({ history }: RouteComponentProps) => {
         login({ ...values, recaptchaData: token })
             .then((response) => {
                 if (response.complete) {
-                    // @ts-expect-error this is valid
                     window.location = response.intended || '/';
                     return;
                 }
@@ -80,7 +78,11 @@ const LoginContainer = ({ history }: RouteComponentProps) => {
                         <Field light type={'password'} label={'Password'} name={'password'} disabled={isSubmitting} />
                     </div>
                     <div css={tw`mt-6`}>
-                        <Button type={'submit'} size={'xlarge'} isLoading={isSubmitting} disabled={isSubmitting}>
+                        <Button 
+                            type={'submit'} 
+                            disabled={isSubmitting} 
+                            css={tw`w-full py-2`}
+                        >
                             Login
                         </Button>
                     </div>
@@ -102,7 +104,10 @@ const LoginContainer = ({ history }: RouteComponentProps) => {
                     <div css={tw`mt-6 text-center`}>
                         <Link
                             to={'/auth/password'}
-                            css={tw`text-xs text-neutral-500 tracking-wide no-underline uppercase hover:text-neutral-600`}
+                            css={tw`text-xs tracking-wide no-underline uppercase transition-colors duration-200`}
+                            style={{ color: 'var(--theme-text-muted)' }}
+                            onMouseEnter={(e) => e.currentTarget.style.color = 'var(--theme-text-base)'}
+                            onMouseLeave={(e) => e.currentTarget.style.color = 'var(--theme-text-muted)'}
                         >
                             Forgot password?
                         </Link>

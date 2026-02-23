@@ -12,6 +12,8 @@ import classNames from 'classnames';
 import ActivityLogEntry from '@/components/elements/activity/ActivityLogEntry';
 import Tooltip from '@/components/elements/tooltip/Tooltip';
 import useLocationHash from '@/plugins/useLocationHash';
+import { useTranslation } from 'react-i18next';
+import tw from 'twin.macro';
 
 export default () => {
     const { hash } = useLocationHash();
@@ -21,6 +23,7 @@ export default () => {
         revalidateOnMount: true,
         revalidateOnFocus: false,
     });
+    const { t } = useTranslation();
 
     useEffect(() => {
         setFilters((value) => ({ ...value, filters: { ip: hash.ip, event: hash.event } }));
@@ -31,7 +34,7 @@ export default () => {
     }, [error]);
 
     return (
-        <PageContentBlock title={'Account Activity Log'}>
+        <PageContentBlock title={t('account.activity.title')}>
             <FlashMessageRender byKey={'account'} />
             {(filters.filters?.event || filters.filters?.ip) && (
                 <div className={'flex justify-end mb-2'}>
@@ -40,33 +43,35 @@ export default () => {
                         className={classNames(btnStyles.button, btnStyles.text, 'w-full sm:w-auto')}
                         onClick={() => setFilters((value) => ({ ...value, filters: {} }))}
                     >
-                        Clear Filters <XCircleIcon className={'w-4 h-4 ml-2'} />
+                        {t('account.activity.clearFilters')} <XCircleIcon className={'w-4 h-4 ml-2'} />
                     </Link>
                 </div>
             )}
-            {!data && isValidating ? (
-                <Spinner centered />
-            ) : (
-                <div className={'bg-gray-700'}>
-                    {data?.items.map((activity) => (
-                        <ActivityLogEntry key={activity.id} activity={activity}>
-                            {typeof activity.properties.useragent === 'string' && (
-                                <Tooltip content={activity.properties.useragent} placement={'top'}>
-                                    <span>
-                                        <DesktopComputerIcon />
-                                    </span>
-                                </Tooltip>
-                            )}
-                        </ActivityLogEntry>
-                    ))}
-                </div>
-            )}
-            {data && (
-                <PaginationFooter
-                    pagination={data.pagination}
-                    onPageSelect={(page) => setFilters((value) => ({ ...value, page }))}
-                />
-            )}
+            <div css={tw`my-10`}>
+                {!data && isValidating ? (
+                    <Spinner centered />
+                ) : (
+                    <div>
+                        {data?.items.map((activity) => (
+                            <ActivityLogEntry key={activity.id} activity={activity}>
+                                {typeof activity.properties.useragent === 'string' && (
+                                    <Tooltip content={activity.properties.useragent} placement={'top'}>
+                                        <span>
+                                            <DesktopComputerIcon />
+                                        </span>
+                                    </Tooltip>
+                                )}
+                            </ActivityLogEntry>
+                        ))}
+                    </div>
+                )}
+                {data && (
+                    <PaginationFooter
+                        pagination={data.pagination}
+                        onPageSelect={(page) => setFilters((value) => ({ ...value, page }))}
+                    />
+                )}
+            </div>
         </PageContentBlock>
     );
 };
