@@ -90,6 +90,7 @@ Route::group([
         Route::post('/delete', [Client\Servers\FileController::class, 'delete']);
         Route::post('/create-folder', [Client\Servers\FileController::class, 'create']);
         Route::post('/chmod', [Client\Servers\FileController::class, 'chmod']);
+        Route::post('/size', [Client\Servers\FolderSizeController::class, 'getFolderSize']);
         Route::middleware([ResourceLimit::FilePull->middleware()])
             ->post('/pull', [Client\Servers\FileController::class, 'pull']);
         Route::post('/restore', [Client\Servers\FileController::class, 'restore']);

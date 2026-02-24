@@ -327,4 +327,27 @@ class DaemonFileRepository extends DaemonRepository
             throw new DaemonConnectionException($exception);
         }
     }
+
+    /**
+     * Get the size of the folder from the daemon.
+     *
+     * @param string $folder
+     * @return ResponseInterface
+     * @throws DaemonConnectionException
+     */
+    public function getFolderSize(string $folder): ResponseInterface
+    {
+        Assert::isInstanceOf($this->server, Server::class);
+
+        try {
+            return $this->getHttpClient()->post(
+                sprintf('/api/servers/%s/files/size', $this->server->uuid),
+                [
+                    'json' => ['path' => $folder],
+                ]
+            );
+        } catch (ClientException | TransferException $exception) {
+            throw new DaemonConnectionException($exception);
+        }
+    }
 }

@@ -15,6 +15,7 @@ import { join } from '@/lib/path';
 import { bytesToString } from '@/lib/formatters';
 import styles from './style.module.css';
 import { useBleeps } from '@/components/RivionBleepsProvider';
+import FileObjectSize from '@/components/server/files/FileObjectSize';
 
 const Clickable: React.FC<{ file: FileObject }> = memo(({ file, children }) => {
     const [canRead] = usePermissions(['file.read']);
@@ -114,7 +115,7 @@ const FileObjectRow = ({ file }: { file: FileObject }) => {
                         <div className="text-xs" style={{ color: 'var(--theme-text-muted)' }}>
                             {file.isFile ? (
                                 <>
-                                    {bytesToString(file.size)} • {Math.abs(differenceInHours(file.modifiedAt, new Date())) > 48
+                                    {Math.abs(differenceInHours(file.modifiedAt, new Date())) > 48
                                         ? format(file.modifiedAt, 'M/d/yyyy, h:mm a')
                                         : formatDistanceToNow(file.modifiedAt, { addSuffix: true })}
                                 </>
@@ -129,6 +130,9 @@ const FileObjectRow = ({ file }: { file: FileObject }) => {
                         </div>
                     </Clickable>
                 </div>
+            </div>
+            <div className="hidden sm:flex items-center mr-3 flex-shrink-0 text-xs font-mono" style={{ color: 'var(--theme-text-muted)', minWidth: '5rem', justifyContent: 'flex-end' }}>
+                <FileObjectSize file={file} />
             </div>
             <div css={tw`ml-2 flex-shrink-0`}>
                 <FileDropdownMenu file={file} />
