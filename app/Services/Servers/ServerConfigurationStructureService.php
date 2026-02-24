@@ -88,6 +88,7 @@ class ServerConfigurationStructureService
                 'id' => $server->egg->uuid,
                 'file_denylist' => $server->egg->inherit_file_denylist,
             ],
+            'timezone' => $server->timezone,
         ];
     }
 
@@ -125,6 +126,7 @@ class ServerConfigurationStructureService
             ],
             'rebuild' => false,
             'suspended' => $server->isSuspended() ? 1 : 0,
+            'timezone' => $server->timezone,
         ];
     }
 }

@@ -21,6 +21,7 @@ use Pterodactyl\Http\Requests\Api\Client\Servers\Schedules\StoreScheduleRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Schedules\DeleteScheduleRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Schedules\UpdateScheduleRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Schedules\TriggerScheduleRequest;
+use Dotenv\Dotenv;
 
 class ScheduleController extends ClientApiController
 {
@@ -30,6 +31,10 @@ class ScheduleController extends ClientApiController
     public function __construct(private ScheduleRepository $repository, private ProcessScheduleService $service)
     {
         parent::__construct();
+
+        $dotenv = Dotenv::createImmutable(base_path());
+        $dotenv->load();
+        $dotenv->required('APP_TIMEZONE');
     }
 
     /**
@@ -52,6 +57,10 @@ class ScheduleController extends ClientApiController
      */
     public function store(StoreScheduleRequest $request, Server $server): array
     {
+        $panelTimeZone = new \DateTimeZone(env('APP_TIMEZONE'));
+        $serverTimeZone = new \DateTimeZone($server->timezone);
+        $cronHour = $this->adjustCronHour($request->input('hour'), $serverTimeZone, $panelTimeZone);
+
         /** @var Schedule $model */
         $model = $this->repository->create([
             'server_id' => $server->id,
@@ -59,11 +68,11 @@ class ScheduleController extends ClientApiController
             'cron_day_of_week' => $request->input('day_of_week'),
             'cron_month' => $request->input('month'),
             'cron_day_of_month' => $request->input('day_of_month'),
-            'cron_hour' => $request->input('hour'),
+            'cron_hour' => (string) $cronHour,
             'cron_minute' => $request->input('minute'),
             'is_active' => (bool) $request->input('is_active'),
             'only_when_online' => (bool) $request->input('only_when_online'),
-            'next_run_at' => $this->getNextRunAt($request),
+            'next_run_at' => $this->getNextRunAt($request, $server),
         ]);
 
         Activity::event('server:schedule.create')
@@ -103,16 +112,20 @@ class ScheduleController extends ClientApiController
     {
         $active = (bool) $request->input('is_active');
 
+        $panelTimeZone = new \DateTimeZone(env('APP_TIMEZONE'));
+        $serverTimeZone = new \DateTimeZone($server->timezone);
+        $cronHour = $this->adjustCronHour($request->input('hour'), $serverTimeZone, $panelTimeZone);
+
         $data = [
             'name' => $request->input('name'),
             'cron_day_of_week' => $request->input('day_of_week'),
             'cron_month' => $request->input('month'),
             'cron_day_of_month' => $request->input('day_of_month'),
-            'cron_hour' => $request->input('hour'),
+            'cron_hour' => (string) $cronHour,
             'cron_minute' => $request->input('minute'),
             'is_active' => $active,
             'only_when_online' => (bool) $request->input('only_when_online'),
-            'next_run_at' => $this->getNextRunAt($request),
+            'next_run_at' => $this->getNextRunAt($request, $server),
         ];
 
         // Toggle the processing state of the scheduled task when it is enabled or disabled so that an
@@ -167,18 +180,53 @@ class ScheduleController extends ClientApiController
      *
      * @throws DisplayException
      */
-    protected function getNextRunAt(Request $request): Carbon
+    protected function getNextRunAt(Request $request, Server $server): Carbon
     {
+        $panelTimeZone = new \DateTimeZone(env('APP_TIMEZONE'));
+        $serverTimeZone = new \DateTimeZone($server->timezone);
+        $cronHour = $this->adjustCronHour($request->input('hour'), $serverTimeZone, $panelTimeZone);
+
+        $minute = $request->input('minute');
+        $hour = (string) $cronHour;
+        $dayOfMonth = $request->input('day_of_month');
+        $month = $request->input('month');
+        $dayOfWeek = $request->input('day_of_week');
+
         try {
-            return Utilities::getScheduleNextRunDate(
-                $request->input('minute'),
-                $request->input('hour'),
-                $request->input('day_of_month'),
-                $request->input('month'),
-                $request->input('day_of_week')
-            );
+            return Utilities::getScheduleNextRunDate($minute, $hour, $dayOfMonth, $month, $dayOfWeek);
         } catch (\Exception $exception) {
             throw new DisplayException('The cron data provided does not evaluate to a valid expression.');
+        }
+    }
+
+    private function adjustCronHour($inputHour, $serverTimeZone, $panelTimeZone)
+    {
+        if (strpos($inputHour, ',') !== false) {
+            $hours = explode(',', $inputHour);
+            $adjustedHours = array_map(function ($hour) use ($serverTimeZone, $panelTimeZone) {
+                return $this->adjustSingleHour($hour, $serverTimeZone, $panelTimeZone);
+            }, $hours);
+            return implode(',', $adjustedHours);
+        }
+        if (strpos($inputHour, '-') !== false) {
+            list($start, $end) = explode('-', $inputHour);
+            $startAdjusted = $this->adjustSingleHour($start, $serverTimeZone, $panelTimeZone);
+            $endAdjusted = $this->adjustSingleHour($end, $serverTimeZone, $panelTimeZone);
+            return $startAdjusted . '-' . $endAdjusted;
+        }
+
+        return $this->adjustSingleHour($inputHour, $serverTimeZone, $panelTimeZone);
+    }
+
+    private function adjustSingleHour($hour, $serverTimeZone, $panelTimeZone)
+    {
+        if (strpos($hour, '/') !== false || $hour === '*') {
+            return $hour;
+        } else {
+            $offsetDifference = ($panelTimeZone->getOffset(new \DateTime()) - $serverTimeZone->getOffset(new \DateTime())) / 3600;
+            $adjustedHour = (int) $hour + $offsetDifference;
+            $adjustedHour = ($adjustedHour >= 0) ? $adjustedHour % 24 : 24 + ($adjustedHour % 24);
+            return (string) $adjustedHour;
         }
     }
 }

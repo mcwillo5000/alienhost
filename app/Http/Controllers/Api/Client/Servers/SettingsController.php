@@ -14,6 +14,8 @@ use Pterodactyl\Http\Requests\Api\Client\Servers\Settings\RenameServerRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Settings\SetDockerImageRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Settings\ReinstallServerRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Settings\CrashURLServerRequest;
+use Pterodactyl\Http\Requests\Api\Client\Servers\Settings\TimezoneServerRequest;
+use App\Rules\ValidTimezone;
 
 class SettingsController extends ClientApiController
 {
@@ -111,6 +113,28 @@ public function reinstall(ReinstallServerRequest $request, Server $server): Json
         if ($original !== $server->image) {
             Activity::event('server:startup.image')
                 ->property(['old' => $original, 'new' => $request->input('docker_image')])
+                ->log();
+        }
+
+        return new JsonResponse([], Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * Adjusts server timezone.
+     *
+     * @throws \Pterodactyl\Exceptions\Model\DataValidationException
+     * @throws \Pterodactyl\Exceptions\Repository\RecordNotFoundException
+     */
+    public function timezone(TimezoneServerRequest $request, Server $server): JsonResponse
+    {
+        $timezone = $request->input('timezone');
+        $this->repository->update($server->id, [
+            'timezone' => $timezone,
+        ]);
+
+        if ($server->timezone !== $timezone) {
+            Activity::event('server:settings.timezone')
+                ->property(['old' => $server->timezone, 'new' => $timezone])
                 ->log();
         }
 

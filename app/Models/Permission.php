@@ -202,6 +202,7 @@ class Permission extends Model
             'keys' => [
                 'rename' => 'Allows a user to rename this server and change the description of it.',
                 'reinstall' => 'Allows a user to trigger a reinstall of this server.',
+                'update' => 'Allows a user to rename the server, modify its description, and adjust the timezone.',
             ],
         ],
 

@@ -7,6 +7,7 @@ import CrashLogURLBox from '@/components/server/settings/CrashLogURLBox';
 import FlashMessageRender from '@/components/FlashMessageRender';
 import Can from '@/components/elements/Can';
 import ReinstallServerBox from '@/components/server/settings/ReinstallServerBox';
+import TimezoneServerBox from '@/components/server/settings/TimezoneServerBox';
 import tw from 'twin.macro';
 import Input from '@/components/elements/Input';
 import Label from '@/components/elements/Label';
@@ -106,6 +107,11 @@ export default () => {
                                 </div>
                         </div>
                     </TitledGreyBox>
+                    <Can action={'settings.update'}>
+                        <div css={tw`mb-4 md:mb-6`}>
+                            <TimezoneServerBox />
+                        </div>
+                    </Can>
                 </div>
                 <div css={tw`w-full mt-6 md:flex-1 md:mt-0`}>
                     <Can action={'settings.rename'}>

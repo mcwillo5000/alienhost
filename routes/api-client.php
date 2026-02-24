@@ -159,6 +159,7 @@ Route::group([
         Route::post('/crashlogs', [Client\Servers\SettingsController::class, 'crashlogs']);
         Route::post('/reinstall', [Client\Servers\SettingsController::class, 'reinstall']);
         Route::put('/docker-image', [Client\Servers\SettingsController::class, 'dockerImage']);
+        Route::post('/timezone', [Client\Servers\SettingsController::class, 'timezone']);
     });
         Route::group(['prefix' => '/hytale-mods'], function () {
         Route::get('/', [Client\Servers\HytaleModInstallerController::class, 'index']);

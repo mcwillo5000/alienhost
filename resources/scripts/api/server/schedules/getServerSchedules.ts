@@ -19,6 +19,8 @@ export interface Schedule {
     updatedAt: Date;
 
     tasks: Task[];
+    serverTimezone: string;
+    panelTimezone: string;
 }
 
 export interface Task {
@@ -64,6 +66,8 @@ export const rawDataToServerSchedule = (data: any): Schedule => ({
     updatedAt: new Date(data.updated_at),
 
     tasks: (data.relationships?.tasks?.data || []).map((row: any) => rawDataToServerTask(row.attributes)),
+    serverTimezone: data.server_timezone ?? 'UTC',
+    panelTimezone: data.panel_timezone ?? 'UTC',
 });
 
 export default async (uuid: string): Promise<Schedule[]> => {

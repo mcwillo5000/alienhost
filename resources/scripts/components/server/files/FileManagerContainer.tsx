@@ -20,7 +20,7 @@ import MassActionsBar from '@/components/server/files/MassActionsBar';
 import UploadButton from '@/components/server/files/UploadButton';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faServer, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faServer } from '@fortawesome/free-solid-svg-icons';
 import { useStoreActions } from '@/state/hooks';
 import ErrorBoundary from '@/components/elements/ErrorBoundary';
 import { FileActionCheckbox } from '@/components/server/files/SelectFileCheckbox';
@@ -472,15 +472,6 @@ export default () => {
                                     <FileManagerStatus />
                                     <NewDirectoryButton />
                                     <UploadButton />
-                                    <NavLink to={`/server/${id}/files#/.trash`}>
-                                        <Button
-                                            size={Options.Size.Compact}
-                                            variant={Options.Variant.Primary}
-                                        >
-                                            <FontAwesomeIcon icon={faTrash} className="mr-1" />
-                                            Trash
-                                        </Button>
-                                    </NavLink>
                                     <NavLink to={`/server/${id}/files/new${window.location.hash}`}>
                                         <Button
                                             size={Options.Size.Compact}

@@ -5,6 +5,8 @@ namespace Pterodactyl\Transformers\Api\Client;
 use Pterodactyl\Models\Task;
 use Pterodactyl\Models\Schedule;
 use League\Fractal\Resource\Collection;
+use Pterodactyl\Models\Server;
+use Dotenv\Dotenv;
 
 class ScheduleTransformer extends BaseClientTransformer
 {
@@ -22,6 +24,12 @@ class ScheduleTransformer extends BaseClientTransformer
      */
     public function transform(Schedule $model): array
     {
+        $model->loadMissing('server');
+        $dotenv = Dotenv::createImmutable(base_path());
+        $dotenv->load();
+        $dotenv->required('APP_TIMEZONE');
+        $panelTimeZone = env('APP_TIMEZONE');
+
         return [
             'id' => $model->id,
             'name' => $model->name,
@@ -39,6 +47,8 @@ class ScheduleTransformer extends BaseClientTransformer
             'next_run_at' => $model->next_run_at?->toAtomString(),
             'created_at' => $model->created_at->toAtomString(),
             'updated_at' => $model->updated_at->toAtomString(),
+            'server_timezone' => $model->server->timezone,
+            'panel_timezone' => $panelTimeZone,
         ];
     }
 
