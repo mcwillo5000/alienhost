@@ -15,6 +15,10 @@ use Pterodactyl\Http\Requests\Api\Client\Servers\Databases\GetDatabasesRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Databases\StoreDatabaseRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Databases\DeleteDatabaseRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Databases\RotatePasswordRequest;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Pterodactyl\Models\DatabaseHost;
+use Pterodactyl\Models\AutomaticPhpMyAdmin;
+use Pterodactyl\Http\Requests\Api\Client\Servers\Databases\GetTokenDatabaseRequest;
 
 class DatabaseController extends ClientApiController
 {
@@ -102,5 +106,34 @@ class DatabaseController extends ClientApiController
             ->log();
 
         return new Response('', Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * Create a token to use for connection with PhpMyAdmin.
+     */
+    public function getToken(GetTokenDatabaseRequest $request, Server $server, Database $database): JsonResource
+    {
+        try {
+            $automatic_pma = AutomaticPhpMyAdmin::query()->where('linked_database_host', $database->database_host_id)->firstOrFail();
+        } catch (\Exception $e) {
+            $automatic_pma = AutomaticPhpMyAdmin::query()->where('linked_database_host', null)->firstOrFail();
+        }
+
+        if ($automatic_pma->linked_database_host == null) {
+            $database_hosts_ids = DatabaseHost::all()->pluck('id')->toArray();
+            $phpmyadmin_server_id = $automatic_pma->phpmyadmin_server_id + array_search($database->database_host_id, $database_hosts_ids);
+        } else {
+            $phpmyadmin_server_id = $automatic_pma->phpmyadmin_server_id;
+        }
+
+        $data = array(
+            'phpmyadmin_server_id' => $phpmyadmin_server_id,
+            'database_username' => $database->username,
+            'database_password' => $this->managementService->getPasswordFromDatabase($database),
+        );
+
+        $encryption = openssl_encrypt(json_encode($data), "AES-128-CTR", $automatic_pma->encryption_key, 0, $automatic_pma->encryption_iv);
+
+        return new JsonResource(['encryption' => $encryption, 'url' => $automatic_pma->url, 'cookie_domain' => $automatic_pma->cookie_domain, 'cookie_name' => $automatic_pma->cookie_name]);
     }
 }

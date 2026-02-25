@@ -159,6 +159,11 @@
                                 <i class="fa fa-bullhorn"></i> <span>Advertisements</span>
                             </a>
                         </li>
+                        <li class="{{ ! starts_with(Route::currentRouteName(), 'admin.automatic-phpmyadmin') ?: 'active' }}">
+                            <a href="{{ route('admin.automatic-phpmyadmin') }}">
+                                <i class="fa fa-database"></i> <span>Automatic phpMyAdmin</span>
+                            </a>
+                        </li>
                     </ul>
                 </section>
             </aside>
@@ -241,7 +246,6 @@
                 </script>
             @endif
 
-            <script>
             <script>
                 $(function () {
                     $('[data-toggle="tooltip"]').tooltip();

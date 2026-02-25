@@ -314,4 +314,21 @@ Route::group(['prefix' => 'advertisements'], function () {
     Route::post('/{advertisement}/send', [Admin\AdvertisementController::class, 'send'])->name('admin.advertisements.send');
     Route::delete('/{advertisement}', [Admin\AdvertisementController::class, 'destroy'])->name('admin.advertisements.destroy');
 });
+/*
+|--------------------------------------------------------------------------
+| Automatic phpMyAdmin Routes
+|--------------------------------------------------------------------------
+|
+| Endpoint: /admin/automatic-phpmyadmin/
+|
+*/
+Route::group(['prefix' => 'automatic-phpmyadmin'], function () {
+ Route::get('/', [Admin\AutomaticPhpMyAdminController::class, 'index'])->name('admin.automatic-phpmyadmin');
+ Route::get('/new', [Admin\AutomaticPhpMyAdminController::class, 'create'])->name('admin.automatic-phpmyadmin.new');
+ Route::get('/view/{automaticphpmyadmin:id}',[Admin\AutomaticPhpMyAdminController::class, 'view'])->name('admin.automatic-phpmyadmin.view');
+ Route::post('/new', [Admin\AutomaticPhpMyAdminController::class, 'store']);
+ Route::patch('/view/{automaticphpmyadmin:id}',[Admin\AutomaticPhpMyAdminController::class, 'update']);
+ Route::delete('/delete/{automaticphpmyadmin:id}',[Admin\AutomaticPhpMyAdminController::class, 'destroy'])->name('admin.automatic-phpmyadmin.delete');
+});
+
 include 'admin-serverimporter.php';

@@ -21,6 +21,7 @@ import Label from '@/components/elements/Label';
 import Input from '@/components/elements/Input';
 import GreyRowBox from '@/components/elements/GreyRowBox';
 import CopyOnClick from '@/components/elements/CopyOnClick';
+import getTokenDatabase from '@/api/server/databases/getTokenDatabase';
 import { useTranslation } from 'react-i18next';
 
 interface Props {
@@ -37,6 +38,22 @@ export default ({ database, className }: Props) => {
 
     const appendDatabase = ServerContext.useStoreActions((actions) => actions.databases.appendDatabase);
     const removeDatabase = ServerContext.useStoreActions((actions) => actions.databases.removeDatabase);
+
+    const openpmaURL = () => {
+        getTokenDatabase(uuid, database.id)
+            .then(data => {
+                if (data) {
+                    const now = new Date();
+                    now.setTime(now.getTime() + (2 * 60 * 1000));
+                    document.cookie = data['cookie_name'] + '=' + data['encryption'] + ';expires=' + now.toUTCString() + ';domain=' + data['cookie_domain'] + ';path=/';
+                    const newWindow = window.open(data['url'], '_blank', 'noopener,noreferrer');
+                    if (newWindow) newWindow.opener = null;
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    };
 
     const jdbcConnectionString = `jdbc:mysql://${database.username}${
         database.password ? `:${encodeURIComponent(database.password)}` : ''
@@ -191,6 +208,18 @@ export default ({ database, className }: Props) => {
                     >
                         <FontAwesomeIcon icon={faEye} fixedWidth />
                     </NewButton>
+                    {database.allowConnectionsFrom === '%' ? (
+                        <Can action={'database.view_on_phpmyadmin'}>
+                            <NewButton
+                                variant={Options.Variant.Secondary}
+                                size={Options.Size.Compact}
+                                css={tw`mr-2`}
+                                onClick={openpmaURL}
+                            >
+                                <FontAwesomeIcon icon={faDatabase} fixedWidth />
+                            </NewButton>
+                        </Can>
+                    ) : null}
                     <Can action={'database.delete'}>
                         <NewButton 
                             variant={Options.Variant.Primary}

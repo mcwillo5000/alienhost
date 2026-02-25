@@ -37,6 +37,9 @@ use Pterodactyl\Contracts\Repository\AllocationRepositoryInterface;
 use Pterodactyl\Contracts\Repository\EggVariableRepositoryInterface;
 use Pterodactyl\Contracts\Repository\DatabaseHostRepositoryInterface;
 use Pterodactyl\Contracts\Repository\ServerVariableRepositoryInterface;
+use Pterodactyl\Contracts\Repository\AktiCubeDevelopmentTeamAutomaticPhpMyAdminRepositoryInterface;
+use Pterodactyl\Repositories\Eloquent\AktiCubeDevelopmentTeamAutomaticPhpMyAdminRepository;
+
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -63,5 +66,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(SubuserRepositoryInterface::class, SubuserRepository::class);
         $this->app->bind(TaskRepositoryInterface::class, TaskRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(AktiCubeDevelopmentTeamAutomaticPhpMyAdminRepositoryInterface::class, AktiCubeDevelopmentTeamAutomaticPhpMyAdminRepository::class);
     }
 }

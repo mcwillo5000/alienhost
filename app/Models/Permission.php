@@ -27,6 +27,9 @@ class Permission extends Model
     public const ACTION_DATABASE_DELETE = 'database.delete';
     public const ACTION_DATABASE_VIEW_PASSWORD = 'database.view_password';
 
+    public const ACTION_DATABASE_VIEW_ON_PHPMYADMIN = 'database.view_on_phpmyadmin';
+
+
     public const ACTION_SCHEDULE_READ = 'schedule.read';
     public const ACTION_SCHEDULE_CREATE = 'schedule.create';
     public const ACTION_SCHEDULE_UPDATE = 'schedule.update';
@@ -184,6 +187,8 @@ class Permission extends Model
                 'update' => 'Allows a user to rotate the password on a database instance. If the user does not have the view_password permission they will not see the updated password.',
                 'delete' => 'Allows a user to remove a database instance from this server.',
                 'view_password' => 'Allows a user to view the password associated with a database instance for this server.',
+                'view_on_phpmyadmin' => 'Allows a user to view the database on phpMyAdmin. This permission also requires the VIEW_PASSWORD, READ and UPDATE permissions.',
+
             ],
         ],
 

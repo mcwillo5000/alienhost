@@ -174,4 +174,8 @@ class DatabaseManagementService
 
         return $database;
     }
+    public function getPasswordFromDatabase(Database $database): string
+ {
+ return $this->encrypter->decrypt($database->password);
+ }
 }
