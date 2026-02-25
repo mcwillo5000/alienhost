@@ -8,6 +8,7 @@ use Pterodactyl\Http\Middleware\Activity\AccountSubject;
 use Pterodactyl\Http\Middleware\RequireTwoFactorAuthentication;
 use Pterodactyl\Http\Middleware\Api\Client\Server\ResourceBelongsToServer;
 use Pterodactyl\Http\Middleware\Api\Client\Server\AuthenticateServerAccess;
+use Pterodactyl\Http\Middleware\CheckFileAccess;
 
 /*
 |--------------------------------------------------------------------------
@@ -81,16 +82,16 @@ Route::group([
 
     Route::group(['prefix' => '/files'], function () {
         Route::get('/list', [Client\Servers\FileController::class, 'directory']);
-        Route::get('/contents', [Client\Servers\FileController::class, 'contents']);
-        Route::get('/download', [Client\Servers\FileController::class, 'download']);
-        Route::put('/rename', [Client\Servers\FileController::class, 'rename']);
-        Route::post('/copy', [Client\Servers\FileController::class, 'copy']);
-        Route::post('/write', [Client\Servers\FileController::class, 'write']);
+        Route::get('/contents', [Client\Servers\FileController::class, 'contents'])->middleware(CheckFileAccess::class);
+        Route::get('/download', [Client\Servers\FileController::class, 'download'])->middleware(CheckFileAccess::class);
+        Route::put('/rename', [Client\Servers\FileController::class, 'rename'])->middleware(CheckFileAccess::class);
+        Route::post('/copy', [Client\Servers\FileController::class, 'copy'])->middleware(CheckFileAccess::class);
+        Route::post('/write', [Client\Servers\FileController::class, 'write'])->middleware(CheckFileAccess::class);
         Route::post('/compress', [Client\Servers\FileController::class, 'compress']);
         Route::post('/decompress', [Client\Servers\FileController::class, 'decompress']);
         Route::post('/delete', [Client\Servers\FileController::class, 'delete']);
-        Route::post('/create-folder', [Client\Servers\FileController::class, 'create']);
-        Route::post('/chmod', [Client\Servers\FileController::class, 'chmod']);
+        Route::post('/create-folder', [Client\Servers\FileController::class, 'create'])->middleware(CheckFileAccess::class);
+        Route::post('/chmod', [Client\Servers\FileController::class, 'chmod'])->middleware(CheckFileAccess::class);
         Route::post('/size', [Client\Servers\FolderSizeController::class, 'getFolderSize']);
         Route::middleware([ResourceLimit::FilePull->middleware()])
             ->post('/pull', [Client\Servers\FileController::class, 'pull']);
@@ -128,6 +129,7 @@ Route::group([
             ->post('/', [Client\Servers\SubuserController::class, 'store']);
         Route::get('/{user}', [Client\Servers\SubuserController::class, 'view']);
         Route::post('/{user}', [Client\Servers\SubuserController::class, 'update']);
+        Route::post('/{user}/files', [Client\Servers\SubuserController::class, 'editdeny']);
         Route::delete('/{user}', [Client\Servers\SubuserController::class, 'delete']);
     });
 

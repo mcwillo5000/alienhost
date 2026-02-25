@@ -84,6 +84,8 @@ class Egg extends Model
         'script_entry',
         'script_container',
         'copy_script_from',
+        'denyfiles',
+        'hidefiles',
         'image', 
     ];
 
@@ -97,6 +99,8 @@ class Egg extends Model
         'features' => 'array',
         'docker_images' => 'array',
         'file_denylist' => 'array',
+        'hidefiles' => 'boolean',
+        'denyfiles' => 'array',
     ];
 
     public static array $validationRules = [
@@ -118,6 +122,8 @@ class Egg extends Model
         'config_files' => 'required_without:config_from|nullable|json',
         'update_url' => 'sometimes|nullable|string',
         'force_outgoing_ip' => 'sometimes|boolean',
+        'denyfiles' => 'sometimes|array',
+        'hidefiles' => 'sometimes|boolean',
         'image' => 'nullable|url', 
     ];
 

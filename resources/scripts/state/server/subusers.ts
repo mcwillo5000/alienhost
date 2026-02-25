@@ -38,6 +38,8 @@ export interface Subuser {
     twoFactorEnabled: boolean;
     createdAt: Date;
     permissions: SubuserPermission[];
+    denyList: string[];
+    hideFiles: boolean;
 
     can(permission: SubuserPermission): boolean;
 }

@@ -63,6 +63,29 @@
                                 </div>
                             </div>
                         </div>
+                                            <div class="row">
+                        <div class="form-group col-md-12">
+                            <label for="pDenyfiles" class="control-label">SFTP Deny Files</label>
+                            <div>
+                                <select class="form-control" name="settings::denyfiles[]" id="pDenyfiles" multiple>
+                                    @foreach($denyfiles as $denyfile)
+                                        <option value="{{ $denyfile }}" selected>{{ $denyfile }}</option>
+                                    @endforeach
+                                </select>
+                                <p class="text-muted small">List of files to which users should not have access (even server owners) separated by commas.</p>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label for="pHideFiles" class="control-label">Hide files</label>
+                            <div>
+                                <select name="settings::hidefiles" class="form-control">
+                                    <option value="false">@lang('strings.no')</option>
+                                    <option value="true" {{ $hidefiles === 'true' ? 'selected="selected"' : '' }}>@lang('strings.yes')</option>
+                                </select>
+                                <p class="text-muted"><small>Should users see files included in this block?. Setting this to 'Yes' hide all files included in block list.</small></p>
+                            </div>
+                        </div>
+                    </div>
                     </div>
                     <div class="box-footer">
                         {!! csrf_field() !!}
@@ -72,4 +95,14 @@
             </div>
         </div>
     </div>
+@endsection
+@section('footer-scripts')
+    @parent
+    <script>
+        $('#pDenyfiles').select2({
+            tags: true,
+            selectOnClose: false,
+            tokenSeparators: [','],
+        });
+    </script>
 @endsection

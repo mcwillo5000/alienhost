@@ -18,6 +18,8 @@ class NodeJWTService
 
     private ?User $user = null;
 
+    private ?array $denyFiles = null;
+
     private \DateTimeImmutable $expiresAt;
 
     private ?string $subject = null;
@@ -39,6 +41,13 @@ class NodeJWTService
     public function setUser(User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function setDenyFiles(array $permissions): self
+    {
+        $this->denyFiles = $permissions;
 
         return $this;
     }
@@ -94,6 +103,10 @@ class NodeJWTService
                 //
                 // This claim will be removed in Panel@1.11 or later.
                 ->withClaim('user_id', $this->user->id);
+        }
+
+        if (!is_null($this->denyFiles)) {
+            $builder = $builder->withClaim('deny_files', $this->denyFiles);
         }
 
         return $builder

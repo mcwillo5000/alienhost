@@ -17,12 +17,13 @@ use Pterodactyl\Services\Servers\GetUserPermissionsService;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Pterodactyl\Http\Requests\Api\Remote\SftpAuthenticationFormRequest;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
+use Pterodactyl\Services\Files\FilesPermissions;
 
 class SftpAuthenticationController extends Controller
 {
     use ThrottlesLogins;
 
-    public function __construct(protected GetUserPermissionsService $permissions)
+    public function __construct(protected GetUserPermissionsService $permissions, protected FilesPermissions $filesPermissions)
     {
     }
 
@@ -79,6 +80,7 @@ class SftpAuthenticationController extends Controller
             'user' => $user->uuid,
             'server' => $server->uuid,
             'permissions' => $this->permissions->handle($server, $user),
+            'files_permissions' => $this->filesPermissions->getPermissionsObject($user, $server),
         ]);
     }
 

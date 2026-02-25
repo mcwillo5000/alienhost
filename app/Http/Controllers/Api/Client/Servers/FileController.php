@@ -25,6 +25,7 @@ use Pterodactyl\Http\Requests\Api\Client\Servers\Files\CompressFilesRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Files\DecompressFilesRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Files\GetFileContentsRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Files\WriteFileContentRequest;
+use Pterodactyl\Services\Files\FilesPermissions;
 
 class FileController extends ClientApiController
 {
@@ -34,6 +35,7 @@ class FileController extends ClientApiController
     public function __construct(
         private NodeJWTService $jwtService,
         private DaemonFileRepository $fileRepository,
+        private FilesPermissions $filesPermissions,
     ) {
         parent::__construct();
     }
@@ -67,6 +69,8 @@ class FileController extends ClientApiController
                     ->getDirectory('/');
             }
         }
+
+        $contents = $this->filesPermissions->listDirectoryContent($contents, ($request->get('directory') ?? '/'), $request->user(), $server);
 
         return $this->fractal->collection($contents)
             ->transformWith($this->getTransformer(FileObjectTransformer::class))
@@ -196,7 +200,8 @@ class FileController extends ClientApiController
     {
         $file = $this->fileRepository->setServer($server)->compressFiles(
             $request->input('root'),
-            $request->input('files')
+            $request->input('files'),
+            $this->filesPermissions->getPermissionsObject($request->user(), $server)
         );
 
         Activity::event('server:file.compress')
@@ -236,31 +241,26 @@ class FileController extends ClientApiController
      */
     public function delete(DeleteFileRequest $request, Server $server): JsonResponse
     {
-        $fileRoot = $request->input('root');
-        $repo = $this->fileRepository->setServer($server);
 
-        if ($fileRoot !== '/.trash') {
-            $rootDir = $repo->getDirectory('/');
-            if (!$this->hasDirectory($rootDir, '.trash')) {
-                $repo->createDirectory('.trash', '/');
-            }
-            $renames = [];
-            foreach ($request->input('files') as $file) {
-                $metadata = new RecycledFile();
-                $metadata->server_id = $server->id;
-                $metadata->path = ltrim($fileRoot, '/') . '/' . $file;
-                $metadata->save();
-                $renames[] = ['from' => ltrim($fileRoot, '/') . '/' . $file, 'to' => '.trash/' . $metadata->id];
-            }
-            $repo->renameFiles('/', $renames);
-        } else {
-            $repo->deleteFiles($fileRoot, $request->input('files'));
-            RecycledFile::whereIn('id', array_map(fn(string $v) => intval($v), $request->input('files')))->delete();
+        $files = $this->filesPermissions->deleteFiles(
+            $request->input('files'),
+            $request->input('root'),
+            $request->user(),
+            $server
+        );
+
+        if (empty($files)) {
+            return new JsonResponse([], Response::HTTP_NO_CONTENT);
         }
 
+        $this->fileRepository->setServer($server)->deleteFiles(
+            $request->input('root'),
+            $files
+        );
+
         Activity::event('server:file.delete')
-            ->property('directory', $fileRoot)
-            ->property('files', $request->input('files'))
+            ->property('directory', $request->input('root'))
+            ->property('files', $files)
             ->log();
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);

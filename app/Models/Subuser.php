@@ -46,6 +46,8 @@ class Subuser extends Model
         'user_id' => 'int',
         'server_id' => 'int',
         'permissions' => 'array',
+        'denyfiles' => 'array',
+        'hidefiles' => 'boolean',
     ];
 
     public static array $validationRules = [
@@ -53,6 +55,8 @@ class Subuser extends Model
         'server_id' => 'required|numeric|exists:servers,id',
         'permissions' => 'nullable|array',
         'permissions.*' => 'string',
+        'denyfiles' => 'nullable|array',
+        'hidefiles' => 'nullable|boolean',
     ];
 
     /**

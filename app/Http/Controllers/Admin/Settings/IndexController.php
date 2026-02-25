@@ -35,6 +35,8 @@ class IndexController extends Controller
         return view('admin.settings.index', [
             'version' => $this->versionService,
             'languages' => $this->getAvailableLanguages(true),
+            'denyfiles' => json_decode($this->settings->get('settings::denyfiles', '[]'), true),
+            'hidefiles' => $this->settings->get('settings::hidefiles', "false"),
         ]);
     }
 
@@ -51,6 +53,9 @@ class IndexController extends Controller
         }
 
         $this->kernel->call('queue:restart');
+        $this->settings->set('settings::denyfiles', json_encode($request->input('settings::denyfiles', []), true));
+        $this->settings->set('settings::hidefiles', str($request->input('settings::hidefiles', "false")));
+
         $this->alert->success('Panel settings have been updated successfully and the queue worker was restarted to apply these changes.')->flash();
 
         return redirect()->route('admin.settings');

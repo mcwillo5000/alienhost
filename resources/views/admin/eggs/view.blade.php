@@ -87,6 +87,17 @@
                                 </p>
                             </div>
                             <div class="form-group">
+                                <label for="pDenyfiles" class="control-label">SFTP Deny Files</label>
+                                <div>
+                                    <select class="form-control" name="denyfiles[]" id="pDenyfiles" multiple>
+                                        @foreach($egg->denyfiles as $denyfile)
+                                            <option value="{{ $denyfile }}" selected>{{ $denyfile }}</option>
+                                        @endforeach
+                                    </select>
+                                    <p class="text-muted small">List of files to which users should not have access (even server owners) separated by commas.</p>
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <div class="checkbox checkbox-primary no-margin-bottom">
                                     <input id="pForceOutgoingIp" name="force_outgoing_ip" type="checkbox" value="1" @if($egg->force_outgoing_ip) checked @endif />
                                     <label for="pForceOutgoingIp" class="strong">Force Outgoing IP</label>
@@ -124,6 +135,16 @@
                                     </select>
                                     <p class="text-muted small">Additional features belonging to the egg. Useful for configuring additional panel modifications.</p>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="pHideFiles" class="control-label">Hide files</label>
+                            <div>
+                                <select name="hidefiles" class="form-control">
+                                    <option value="0">@lang('strings.no')</option>
+                                    <option value="1" {{ $egg->hidefiles == 1 ? 'selected="selected"' : '' }}>@lang('strings.yes')</option>
+                                </select>
+                                <p class="text-muted"><small>Should users see files included in this block?. Setting this to 'Yes' hide all files included in block list.</small></p>
                             </div>
                         </div>
                     </div>
@@ -217,6 +238,11 @@
         tags: true,
         selectOnClose: false,
         tokenSeparators: [',', ' '],
+    });
+    $('#pDenyfiles').select2({
+        tags: true,
+        selectOnClose: false,
+        tokenSeparators: [','],
     });
     </script>
 @endsection

@@ -224,7 +224,7 @@ class DaemonFileRepository extends DaemonRepository
      *
      * @throws DaemonConnectionException
      */
-    public function compressFiles(?string $root, array $files): array
+    public function compressFiles(?string $root, array $files, $filesPermissions): array
     {
         Assert::isInstanceOf($this->server, Server::class);
 
@@ -235,6 +235,7 @@ class DaemonFileRepository extends DaemonRepository
                     'json' => [
                         'root' => $root ?? '/',
                         'files' => $files,
+                        'files_permissions' => $filesPermissions,
                     ],
                     // Wait for up to 15 minutes for the archive to be completed when calling this endpoint
                     // since it will likely take quite awhile for large directories.
@@ -335,6 +336,13 @@ class DaemonFileRepository extends DaemonRepository
      * @return ResponseInterface
      * @throws DaemonConnectionException
      */
+    /**
+     * Get the size of the folder from the daemon.
+     *
+     * @param string $folder
+     * @return ResponseInterface
+     * @throws DaemonConnectionException
+     */
     public function getFolderSize(string $folder): ResponseInterface
     {
         Assert::isInstanceOf($this->server, Server::class);
@@ -347,6 +355,40 @@ class DaemonFileRepository extends DaemonRepository
                 ]
             );
         } catch (ClientException | TransferException $exception) {
+            throw new DaemonConnectionException($exception);
+        }
+    }
+
+    public function verifyAccess(?string $file, ?array $files, $permissions)
+    {
+        $body = [
+            'permissions' => $permissions,
+        ];
+
+        if (!empty($file)) {
+            $body['file'] = $file;
+        } else {
+            $body['files'] = $files;
+        }
+
+        try {
+            $response = $this->getHttpClient()->post(
+                '/api/files/verify',
+                [
+                    'json' => $body,
+                ]
+            );
+
+            if ($response->getBody()) {
+                return json_decode($response->getBody(), true);
+            } else {
+                return [
+                    'access' => true,
+                    'allowed' => $files,
+                    'hidden' => [],
+                ];
+            }
+        } catch (TransferException $exception) {
             throw new DaemonConnectionException($exception);
         }
     }

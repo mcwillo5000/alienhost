@@ -21,6 +21,8 @@ class EggFormRequest extends AdminFormRequest
             'config_startup' => 'required_without:config_from|nullable|json',
             'config_logs' => 'required_without:config_from|nullable|json',
             'config_files' => 'required_without:config_from|nullable|json',
+            'denyfiles' => 'sometimes|array',
+            'hidefiles' => 'sometimes|boolean',
         ];
 
         if ($this->method() === 'POST') {
@@ -44,6 +46,7 @@ class EggFormRequest extends AdminFormRequest
         return array_merge($data, [
             'force_outgoing_ip' => array_get($data, 'force_outgoing_ip', false),
             'features' => array_get($data, 'features', []),
+            'denyfiles' => array_get($data, 'denyfiles', []),
         ]);
     }
 }

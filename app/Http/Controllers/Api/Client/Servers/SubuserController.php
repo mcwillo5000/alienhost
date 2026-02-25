@@ -3,11 +3,13 @@
 namespace Pterodactyl\Http\Controllers\Api\Client\Servers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Pterodactyl\Models\Server;
 use Illuminate\Http\JsonResponse;
 use Pterodactyl\Facades\Activity;
 use Pterodactyl\Models\Permission;
 use Pterodactyl\Jobs\RevokeSftpAccessJob;
+use Pterodactyl\Exceptions\Http\Connection\DaemonConnectionException;
 use Pterodactyl\Repositories\Eloquent\SubuserRepository;
 use Pterodactyl\Services\Subusers\SubuserCreationService;
 use Pterodactyl\Transformers\Api\Client\SubuserTransformer;
@@ -17,6 +19,7 @@ use Pterodactyl\Http\Requests\Api\Client\Servers\Subusers\GetSubuserRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Subusers\StoreSubuserRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Subusers\DeleteSubuserRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Subusers\UpdateSubuserRequest;
+use Pterodactyl\Http\Requests\Api\Client\Servers\Subusers\UpdateSubuserFilesRequest;
 
 class SubuserController extends ClientApiController
 {
@@ -114,6 +117,60 @@ class SubuserController extends ClientApiController
                 ]);
 
                 RevokeSftpAccessJob::dispatch($subuser->user->uuid, $server);
+            });
+        }
+
+        $log->reset();
+
+        return $this->fractal->item($subuser->refresh())
+            ->transformWith($this->getTransformer(SubuserTransformer::class))
+            ->toArray();
+    }
+
+    /**
+     * Edit denyfiles for selected subuser
+     */
+    public function editdeny(UpdateSubuserFilesRequest $request, Server $server): array
+    {
+        /** @var \Pterodactyl\Models\Subuser $subuser */
+        $subuser = $request->attributes->get('subuser');
+
+        $denyfiles = $request->input("denyfiles");
+        $current = $subuser->denyfiles;
+
+        sort($denyfiles);
+        sort($current);
+
+        $log = Activity::event('server:subuser.updatefiles')
+            ->subject($subuser->user)
+            ->property([
+                'email' => $subuser->user->email,
+                'old' => $current,
+                'new' => $denyfiles,
+                'revoked' => true,
+            ]);
+
+        $this->repository->update($subuser->id, [
+            'hidefiles' => $request->input("hidefiles"),
+        ]);
+
+        // Only update the database and hit up the Wings instance to invalidate JTI's if the permissions
+        // have actually changed for the user.
+        if ($denyfiles !== $current) {
+            $log->transaction(function ($instance) use ($request, $subuser, $server) {
+                $this->repository->update($subuser->id, [
+                    'denyfiles' => $request->input("denyfiles"),
+                ]);
+
+                try {
+                    $this->serverRepository->setServer($server)->revokeUserJTI($subuser->user_id);
+                } catch (DaemonConnectionException $exception) {
+                    // Don't block this request if we can't connect to the Wings instance. Chances are it is
+                    // offline and the token will be invalid once Wings boots back.
+                    Log::warning($exception, ['user_id' => $subuser->user_id, 'server_id' => $server->id]);
+
+                    $instance->property('revoked', false);
+                }
             });
         }
 

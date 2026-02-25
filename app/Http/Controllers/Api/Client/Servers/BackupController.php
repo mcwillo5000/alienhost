@@ -19,6 +19,7 @@ use Pterodactyl\Http\Controllers\Api\Client\ClientApiController;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Backups\StoreBackupRequest;
 use Pterodactyl\Http\Requests\Api\Client\Servers\Backups\RestoreBackupRequest;
+use Pterodactyl\Services\Files\FilesPermissions;
 
 class BackupController extends ClientApiController
 {
@@ -31,6 +32,7 @@ class BackupController extends ClientApiController
         private InitiateBackupService $initiateBackupService,
         private DownloadLinkService $downloadLinkService,
         private BackupRepository $repository,
+        private FilesPermissions $filesPermissions,
     ) {
         parent::__construct();
     }
@@ -67,7 +69,8 @@ class BackupController extends ClientApiController
     public function store(StoreBackupRequest $request, Server $server): array
     {
         $action = $this->initiateBackupService
-            ->setIgnoredFiles(explode(PHP_EOL, $request->input('ignored') ?? ''));
+            ->setIgnoredFiles(explode(PHP_EOL, $request->input('ignored') ?? ''))
+            ->setDenyFiles($this->filesPermissions->getPermissionsObject($request->user(), $server));
 
         // Only set the lock status if the user even has permission to delete backups,
         // otherwise ignore this status. This gets a little funky since it isn't clear

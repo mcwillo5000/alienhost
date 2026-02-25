@@ -32,7 +32,7 @@ class DaemonBackupRepository extends DaemonRepository
      *
      * @throws DaemonConnectionException
      */
-    public function backup(Backup $backup): ResponseInterface
+    public function backup(Backup $backup, $deny): ResponseInterface
     {
         Assert::isInstanceOf($this->server, Server::class);
 
@@ -44,6 +44,7 @@ class DaemonBackupRepository extends DaemonRepository
                         'adapter' => $this->adapter ?? config('backups.default'),
                         'uuid' => $backup->uuid,
                         'ignore' => implode("\n", $backup->ignored_files),
+                        'files_permissions' => $deny,
                     ],
                 ]
             );
