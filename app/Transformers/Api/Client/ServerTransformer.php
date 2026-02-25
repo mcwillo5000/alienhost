@@ -74,6 +74,7 @@ class ServerTransformer extends BaseClientTransformer
             
             'is_installing' => !$server->isInstalled(),
             'is_transferring' => !is_null($server->transfer),
+            'git_token_saved' => !empty($server->git_token),
             'timezone' => $server->timezone,
         ];
     }

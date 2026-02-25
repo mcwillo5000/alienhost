@@ -27,6 +27,7 @@ import { FileActionCheckbox } from '@/components/server/files/SelectFileCheckbox
 import { hashToPath } from '@/helpers';
 import PowerButtons from '@/components/server/console/PowerButtons';
 import style from './style.module.css';
+import GitActions from '@/components/server/files/GitActions';
 
 
 const FrameContainer = styled.div`
@@ -481,6 +482,9 @@ export default () => {
                                             New File
                                         </Button>
                                     </NavLink>
+                                    <Can action={'file.git'}>
+                                        <GitActions />
+                                    </Can>
                                 </FileActionsContainer>
                             </Can>
                         </FileManagerHeaderContainer>

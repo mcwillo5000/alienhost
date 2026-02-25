@@ -97,6 +97,8 @@ Route::group([
             ->post('/pull', [Client\Servers\FileController::class, 'pull']);
         Route::post('/restore', [Client\Servers\FileController::class, 'restore']);
         Route::get('/upload', Client\Servers\FileUploadController::class);
+        Route::post('/git/clone', [Client\Servers\GitController::class, 'clone']);
+        Route::post('/git/pull', [Client\Servers\GitController::class, 'pull']);
     });
 
     Route::group(['prefix' => '/schedules'], function () {

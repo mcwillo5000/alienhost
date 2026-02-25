@@ -138,6 +138,7 @@ class Permission extends Model
                 'update' => 'Allows a user to update the contents of an existing file or directory.',
                 'delete' => 'Allows a user to delete files or directories.',
                 'archive' => 'Allows a user to archive the contents of a directory as well as decompress existing archives on the system.',
+                'git' => 'Manage Git actions in file manager.',
                 'sftp' => 'Allows a user to connect to SFTP and manage server files using the other assigned file permissions.',
             ],
         ],
