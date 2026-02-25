@@ -9,7 +9,6 @@ import { useStoreState } from 'easy-peasy';
 import tw from 'twin.macro';
 import styled from 'styled-components/macro';
 import GreyRowBox from '@/components/elements/GreyRowBox';
-import EditFilesPermissions from '@/components/server/users/EditFilesPermissions';
 import { useTranslation } from 'react-i18next';
 
 const AvatarContainer = styled.div`
@@ -116,16 +115,10 @@ export default ({ subuser }: Props) => {
     const { t } = useTranslation();
     const uuid = useStoreState((state) => state.user!.data!.uuid);
     const [visible, setVisible] = useState(false);
-    const [filesVisible, setFilesVisible] = useState(false);
 
     return (
         <GreyRowBox>
             <EditSubuserModal subuser={subuser} visible={visible} onModalDismissed={() => setVisible(false)} />
-            <EditFilesPermissions
-                subuser={subuser}
-                visible={filesVisible}
-                onModalDismissed={() => setFilesVisible(false)}
-            />
             
             <AvatarContainer css={tw`hidden md:block`}>
                 <img src={`${subuser.image}?s=400`} alt={subuser.email} />
@@ -156,16 +149,6 @@ export default ({ subuser }: Props) => {
             
             {subuser.uuid !== uuid && (
                 <>
-                    <Can action={'*'}>
-                        <button
-                            type={'button'}
-                            aria-label={'Edit files permissions'}
-                            css={tw`block text-sm p-1 md:p-2 text-neutral-500 hover:text-neutral-100 transition-colors duration-150 ml-4`}
-                            onClick={() => setFilesVisible(true)}
-                        >
-                            <FontAwesomeIcon icon={faUserLock} />
-                        </button>
-                    </Can>
                     <Can action={'user.update'}>
                         <ActionButton
                             type={'button'}

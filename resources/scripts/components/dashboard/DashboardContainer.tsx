@@ -28,6 +28,9 @@ export default () => {
     const { clearFlashes, clearAndAddHttpError } = useFlash();
     const uuid = useStoreState((state) => state.user.data!.uuid);
     const rootAdmin = useStoreState((state) => state.user.data!.rootAdmin);
+    // Advanced-role users with "Server Access" permission can also view all servers.
+    const canViewAllServers = !rootAdmin && ((window as any).PterodactylUser?.can_view_all_servers ?? false);
+    const canToggleAdmin = rootAdmin || canViewAllServers;
     const [showOnlyAdmin, setShowOnlyAdmin] = usePersistedState(`${uuid}:show_all_servers`, false);
     const { t } = useTranslation();
 
@@ -53,8 +56,8 @@ export default () => {
     };
 
     const { data: servers, error } = useSWR<PaginatedResult<Server>>(
-        ['/api/client/servers', showOnlyAdmin && rootAdmin, page],
-        () => getServers({ page, type: showOnlyAdmin && rootAdmin ? 'admin' : undefined })
+        ['/api/client/servers', showOnlyAdmin && canToggleAdmin, page],
+        () => getServers({ page, type: showOnlyAdmin && canToggleAdmin ? 'admin' : undefined })
     );
 
     useEffect(() => {
@@ -75,7 +78,7 @@ export default () => {
 
     return (
         <PageContentBlock title={t('dashboard.title')} showFlashKey={'dashboard'}>
-            {rootAdmin && (
+            {canToggleAdmin && (
                 <div css={tw`mb-4 flex justify-end items-center`}>
                     <div css={tw`flex items-center`}>
                         <p css={tw`uppercase text-xs text-neutral-400 mr-2`}>

@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Pterodactyl\Http\Controllers\Admin;
+use Pterodactyl\Http\Controllers\Admin\AdvancedPermissions\AdvancedPermissionsController;
+use Pterodactyl\Http\Controllers\Admin\AdvancedPermissions\ServerGroupController;
 use Pterodactyl\Http\Middleware\Admin\Servers\ServerInstalled;
 
 Route::get('/', [Admin\BaseController::class, 'index'])->name('admin.index');
@@ -329,6 +331,66 @@ Route::group(['prefix' => 'automatic-phpmyadmin'], function () {
  Route::post('/new', [Admin\AutomaticPhpMyAdminController::class, 'store']);
  Route::patch('/view/{automaticphpmyadmin:id}',[Admin\AutomaticPhpMyAdminController::class, 'update']);
  Route::delete('/delete/{automaticphpmyadmin:id}',[Admin\AutomaticPhpMyAdminController::class, 'destroy'])->name('admin.automatic-phpmyadmin.delete');
+});
+
+Route::group(['prefix' => 'advanced-permissions'], function () {
+    Route::get('/', [AdvancedPermissionsController::class, 'index'])
+        ->name('admin.advanced-permissions');
+
+    Route::get('/create', [AdvancedPermissionsController::class, 'create'])
+        ->name('admin.advanced-permissions.create');
+
+    Route::post('/', [AdvancedPermissionsController::class, 'store'])
+        ->name('admin.advanced-permissions.store');
+
+    Route::get('/users/search', [AdvancedPermissionsController::class, 'searchUsers'])
+        ->name('admin.advanced-permissions.users.search');
+
+    // ── Server Groups (must be before /{id} wildcard) ─────────────────────────────
+    Route::group(['prefix' => 'server-groups'], function () {
+        Route::get('/', [ServerGroupController::class, 'index'])
+            ->name('admin.advanced-permissions.server-groups');
+
+        Route::get('/create', [ServerGroupController::class, 'create'])
+            ->name('admin.advanced-permissions.server-groups.create');
+
+        Route::post('/', [ServerGroupController::class, 'store'])
+            ->name('admin.advanced-permissions.server-groups.store');
+
+        Route::get('/{id}/servers/search', [ServerGroupController::class, 'searchServers'])
+            ->name('admin.advanced-permissions.server-groups.servers.search');
+
+        Route::get('/{id}', [ServerGroupController::class, 'edit'])
+            ->name('admin.advanced-permissions.server-groups.edit');
+
+        Route::patch('/{id}', [ServerGroupController::class, 'update'])
+            ->name('admin.advanced-permissions.server-groups.update');
+
+        Route::delete('/{id}', [ServerGroupController::class, 'destroy'])
+            ->name('admin.advanced-permissions.server-groups.destroy');
+
+        Route::post('/{id}/servers', [ServerGroupController::class, 'addServer'])
+            ->name('admin.advanced-permissions.server-groups.servers.add');
+
+        Route::delete('/{id}/servers/{serverId}', [ServerGroupController::class, 'removeServer'])
+            ->name('admin.advanced-permissions.server-groups.servers.remove');
+    });
+
+    // ── Role wildcard routes (after all literal prefixes) ───────────────────────
+    Route::get('/{id}', [AdvancedPermissionsController::class, 'edit'])
+        ->name('admin.advanced-permissions.edit');
+
+    Route::patch('/{id}', [AdvancedPermissionsController::class, 'update'])
+        ->name('admin.advanced-permissions.update');
+
+    Route::delete('/{id}', [AdvancedPermissionsController::class, 'destroy'])
+        ->name('admin.advanced-permissions.destroy');
+
+    Route::post('/{id}/users', [AdvancedPermissionsController::class, 'assignUser'])
+        ->name('admin.advanced-permissions.users.assign');
+
+    Route::delete('/{id}/users/{userId}', [AdvancedPermissionsController::class, 'removeUser'])
+        ->name('admin.advanced-permissions.users.remove');
 });
 
 include 'admin-serverimporter.php';

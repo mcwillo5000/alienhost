@@ -13,6 +13,7 @@ import SearchContainer from '@/components/dashboard/search/SearchContainer';
 export default () => {
     const name = useStoreState((state: ApplicationStore) => state.settings.data!.name);
     const rootAdmin = useStoreState((state: ApplicationStore) => state.user.data!.rootAdmin);
+    const hasAdvRole = !rootAdmin && ((window as any).PterodactylUser?.has_adv_role ?? false);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
     const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
@@ -42,7 +43,7 @@ export default () => {
                             <span>Dashboard</span>
                         </NavLink>
                         
-                        {rootAdmin && (
+                        {(rootAdmin || hasAdvRole) && (
                             <a href="/admin" rel="noreferrer" className="rivion-nav-link">
                                 <span>Admin</span>
                             </a>

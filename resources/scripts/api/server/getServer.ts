@@ -48,7 +48,6 @@ export interface Server {
         backups: number;
     };
     isTransferring: boolean;
-    gitTokenSaved: boolean;
     variables: ServerEggVariable[];
     allocations: Allocation[];
     timezone: string;
@@ -80,7 +79,6 @@ export const rawDataToServerObject = ({ attributes: data }: FractalResponseData)
     eggFeatures: data.egg_features || [],
     featureLimits: { ...data.feature_limits },
     isTransferring: data.is_transferring,
-    gitTokenSaved: data.git_token_saved,
     variables: ((data.relationships?.variables as FractalResponseList | undefined)?.data || []).map(
         rawDataToServerEggVariable
     ),

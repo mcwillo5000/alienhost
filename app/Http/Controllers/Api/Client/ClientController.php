@@ -4,6 +4,8 @@ namespace Pterodactyl\Http\Controllers\Api\Client;
 
 use Pterodactyl\Models\Server;
 use Pterodactyl\Models\Permission;
+use Pterodactyl\Models\AdvancedRole;
+use Pterodactyl\Models\ServerGroup;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use Pterodactyl\Models\Filters\MultiFieldServerFilter;
@@ -41,19 +43,41 @@ class ClientController extends ClientApiController
         ]);
 
         $type = $request->input('type');
-        // Either return all the servers the user has access to because they are an admin `?type=admin` or
-        // just return all the servers the user has access to because they are the owner or a subuser of the
-        // server. If ?type=admin-all is passed all servers on the system will be returned to the user, rather
-        // than only servers they can see because they are an admin.
+
+        // Load advanced role once and check server_access + optional group filter.
+        $hasServerAccess = false;
+        $serverGroupIds  = null;
+        $serverGroupMode = null;
+        if (!$user->root_admin && $user->adv_role_id) {
+            $advRole = AdvancedRole::find($user->adv_role_id);
+            if ($advRole && in_array('special.server_access', $advRole->admin_routes ?? [])) {
+                $hasServerAccess = true;
+                if ($advRole->server_group_id && $advRole->server_group_mode) {
+                    $serverGroupIds  = ServerGroup::find($advRole->server_group_id)
+                        ?->servers()->pluck('servers.id')->all() ?? [];
+                    $serverGroupMode = $advRole->server_group_mode;
+                }
+            }
+        }
+
         if (in_array($type, ['admin', 'admin-all'])) {
-            // If they aren't an admin but want all the admin servers don't fail the request, just
-            // make it a query that will never return any results back.
-            if (!$user->root_admin) {
+            if (!$user->root_admin && !$hasServerAccess) {
                 $builder->whereRaw('1 = 2');
             } else {
-                $builder = $type === 'admin-all'
-                    ? $builder
-                    : $builder->whereNotIn('servers.id', $user->accessibleServers()->pluck('id')->all());
+                $ownServerIds = $user->accessibleServers()->pluck('id')->all();
+                if ($hasServerAccess && $serverGroupIds !== null) {
+                    if ($serverGroupMode === 'allow') {
+                        $builder->whereIn('servers.id', $serverGroupIds)
+                                ->whereNotIn('servers.id', $ownServerIds);
+                    } else {
+                        $builder->whereNotIn('servers.id', $serverGroupIds)
+                                ->whereNotIn('servers.id', $ownServerIds);
+                    }
+                } else {
+                    $builder = $type === 'admin-all'
+                        ? $builder
+                        : $builder->whereNotIn('servers.id', $ownServerIds);
+                }
             }
         } elseif ($type === 'owner') {
             $builder = $builder->where('servers.owner_id', $user->id);

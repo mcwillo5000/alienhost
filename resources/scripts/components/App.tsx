@@ -31,7 +31,8 @@ interface ExtendedWindow extends Window {
         language: string;
         updated_at: string;
         created_at: string;
-
+        can_view_all_servers?: boolean;
+        has_adv_role?: boolean;
     };
 }
 

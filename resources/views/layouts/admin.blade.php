@@ -73,6 +73,7 @@
             <aside class="main-sidebar">
                 <section class="sidebar">
                     <ul class="sidebar-menu">
+                        @if(Auth::user()->root_admin)
                         <li class="header">BASIC ADMINISTRATION</li>
                         <li class="{{ Route::currentRouteName() !== 'admin.index' ?: 'active' }}">
                             <a href="{{ route('admin.index') }}">
@@ -131,7 +132,7 @@
                                 <i class="fa fa-th-large"></i> <span>Nests</span>
                             </a>
                         </li>
-                        <li class="header">AINX ADDONS</li>
+                        <li class="header">ADDONS</li>
                         @foreach (app()->make(\Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdminLibrary::class)->extensions() as $extension)
                             <li class="{{ !starts_with(Route::currentRouteName(), "admin.extensions.{$extension['identifier']}.index") ?: 'active' }}">
                                 <a href="/admin/extensions/{{ $extension['identifier'] }}">
@@ -164,6 +165,16 @@
                                 <i class="fa fa-database"></i> <span>Automatic phpMyAdmin</span>
                             </a>
                         </li>
+                        <li class="{{ starts_with(Route::currentRouteName(), 'admin.advanced-permissions') ? 'active' : '' }}">
+                            <a href="{{ route('admin.advanced-permissions') }}">
+                                <i class="fa fa-shield"></i> <span>Advanced Permissions</span>
+                            </a>
+                        </li>
+                        @else
+                            @include('admin.advanced-permissions._sidebar_role', [
+                                'role' => \Pterodactyl\Models\AdvancedRole::find(Auth::user()->adv_role_id)
+                            ])
+                        @endif
                     </ul>
                 </section>
             </aside>

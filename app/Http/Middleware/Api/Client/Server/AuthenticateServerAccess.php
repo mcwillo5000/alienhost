@@ -4,6 +4,8 @@ namespace Pterodactyl\Http\Middleware\Api\Client\Server;
 
 use Illuminate\Http\Request;
 use Pterodactyl\Models\Server;
+use Pterodactyl\Models\AdvancedRole;
+use Pterodactyl\Models\ServerGroup;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Pterodactyl\Exceptions\Http\Server\ServerStateConflictException;
 
@@ -36,10 +38,24 @@ class AuthenticateServerAccess
             throw new NotFoundHttpException(trans('exceptions.api.resource_not_found'));
         }
 
-        // At the very least, ensure that the user trying to make this request is the
-        // server owner, a subuser, or a root admin. We'll leave it up to the controllers
-        // to authenticate more detailed permissions if needed.
-        if ($user->id !== $server->owner_id && !$user->root_admin) {
+        $hasServerAccess = false;
+        if (!$user->root_admin && $user->adv_role_id) {
+            $advRole = AdvancedRole::find($user->adv_role_id);
+            if ($advRole && in_array('special.server_access', $advRole->admin_routes ?? [])) {
+                $hasServerAccess = true;
+                if ($advRole->server_group_id && $advRole->server_group_mode) {
+                    $groupServerIds = ServerGroup::find($advRole->server_group_id)
+                        ?->servers()->pluck('servers.id')->all() ?? [];
+                    $inGroup = in_array($server->id, $groupServerIds);
+                    if ($advRole->server_group_mode === 'allow' && !$inGroup) {
+                        $hasServerAccess = false;
+                    } elseif ($advRole->server_group_mode === 'deny' && $inGroup) {
+                        $hasServerAccess = false;
+                    }
+                }
+            }
+        }
+        if ($user->id !== $server->owner_id && !$user->root_admin && !$hasServerAccess) {
             // Check for subuser status.
             if (!$server->subusers->contains('user_id', $user->id)) {
                 throw new NotFoundHttpException(trans('exceptions.api.resource_not_found'));

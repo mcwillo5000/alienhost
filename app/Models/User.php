@@ -134,6 +134,7 @@ class User extends Model implements
         'totp_authenticated_at',
         'gravatar',
         'root_admin',
+        'adv_role_id',
     ];
 
     /**
@@ -157,6 +158,7 @@ class User extends Model implements
     protected $attributes = [
         'external_id' => null,
         'root_admin' => false,
+        'adv_role_id' => null,
         'language' => 'en',
         'use_totp' => false,
         'totp_secret' => null,

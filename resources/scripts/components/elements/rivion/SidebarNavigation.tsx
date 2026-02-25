@@ -39,6 +39,7 @@ export default ({ isOpen, onClose, type = 'dashboard' }: SidebarProps) => {
     const { t, i18n } = useTranslation();
     const location = useLocation();
     const rootAdmin = useStoreState((state: ApplicationStore) => state.user.data!.rootAdmin);
+    const hasAdvRole = !rootAdmin && ((window as any).PterodactylUser?.has_adv_role ?? false);
     const [sectionsCollapsed, setSectionsCollapsed] = useState<{[key: string]: boolean}>({});
     const [searchVisible, setSearchVisible] = useState(false);
     const [availableLanguages, setAvailableLanguages] = useState<string[]>(['en']);
@@ -228,7 +229,7 @@ export default ({ isOpen, onClose, type = 'dashboard' }: SidebarProps) => {
                                 </FuturisticNavAnchor>
                             )}
                             
-                            {rootAdmin && (
+                            {(rootAdmin || hasAdvRole) && (
                                 <FuturisticNavAnchor 
                                     href="/admin" 
                                     rel="noreferrer"

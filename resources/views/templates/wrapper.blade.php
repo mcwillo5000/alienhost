@@ -202,6 +202,17 @@
             @if(!is_null(Auth::user()))
                 <script>
                     window.PterodactylUser = {!! json_encode(Auth::user()->toVueObject()) !!};
+                    @if(!Auth::user()->root_admin && Auth::user()->adv_role_id)
+                        @php
+                            $__advRole = \Pterodactyl\Models\AdvancedRole::find(Auth::user()->adv_role_id);
+                            $__canViewAllServers = $__advRole && in_array('special.server_access', $__advRole->admin_routes ?? []);
+                        @endphp
+                        window.PterodactylUser.can_view_all_servers = {{ $__canViewAllServers ? 'true' : 'false' }};
+                        window.PterodactylUser.has_adv_role = true;
+                    @else
+                        window.PterodactylUser.can_view_all_servers = false;
+                        window.PterodactylUser.has_adv_role = false;
+                    @endif
                 </script>
             @endif
             @if(!empty($siteConfiguration))
