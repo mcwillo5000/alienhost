@@ -798,6 +798,7 @@ export default function PlayerInventory({
                                 </div>
                                 <div
                                     css={tw`grid grid-cols-9 gap-1 md:gap-2 mb-7 bg-neutral-800 bg-opacity-50 p-2 rounded-lg border border-neutral-700`}
+                                    style={{ minWidth: '400px' }}
                                 >
                                     {mainInventory.map((item, index) => (
                                         <InventorySlot
@@ -824,6 +825,7 @@ export default function PlayerInventory({
                                 </div>
                                 <div
                                     css={tw`grid grid-cols-9 gap-1 md:gap-2 bg-neutral-800 bg-opacity-50 p-2 rounded-lg border border-neutral-700`}
+                                    style={{ minWidth: '400px' }}
                                 >
                                     {hotbar.map((item, index) => (
                                         <InventorySlot
@@ -855,6 +857,7 @@ export default function PlayerInventory({
                             </div>
                             <div
                                 css={tw`grid grid-cols-9 gap-1 md:gap-2 bg-neutral-800 bg-opacity-50 p-2 rounded-lg border border-neutral-700`}
+                                style={{ minWidth: '400px' }}
                             >
                                 {enderChestSlots.map((item, index) => (
                                     <InventorySlot

@@ -47,9 +47,7 @@ class FileController extends ClientApiController
      */
     public function directory(ListFilesRequest $request, Server $server): array
     {
-        // Handle trash listing - return from DB, never call Wings for trash
-        $dir = $request->get('directory');
-        if ($dir === '/.trash' || $dir === '.trash' || $dir === '//.trash') {
+        if ($request->get('directory') === '/.trash') {
             $contents = $server->recycledFiles()->get();
 
             return $this->fractal->collection($contents)
@@ -243,54 +241,26 @@ class FileController extends ClientApiController
      */
     public function delete(DeleteFileRequest $request, Server $server): JsonResponse
     {
-        $fileRoot = $request->input('root');
-        $repo = $this->fileRepository->setServer($server);
 
-        if ($fileRoot === '/.trash' || $fileRoot === '.trash') {
-            // Permanent deletion from trash - apply AUP permission filter on IDs
-            // Advanced User Permissions Start
-            $files = $this->filesPermissions->deleteFiles(
-                $request->input('files'),
-                $fileRoot,
-                $request->user(),
-                $server
-            );
-            // Advanced User Permissions End
-            if (empty($files)) {
-                return new JsonResponse([], Response::HTTP_NO_CONTENT);
-            }
-            $repo->deleteFiles($fileRoot, $files);
-            RecycledFile::whereIn('id', array_map(fn(string $v) => intval($v), $files))->delete();
-        } else {
-            // Move to trash: apply AUP permission filter, then rename to .trash/{recordId}
-            // Advanced User Permissions Start
-            $files = $this->filesPermissions->deleteFiles(
-                $request->input('files'),
-                $fileRoot,
-                $request->user(),
-                $server
-            );
-            // Advanced User Permissions End
-            if (empty($files)) {
-                return new JsonResponse([], Response::HTTP_NO_CONTENT);
-            }
-            $renames = [];
-            foreach ($files as $file) {
-                $metadata = new RecycledFile();
-                $metadata->server_id = $server->id;
-                $metadata->path = ltrim(rtrim($fileRoot, '/') . '/' . $file, '/');
-                $metadata->save();
-                $renames[] = [
-                    'from' => $metadata->path,
-                    'to' => '.trash/' . $metadata->id,
-                ];
-            }
-            $repo->renameFiles('/', $renames);
+        $files = $this->filesPermissions->deleteFiles(
+            $request->input('files'),
+            $request->input('root'),
+            $request->user(),
+            $server
+        );
+
+        if (empty($files)) {
+            return new JsonResponse([], Response::HTTP_NO_CONTENT);
         }
 
+        $this->fileRepository->setServer($server)->deleteFiles(
+            $request->input('root'),
+            $files
+        );
+
         Activity::event('server:file.delete')
-            ->property('directory', $fileRoot)
-            ->property('files', $request->input('files'))
+            ->property('directory', $request->input('root'))
+            ->property('files', $files)
             ->log();
 
         return new JsonResponse([], Response::HTTP_NO_CONTENT);

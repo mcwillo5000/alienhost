@@ -57,6 +57,11 @@ const RenameFileModal = ({ files, useMoveTerminology, ...props }: OwnProps) => {
             .then(() => props.onDismissed());
     };
 
+    const pointsToTrash = (values: FormikValues) =>
+        join(directory, values.name)
+            .replace(/^(\.\.\/|\/)+/, '')
+            .startsWith('.trash');
+
     return (
         <Formik onSubmit={submit} initialValues={{ name: files.length > 1 ? '' : files[0] || '' }}>
             {({ isSubmitting, values }) => (
@@ -78,9 +83,14 @@ const RenameFileModal = ({ files, useMoveTerminology, ...props }: OwnProps) => {
                                 />
                             </div>
                             <div css={tw`w-full sm:w-auto mt-4 sm:mt-0`}>
-                                <Button css={tw`w-full`}>{useMoveTerminology ? t('files.renameModal.move') : t('files.renameModal.rename')}</Button>
+                                <Button disabled={pointsToTrash(values)} css={tw`w-full`}>{useMoveTerminology ? t('files.renameModal.move') : t('files.renameModal.rename')}</Button>
                             </div>
                         </div>
+                        {pointsToTrash(values) && (
+                            <p css={tw`text-xs mt-2 text-gray-300`}>
+                                You cannot move this file into the Trash manually.
+                            </p>
+                        )}
                         {useMoveTerminology && (
                             <p css={[tw`text-xs mt-2`, { color: 'var(--theme-text-muted)' }]}>
                                 <strong css={{ color: 'var(--theme-text-base)' }}>{t('files.renameModal.newLocation')}</strong>

@@ -331,7 +331,7 @@ export default () => {
                     <Pagination data={plugins} onPageSelect={setPage}>
                         {({ items }) =>
                             items.length > 0 ? (
-                                <div className='grid lg:grid-cols-3 gap-2'>
+                                <div className='grid lg:grid-cols-3 gap-2 w-full overflow-x-hidden'>
                                     {items.map((plugin) => (
                                         <MinecraftPluginRow
                                             key={`${page}-${plugin.id}`}

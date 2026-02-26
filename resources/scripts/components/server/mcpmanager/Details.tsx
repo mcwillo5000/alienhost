@@ -880,17 +880,17 @@ const PlayerDetails: React.FC<Props> = ({
                         clipPath: 'polygon(0px 5px, 5px 0px, 100% 0px, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0px 100%)',
                     }}
                 />
-                <div style={{ flexGrow: 1 }}>
+                <div style={{ flexGrow: 1, minWidth: 0 }}>
                     <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--theme-text-base)', fontFamily: "'Orbitron', sans-serif", margin: 0 }}>{player.name}</h2>
                     {player.uuid && (
                         <CopyOnClick text={player.uuid}>
                             <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-                                <code style={{ fontSize: '0.8rem', color: 'var(--theme-text-muted)', fontFamily: 'monospace' }}>{player.uuid}</code>
-                                <FontAwesomeIcon icon={faCopy} style={{ marginLeft: '0.5rem', color: 'var(--theme-text-muted)' }} />
+                                <code style={{ fontSize: '0.8rem', color: 'var(--theme-text-muted)', fontFamily: 'monospace', wordBreak: 'break-all', overflow: 'hidden', textOverflow: 'ellipsis' }}>{player.uuid}</code>
+                                <FontAwesomeIcon icon={faCopy} style={{ marginLeft: '0.5rem', color: 'var(--theme-text-muted)', flexShrink: 0 }} />
                             </div>
                         </CopyOnClick>
                     )}
-                    <div style={{ display: 'flex', alignItems: 'center', marginTop: '0.5rem', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', marginTop: '0.5rem', flexWrap: 'wrap', gap: '0.25rem' }}>
                         {isOnline && <span style={getStatusStyle('online')}>Online</span>}
                         {isBanned && <span style={getStatusStyle('banned')}>Banned</span>}
                         {isIpBanned && <span style={getStatusStyle('banned')}>IP Banned</span>}
@@ -900,7 +900,19 @@ const PlayerDetails: React.FC<Props> = ({
                 </div>
             </div>
             <div style={{ padding: '1rem' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }}>
+                <style>{`
+                    .player-manage-buttons-grid {
+                        display: grid;
+                        grid-template-columns: repeat(1, 1fr);
+                        gap: 1rem;
+                    }
+                    @media (min-width: 768px) {
+                        .player-manage-buttons-grid {
+                            grid-template-columns: repeat(3, 1fr);
+                        }
+                    }
+                `}</style>
+                <div className="player-manage-buttons-grid">
                     <div>
                         <h3 style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--theme-primary)', marginBottom: '0.5rem', textTransform: 'uppercase', fontFamily: "'Orbitron', sans-serif", letterSpacing: '0.05em' }}>General</h3>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>

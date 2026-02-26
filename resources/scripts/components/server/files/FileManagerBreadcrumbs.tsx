@@ -38,7 +38,7 @@ export default ({ renderLeft, withinFileEditor, isNewFile }: Props) => {
             .filter((directory) => !!directory && directory !== '.')
             .map((directory, index, dirs) => {
                 if (!withinFileEditor && index === dirs.length - 1) {
-                    return { name: directory };
+                    return { name: directory === '.trash' ? 'Trash' : directory };
                 }
 
                 return { name: directory, path: `/${dirs.slice(0, index + 1).join('/')}` };

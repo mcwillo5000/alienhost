@@ -24,10 +24,12 @@ export const FileActionCheckbox = styled(Input)`
     }
 `;
 
-export default ({ name }: { name: string }) => {
+export default ({ name, trashId }: { name: string; trashId?: number }) => {
     const isChecked = ServerContext.useStoreState((state) => state.files.selectedFiles.indexOf(name) >= 0);
     const appendSelectedFile = ServerContext.useStoreActions((actions) => actions.files.appendSelectedFile);
     const removeSelectedFile = ServerContext.useStoreActions((actions) => actions.files.removeSelectedFile);
+    const appendSelectedTrashId = ServerContext.useStoreActions((actions) => actions.files.appendSelectedTrashId);
+    const removeSelectedTrashId = ServerContext.useStoreActions((actions) => actions.files.removeSelectedTrashId);
 
     return (
         <label css={tw`flex items-center cursor-pointer`}>
@@ -39,8 +41,10 @@ export default ({ name }: { name: string }) => {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     if (e.currentTarget.checked) {
                         appendSelectedFile(name);
+                        trashId && appendSelectedTrashId(trashId);
                     } else {
                         removeSelectedFile(name);
+                        trashId && removeSelectedTrashId(trashId);
                     }
                 }}
             />

@@ -38,11 +38,11 @@ export default ({ file }: Props) => {
     return (
         <>
             {file.isFile ? (
-                <div css={tw`w-1/6 text-right mr-4 block`}>{bytesToString(file.size)}</div>
+                <div css={tw`text-right block`}>{bytesToString(file.size)}</div>
             ) : (
                 <>
                     {size === -1 ? (
-                        <div css={tw`text-right mr-4 sm:block`} style={{ cursor: 'pointer' }} onClick={calculateSize}>
+                        <div css={tw`text-right block`} style={{ cursor: 'pointer' }} onClick={calculateSize}>
                             <FontAwesomeIcon icon={faRuler} />
                         </div>
                     ) : (
@@ -50,7 +50,7 @@ export default ({ file }: Props) => {
                             {size === -2 ? (
                                 <Spinner size={'small'} />
                             ) : (
-                                <div css={tw`w-1/6 text-right mr-4`}>{bytesToString(size)}</div>
+                                <div css={tw`text-right`}>{bytesToString(size)}</div>
                             )}
                         </>
                     )}

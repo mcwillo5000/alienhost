@@ -10,12 +10,16 @@ export interface FileUploadData {
 export interface ServerFileStore {
     directory: string;
     selectedFiles: string[];
+    selectedTrashIds: number[];
     uploads: Record<string, FileUploadData>;
 
     setDirectory: Action<ServerFileStore, string>;
     setSelectedFiles: Action<ServerFileStore, string[]>;
+    setSelectedTrashIds: Action<ServerFileStore, number[]>;
     appendSelectedFile: Action<ServerFileStore, string>;
     removeSelectedFile: Action<ServerFileStore, string>;
+    appendSelectedTrashId: Action<ServerFileStore, number>;
+    removeSelectedTrashId: Action<ServerFileStore, number>;
 
     pushFileUpload: Action<ServerFileStore, { name: string; data: FileUploadData }>;
     setUploadProgress: Action<ServerFileStore, { name: string; loaded: number }>;
@@ -27,6 +31,7 @@ export interface ServerFileStore {
 const files: ServerFileStore = {
     directory: '/',
     selectedFiles: [],
+    selectedTrashIds: [],
     uploads: {},
 
     setDirectory: action((state, payload) => {
@@ -37,12 +42,24 @@ const files: ServerFileStore = {
         state.selectedFiles = payload;
     }),
 
+    setSelectedTrashIds: action((state, payload) => {
+        state.selectedTrashIds = payload;
+    }),
+
     appendSelectedFile: action((state, payload) => {
         state.selectedFiles = state.selectedFiles.filter((f) => f !== payload).concat(payload);
     }),
 
     removeSelectedFile: action((state, payload) => {
         state.selectedFiles = state.selectedFiles.filter((f) => f !== payload);
+    }),
+
+    appendSelectedTrashId: action((state, payload) => {
+        state.selectedTrashIds = state.selectedTrashIds.filter((f) => f !== payload).concat(payload);
+    }),
+
+    removeSelectedTrashId: action((state, payload) => {
+        state.selectedTrashIds = state.selectedTrashIds.filter((f) => f !== payload);
     }),
 
     clearFileUploads: action((state) => {

@@ -574,9 +574,9 @@ export default function HytalePlayerManagerContainer() {
                             </div>
                         </div>
                         {/* Main Layout: Body Left, Details Right */}
-                        <div className={'flex gap-3'}>
+                        <div className={'flex flex-col md:flex-row gap-3'}>
                             {/* Left: Player Body */}
-                            <div className={'flex items-center justify-center rounded-lg px-8 py-4 self-stretch min-w-[140px]'} style={{ backgroundColor: 'var(--theme-background-secondary)' }}>
+                            <div className={'flex items-center justify-center rounded-lg px-8 py-4 self-stretch md:min-w-[140px]'} style={{ backgroundColor: 'var(--theme-background-secondary)' }}>
                                 <img
                                     src={`https://crafthead.net/hytale/body/${selectedPlayerDetail.uuid}`}
                                     alt={selectedPlayerDetail.username}
@@ -587,9 +587,9 @@ export default function HytalePlayerManagerContainer() {
                                 />
                             </div>
                             {/* Right: Details Grid */}
-                            <div className={'flex-1 grid grid-cols-2 gap-3'}>
+                            <div className={'flex-1 grid grid-cols-1 md:grid-cols-2 gap-3'}>
                                 {/* UUID */}
-                                <div className={'col-span-2 rounded-lg p-3'} style={{ backgroundColor: 'var(--theme-background-secondary)' }}>
+                                <div className={'col-span-1 md:col-span-2 rounded-lg p-3'} style={{ backgroundColor: 'var(--theme-background-secondary)' }}>
                                     <div className={'flex items-center gap-2 text-sm mb-1'} style={{ color: 'var(--theme-text-muted)' }}>
                                         <FontAwesomeIcon icon={faInfoCircle} className={'text-xs'} />
                                         <span>UUID</span>
@@ -683,7 +683,7 @@ export default function HytalePlayerManagerContainer() {
                                     </div>
                                 </div>
                                 {/* Stats Row */}
-                                <div className={'col-span-2 grid grid-cols-4 gap-2'}>
+                                <div className={'col-span-1 md:col-span-2 grid grid-cols-2 md:grid-cols-4 gap-2'}>
                                     {/* Health */}
                                     <div className={'rounded-lg p-2 text-center'} style={{ backgroundColor: 'var(--theme-background-secondary)' }}>
                                         <div className={'text-red-400 text-base font-bold'}>
@@ -989,8 +989,9 @@ export default function HytalePlayerManagerContainer() {
             <div className={'flex flex-col w-full'}>
                 <div className={'mb-4 flex flex-col md:flex-row md:justify-between justify-center md:items-center content-between w-full'}>
                     <h1 className={'text-2xl font-medium'}>Hytale Player Manager</h1>
-                    <div className={'flex flex-row gap-2 mt-2 md:mt-0'}>
+                    <div className={'flex flex-row flex-wrap gap-2 mt-2 md:mt-0'}>
                         <Button.Text
+                            className={'flex-1 md:flex-none'}
                             disabled={activeTab === 'players'}
                             onClick={() => setActiveTab('players')}
                         >
@@ -998,6 +999,7 @@ export default function HytalePlayerManagerContainer() {
                             Players
                         </Button.Text>
                         <Button.Text
+                            className={'flex-1 md:flex-none'}
                             disabled={activeTab === 'permissions'}
                             onClick={() => setActiveTab('permissions')}
                         >
@@ -1005,6 +1007,7 @@ export default function HytalePlayerManagerContainer() {
                             Permissions
                         </Button.Text>
                         <Button.Text
+                            className={'flex-1 md:flex-none'}
                             disabled={activeTab === 'whitelist'}
                             onClick={() => setActiveTab('whitelist')}
                         >
@@ -1012,6 +1015,7 @@ export default function HytalePlayerManagerContainer() {
                             Allowlist
                         </Button.Text>
                         <Button.Text
+                            className={'flex-1 md:flex-none'}
                             disabled={activeTab === 'bans'}
                             onClick={() => setActiveTab('bans')}
                         >

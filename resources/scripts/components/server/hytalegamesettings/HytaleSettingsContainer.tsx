@@ -149,9 +149,9 @@ export default () => {
         <ServerContentBlock title={'Hytale Game Settings'}>
             <FlashMessageRender byKey={'hytale'} css={tw`mb-4`} />
             {!loading && (
-                <div className={'flex gap-4' + (status === 'starting' ? ' opacity-50 pointer-events-none' : '')}>
-                    <div className={'w-64 flex-shrink-0'}>
-                        <div className={'sticky top-4'}>
+                <div className={'flex flex-col lg:flex-row gap-4' + (status === 'starting' ? ' opacity-50 pointer-events-none' : '')}>
+                    <div className={'w-full lg:w-64 lg:flex-shrink-0'}>
+                        <div className={'lg:sticky lg:top-4'}>
                             <FuturisticContentBox title={'Navigation'}>
                                 <nav className={'flex flex-col gap-1'}>
                                     {(['basic', 'worlds', 'advanced'] as const).map((tab) => ({

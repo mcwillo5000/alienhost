@@ -23,14 +23,14 @@ const PlayerDetailsTabs: React.FC<PlayerDetailsTabsProps> = ({ tabs }) => {
     const [activeTab, setActiveTab] = useState(tabs[0].id);
     return (
         <div>
-            <div tw="border-b border-neutral-800">
-                <nav tw="-mb-px flex space-x-6" aria-label="Tabs">
+            <div tw="border-b border-neutral-800 overflow-x-auto">
+                <nav tw="-mb-px flex space-x-2 md:space-x-6" aria-label="Tabs" style={{ minWidth: 'max-content' }}>
                     {tabs.map(tab => (
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             css={[
-                                tw`px-4 py-2 text-sm font-medium transition-colors duration-200 ease-in-out border-b-2 focus:outline-none`,
+                                tw`px-3 md:px-4 py-2 text-xs md:text-sm font-medium transition-colors duration-200 ease-in-out border-b-2 focus:outline-none whitespace-nowrap`,
                                 activeTab === tab.id ? tw`border-cyan-400 text-white` : tw`border-transparent text-neutral-400 hover:text-white hover:border-gray-300`
                             ]}
                         >

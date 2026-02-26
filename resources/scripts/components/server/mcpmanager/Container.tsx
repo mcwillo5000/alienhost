@@ -182,7 +182,7 @@ const PlayerManagerContainer = () => {
                     </div>
                 </FuturisticContentBox>
             ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1.5rem', marginBottom: '2.5rem' }}>
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-6 mb-10">
                     <div>
                         <div style={{ position: 'sticky', top: '1.5rem' }}>
                             <PlayersList

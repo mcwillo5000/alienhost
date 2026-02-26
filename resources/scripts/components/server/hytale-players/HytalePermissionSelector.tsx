@@ -46,7 +46,7 @@ const PermissionItem = styled.label`
 `;
 const FilterBar = styled.div`
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
     gap: 0.75rem;
     padding: 0.75rem;
     border-bottom: 1px solid var(--theme-border);
@@ -54,6 +54,10 @@ const FilterBar = styled.div`
     top: 0;
     background-color: var(--theme-background-secondary);
     z-index: 10;
+
+    @media (min-width: 768px) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 `;
 interface Props {
     selectedPermissions: string[];

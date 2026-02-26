@@ -13,7 +13,8 @@ import RenameFileModal from '@/components/server/files/RenameFileModal';
 import Portal from '@/components/elements/Portal';
 import { Dialog } from '@/components/elements/dialog';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowsAlt, faFileArchive, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faArrowsAlt, faFileArchive, faTrash, faHistory } from '@fortawesome/free-solid-svg-icons';
+import restoreFiles from '@/api/server/files/restoreFiles';
 import { useTranslation } from 'react-i18next';
 
 const MassActionsBar = () => {
@@ -29,7 +30,9 @@ const MassActionsBar = () => {
     const directory = ServerContext.useStoreState((state) => state.files.directory);
 
     const selectedFiles = ServerContext.useStoreState((state) => state.files.selectedFiles);
+    const selectedTrashIds = ServerContext.useStoreState((state) => state.files.selectedTrashIds);
     const setSelectedFiles = ServerContext.useStoreActions((actions) => actions.files.setSelectedFiles);
+    const setSelectedTrashIds = ServerContext.useStoreActions((state) => state.files.setSelectedTrashIds);
 
     useEffect(() => {
         if (!loading) setLoadingMessage('');
@@ -53,7 +56,11 @@ const MassActionsBar = () => {
         clearFlashes('files');
         setLoadingMessage(t('files.massActions.deleting'));
 
-        deleteFiles(uuid, directory, selectedFiles)
+        deleteFiles(
+            uuid,
+            directory,
+            directory === '/.trash' ? selectedTrashIds.map((n) => n.toString()) : selectedFiles
+        )
             .then(() => {
                 mutate((files) => files.filter((f) => selectedFiles.indexOf(f.name) < 0), false);
                 setSelectedFiles([]);
@@ -62,6 +69,18 @@ const MassActionsBar = () => {
                 mutate();
                 clearAndAddHttpError({ key: 'files', error });
             })
+            .then(() => setLoading(false));
+    };
+
+    const onClickRestore = () => {
+        setLoading(true);
+        clearFlashes('files');
+        setLoadingMessage('Restoring files...');
+        restoreFiles(uuid, selectedTrashIds)
+            .then(() => mutate())
+            .then(() => setSelectedFiles([]))
+            .then(() => setSelectedTrashIds([]))
+            .catch((error) => clearAndAddHttpError({ key: 'files', error }))
             .then(() => setLoading(false));
     };
 
@@ -119,7 +138,21 @@ const MassActionsBar = () => {
                                     flexWrap: 'wrap',
                                     justifyContent: 'center'
                                 }}>
-                                    <Button 
+                                    {directory === '/.trash' && (
+                                        <Button
+                                            size={Options.Size.Compact}
+                                            variant={Options.Variant.Primary}
+                                            onClick={onClickRestore}
+                                            style={{
+                                                minWidth: '80px',
+                                                fontSize: '0.875rem'
+                                            }}
+                                        >
+                                            <FontAwesomeIcon icon={faHistory} className="mr-1" />
+                                            Restore
+                                        </Button>
+                                    )}
+                                    {directory !== '/.trash' && <Button 
                                         size={Options.Size.Compact}
                                         variant={Options.Variant.Primary}
                                         onClick={() => setShowMove(true)}
@@ -130,8 +163,8 @@ const MassActionsBar = () => {
                                     >
                                         <FontAwesomeIcon icon={faArrowsAlt} className="mr-1" />
                                         {t('files.massActions.move')}
-                                    </Button>
-                                    <Button 
+                                    </Button>}
+                                    {directory !== '/.trash' && <Button 
                                         size={Options.Size.Compact}
                                         variant={Options.Variant.Primary}
                                         onClick={onClickCompress}
@@ -142,7 +175,7 @@ const MassActionsBar = () => {
                                     >
                                         <FontAwesomeIcon icon={faFileArchive} className="mr-1" />
                                         {t('files.massActions.compress')}
-                                    </Button>
+                                    </Button>}
                                     <Button.Danger 
                                         size={Options.Size.Compact}
                                         variant={Options.Variant.Primary} 

@@ -285,11 +285,11 @@ const ConfigEditor: React.FC<Props> = ({ file }) => {
             >
                 {/* Title Bar */}
                 <div css={[tw`pl-3 pr-2 py-2 border-b`, { borderBottomColor: 'var(--theme-border)' }]}>
-                    <div css={tw`flex items-center justify-between w-full`}>
-                        <div>
-                            <div css={tw`flex items-center gap-2`}>
+                    <div css={tw`flex items-start justify-between w-full gap-2`}>
+                        <div css={tw`flex-1 min-w-0`}>
+                            <div css={tw`flex flex-col md:flex-row md:items-center gap-1 md:gap-2`}>
                                 <p
-                                    css={tw`text-sm uppercase`}
+                                    css={tw`text-sm uppercase flex-shrink-0`}
                                     style={{
                                         color: 'var(--theme-text-base)',
                                         fontFamily: "'Orbitron', sans-serif",
@@ -298,7 +298,7 @@ const ConfigEditor: React.FC<Props> = ({ file }) => {
                                     {file.name}
                                 </p>
                                 <p
-                                    css={tw`text-xs mt-0.5 normal-case`}
+                                    css={tw`text-xs normal-case truncate`}
                                     style={{ color: 'var(--theme-text-muted)', fontFamily: "'Electrolize', sans-serif" }}
                                 >
                                     /home/container/{file.path}
@@ -311,7 +311,7 @@ const ConfigEditor: React.FC<Props> = ({ file }) => {
                                 )}
                             </div>
                         </div>
-                        <div css={tw`flex items-center gap-2`}>
+                        <div css={tw`flex items-center gap-2 flex-shrink-0`}>
                             {/* Editor Mode Toggle */}
                             <div css={[tw`flex rounded overflow-hidden`, { backgroundColor: 'var(--theme-background-secondary)' }]}>
                                 <button

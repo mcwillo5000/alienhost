@@ -161,14 +161,14 @@ const SubdomainManager = () => {
                             {data.subdomains.map((sub) => (
                                 <div
                                     key={sub.id}
-                                    css={tw`flex items-center justify-between gap-4 px-4 py-3 rounded`}
+                                    css={tw`flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4 px-4 py-3 rounded`}
                                     style={{
                                         backgroundColor: 'var(--theme-background)',
                                         border: '1px solid var(--theme-border)',
                                     }}
                                 >
                                     <div
-                                        css={tw`flex-shrink-0`}
+                                        css={tw`hidden md:flex flex-shrink-0`}
                                         style={{ color: 'var(--theme-primary)' }}
                                     >
                                         <FontAwesomeIcon icon={faGlobeAmericas} size="lg" />
@@ -195,14 +195,17 @@ const SubdomainManager = () => {
                                             </span>
                                         </div>
                                     </div>
-                                    <div css={tw`flex gap-2`}>
+                                    <div css={tw`flex gap-2 w-full md:w-auto`}>
                                         <Button.Text
-                                            css={tw`flex items-center gap-2`}
+                                            css={tw`flex flex-1 md:flex-none items-center justify-center gap-2`}
                                             onClick={() => openDialog('sync', sub.id)}
                                         >
                                             <FontAwesomeIcon icon={faSync} /> Sync
                                         </Button.Text>
-                                        <Button.Danger onClick={() => openDialog('delete', sub.id)}>
+                                        <Button.Danger
+                                            css={tw`flex flex-1 md:flex-none items-center justify-center`}
+                                            onClick={() => openDialog('delete', sub.id)}
+                                        >
                                             <FontAwesomeIcon icon={faTrash} />
                                         </Button.Danger>
                                     </div>

@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFileAlt, faFileArchive, faFileImport, faFolder } from '@fortawesome/free-solid-svg-icons';
+import { faFileAlt, faFileArchive, faFileImport, faFolder, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { encodePathSegments } from '@/helpers';
 import { differenceInHours, format, formatDistanceToNow } from 'date-fns';
 import React, { memo } from 'react';
@@ -39,6 +39,7 @@ const Clickable: React.FC<{ file: FileObject }> = memo(({ file, children }) => {
 const FileObjectRow = ({ file }: { file: FileObject }) => {
     const isSelected = ServerContext.useStoreState((state) => state.files.selectedFiles.indexOf(file.name) >= 0);
     const bleeps = useBleeps();
+    const isTrash = file.name === '.trash';
     
     const handleClick = () => {
         bleeps.click?.play();
@@ -97,10 +98,10 @@ const FileObjectRow = ({ file }: { file: FileObject }) => {
                         />
                     ) : (
                         <FontAwesomeIcon 
-                            icon={faFolder} 
+                            icon={isTrash ? faTrash : faFolder} 
                             className="text-sm" 
                             css={{ 
-                                color: 'var(--theme-primary)', 
+                                color: isTrash ? '#ef4444' : 'var(--theme-primary)', 
                                 transform: isSelected ? 'scale(1.05)' : 'scale(1)',
                                 transition: 'all 0.2s ease'
                             }} 
@@ -110,33 +111,39 @@ const FileObjectRow = ({ file }: { file: FileObject }) => {
                 <div css={tw`flex-1 min-w-0`}>
                     <Clickable file={file}>
                         <div className="font-medium truncate" style={{ color: 'var(--theme-text-base)' }}>
-                            {file.name}
+                            {isTrash ? 'Trash' : file.name}
                         </div>
-                        <div className="text-xs" style={{ color: 'var(--theme-text-muted)' }}>
-                            {file.isFile ? (
-                                <>
-                                    {Math.abs(differenceInHours(file.modifiedAt, new Date())) > 48
-                                        ? format(file.modifiedAt, 'M/d/yyyy, h:mm a')
-                                        : formatDistanceToNow(file.modifiedAt, { addSuffix: true })}
-                                </>
-                            ) : (
-                                <>
-                                    Directory • {Math.abs(differenceInHours(file.modifiedAt, new Date())) > 48
-                                        ? format(file.modifiedAt, 'M/d/yyyy, h:mm a')
-                                        : formatDistanceToNow(file.modifiedAt, { addSuffix: true })}
-                                    {' • Click to enter'}
-                                </>
-                            )}
-                        </div>
+                        {!isTrash && (
+                            <div className="text-xs" style={{ color: 'var(--theme-text-muted)' }}>
+                                {file.isFile ? (
+                                    <>
+                                        {Math.abs(differenceInHours(file.modifiedAt, new Date())) > 48
+                                            ? format(file.modifiedAt, 'M/d/yyyy, h:mm a')
+                                            : formatDistanceToNow(file.modifiedAt, { addSuffix: true })}
+                                    </>
+                                ) : (
+                                    <>
+                                        Directory • {Math.abs(differenceInHours(file.modifiedAt, new Date())) > 48
+                                            ? format(file.modifiedAt, 'M/d/yyyy, h:mm a')
+                                            : formatDistanceToNow(file.modifiedAt, { addSuffix: true })}
+                                        {' • Click to enter'}
+                                    </>
+                                )}
+                            </div>
+                        )}
                     </Clickable>
                 </div>
             </div>
-            <div className="hidden sm:flex items-center mr-3 flex-shrink-0 text-xs font-mono" style={{ color: 'var(--theme-text-muted)', minWidth: '5rem', justifyContent: 'flex-end' }}>
-                <FileObjectSize file={file} />
-            </div>
-            <div css={tw`ml-2 flex-shrink-0`}>
-                <FileDropdownMenu file={file} />
-            </div>
+            {!isTrash && (
+                <div className="flex items-center mr-3 flex-shrink-0 text-xs font-mono" style={{ color: 'var(--theme-text-muted)', minWidth: '5rem', justifyContent: 'flex-end' }}>
+                    <FileObjectSize file={file} />
+                </div>
+            )}
+            {!isTrash && (
+                <div css={tw`ml-2 flex-shrink-0`}>
+                    <FileDropdownMenu file={file} />
+                </div>
+            )}
         </div>
     );
 };

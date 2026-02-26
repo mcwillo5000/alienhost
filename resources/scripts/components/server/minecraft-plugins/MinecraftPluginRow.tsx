@@ -113,7 +113,7 @@ export default ({ provider, plugin, pluginLoader, minecraftVersion, className }:
                 </Select>
             </Dialog.Confirm>
             <div
-                css={tw`flex items-center gap-3 px-3 py-2.5 rounded transition-colors duration-150`}
+                css={tw`flex items-center gap-3 px-3 py-2.5 rounded transition-colors duration-150 min-w-0 overflow-hidden`}
                 style={{
                     backgroundColor: 'var(--theme-background-secondary)',
                     border: '1px solid var(--theme-border)',

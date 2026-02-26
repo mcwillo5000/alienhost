@@ -1,4 +1,5 @@
 import React, { createRef } from 'react';
+import ReactDOM from 'react-dom';
 import styled from 'styled-components/macro';
 import tw from 'twin.macro';
 import Fade from '@/components/elements/Fade';
@@ -126,25 +127,29 @@ class DropdownMenu extends React.PureComponent<Props, State> {
         return (
             <div>
                 {this.props.renderToggle(this.onClickHandler)}
-                <Fade timeout={150} in={this.state.visible} unmountOnExit>
-                    <div
-                        ref={this.menu}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            this.setState({ visible: false });
-                        }}
-                        className="fixed p-2 rounded-lg shadow-sm z-50"
-                        style={{ 
-                            width: '12rem',
-                            backgroundColor: 'var(--theme-background-secondary)',
-                            border: '1px solid var(--theme-border)',
-                            color: 'var(--theme-text-base)',
-                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
-                        }}
-                    >
-                        {this.props.children}
-                    </div>
-                </Fade>
+                {ReactDOM.createPortal(
+                    <Fade timeout={150} in={this.state.visible} unmountOnExit>
+                        <div
+                            ref={this.menu}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                this.setState({ visible: false });
+                            }}
+                            className="fixed p-2 rounded-lg shadow-sm"
+                            style={{ 
+                                width: '12rem',
+                                backgroundColor: 'var(--theme-background-secondary)',
+                                border: '1px solid var(--theme-border)',
+                                color: 'var(--theme-text-base)',
+                                boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                                zIndex: 9999,
+                            }}
+                        >
+                            {this.props.children}
+                        </div>
+                    </Fade>,
+                    document.body
+                )}
             </div>
         );
     }

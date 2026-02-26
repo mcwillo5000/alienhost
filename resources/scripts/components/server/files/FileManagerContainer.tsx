@@ -20,7 +20,7 @@ import MassActionsBar from '@/components/server/files/MassActionsBar';
 import UploadButton from '@/components/server/files/UploadButton';
 import ServerContentBlock from '@/components/elements/ServerContentBlock';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faServer } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faServer, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { useStoreActions } from '@/state/hooks';
 import ErrorBoundary from '@/components/elements/ErrorBoundary';
 import { FileActionCheckbox } from '@/components/server/files/SelectFileCheckbox';
@@ -136,7 +136,13 @@ const ArwesFrame: React.FC<{
 const sortFiles = (files: FileObject[]): FileObject[] => {
     const sortedFiles: FileObject[] = files
         .sort((a, b) => a.name.localeCompare(b.name))
-        .sort((a, b) => (a.isFile === b.isFile ? 0 : a.isFile ? 1 : -1));
+        .sort((a, b) => (a.isFile === b.isFile ? 0 : a.isFile ? 1 : -1))
+        .sort((a, b) => {
+            // Always put .trash on top
+            if (a.name === '.trash') return -1;
+            if (b.name === '.trash') return 1;
+            return 0;
+        });
     return sortedFiles.filter((file, index) => index === 0 || file.name !== sortedFiles[index - 1].name);
 };
 
@@ -384,6 +390,7 @@ export default () => {
     const setDirectory = ServerContext.useStoreActions((actions) => actions.files.setDirectory);
 
     const setSelectedFiles = ServerContext.useStoreActions((actions) => actions.files.setSelectedFiles);
+    const setSelectedTrashIds = ServerContext.useStoreActions((actions) => actions.files.setSelectedTrashIds);
     const selectedFilesLength = ServerContext.useStoreState((state) => state.files.selectedFiles.length);
     const [ amount, setAmount ] = useState(250); 
 
@@ -399,6 +406,7 @@ export default () => {
     useEffect(() => {
         clearFlashes('files');
         setSelectedFiles([]);
+        setSelectedTrashIds([]);
         setDirectory(hashToPath(hash));
     }, [hash]);
 
@@ -407,7 +415,14 @@ export default () => {
     }, [directory]);
 
     const onSelectAllClick = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedFiles(e.currentTarget.checked ? files?.map((file) => file.name) || [] : []);
+        setSelectedFiles(
+            e.currentTarget.checked
+                ? files?.filter((file) => file.name !== '.trash').map((file) => file.name) || []
+                : []
+        );
+        setSelectedTrashIds(
+            e.currentTarget.checked ? files?.filter((file) => file.isTrash).map((file) => file.trashId!) || [] : []
+        );
     };
 
     if (error) {
@@ -473,6 +488,15 @@ export default () => {
                                     <FileManagerStatus />
                                     <NewDirectoryButton />
                                     <UploadButton />
+                                    <NavLink to={`/server/${id}/files#/.trash`}>
+                                        <Button
+                                            size={Options.Size.Compact}
+                                            variant={Options.Variant.Primary}
+                                        >
+                                            <FontAwesomeIcon icon={faTrash} className="mr-1" />
+                                            Trash
+                                        </Button>
+                                    </NavLink>
                                     <NavLink to={`/server/${id}/files/new${window.location.hash}`}>
                                         <Button
                                             size={Options.Size.Compact}

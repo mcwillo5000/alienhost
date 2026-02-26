@@ -247,7 +247,7 @@ const PlayersList: React.FC<Props> = ({
                                 </div>
                             )}
                         </div>
-                        {playerItem.uuid && <p style={{ fontSize: '0.7rem', color: 'var(--theme-text-muted)', fontFamily: 'monospace', margin: 0 }}>{playerItem.uuid}</p>}
+                        {playerItem.uuid && <p style={{ fontSize: '0.7rem', color: 'var(--theme-text-muted)', fontFamily: 'monospace', margin: 0, wordBreak: 'break-all', overflow: 'hidden', textOverflow: 'ellipsis' }}>{playerItem.uuid}</p>}
                     </div>
                     {status && <span style={getStatusBadgeStyle(status)}>{status}</span>}
                 </div>
@@ -257,7 +257,31 @@ const PlayersList: React.FC<Props> = ({
     return (
         <FuturisticContentBox title='Players'>
             {/* Stats */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+            <style>{`
+                .player-list-stats-grid {
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    gap: 1rem;
+                    margin-bottom: 1rem;
+                }
+                @media (min-width: 640px) {
+                    .player-list-stats-grid {
+                        grid-template-columns: 1fr 1fr;
+                    }
+                }
+                .player-list-categories-grid {
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    gap: 0.75rem;
+                    margin-bottom: 1rem;
+                }
+                @media (min-width: 640px) {
+                    .player-list-categories-grid {
+                        grid-template-columns: 1fr 1fr;
+                    }
+                }
+            `}</style>
+            <div className="player-list-stats-grid">
                 <Stat label='Players' value={`${players?.online?.length || 0} / ${players?.max || 'N/A'}`}>
                     <FontAwesomeIcon
                         icon={faCircle}
@@ -272,7 +296,7 @@ const PlayersList: React.FC<Props> = ({
             </div>
 
             {/* Category Filters */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
+            <div className="player-list-categories-grid">
                 {categories.map((category) => (
                     <button
                         key={category.id}
