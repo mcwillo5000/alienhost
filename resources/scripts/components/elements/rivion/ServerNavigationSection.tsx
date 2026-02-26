@@ -32,6 +32,7 @@ interface NavItem {
     path: string;
     icon: any;
     permission: string | null;
+    pageKey?: string;            // matches PHP $availableServerSections key
     exact?: boolean;
     allowedEggs?: number[];      
     hiddenForEggs?: number[];
@@ -43,9 +44,19 @@ interface NavSection {
     items: NavItem[];
 }
 
-const renderNavItems = (items: NavItem[], serverId: string, eggId: number, nestId: number) => {
+const renderNavItems = (items: NavItem[], serverId: string, eggId: number, nestId: number, permissions: string[]) => {
+    // Role users have 'role.server_access' injected into their permissions by GetUserPermissionsService.
+    // For role users with page restrictions, only show items whose pageKey is in 'page.{key}' permissions.
+    const isRoleUser = permissions.includes('role.server_access');
+
     return items
         .filter((item) => {
+            // Role-user page visibility filter (runs before egg/nest filter).
+            if (isRoleUser && item.pageKey) {
+                if (!permissions.includes(`page.${item.pageKey}`)) {
+                    return false;
+                }
+            }
             if (item.allowedEggs && item.allowedEggs.length > 0) {
                 return item.allowedEggs.includes(eggId);
             }
@@ -83,6 +94,7 @@ const renderNavItems = (items: NavItem[], serverId: string, eggId: number, nestI
 export default () => {
     const { t } = useTranslation();
     const server = ServerContext.useStoreState((state) => state.server.data);
+    const permissions = ServerContext.useStoreState((state) => state.server.permissions) as string[];
     const rootAdmin = useStoreState((state: ApplicationStore) => state.user.data!.rootAdmin);
     
     if (!server) return null;
@@ -96,49 +108,49 @@ export default () => {
         {
             title: t('sidebar.overview', 'Overview'),
             items: [
-                { name: t('sidebar.serverInfo'), path: '/', icon: faInfoCircle, permission: null, exact: true },
-                { name: t('sidebar.console'), path: '/console', icon: faTerminal, permission: null, exact: true },
+                { name: t('sidebar.serverInfo'), path: '/', icon: faInfoCircle, permission: null, pageKey: 'serverinfo', exact: true },
+                { name: t('sidebar.console'), path: '/console', icon: faTerminal, permission: null, pageKey: 'console', exact: true },
             ],
         },
         {
             title: t('sidebar.configuration', 'Configuration'),
             items: [
-                { name: t('sidebar.schedules'), path: '/schedules', icon: faClock, permission: 'schedule.*' },
-                { name: t('sidebar.network'), path: '/network', icon: faNetworkWired, permission: 'allocation.*' },
-                { name: t('sidebar.startup'), path: '/startup', icon: faRocket, permission: 'startup.*' },
-                { name: t('sidebar.settings'), path: '/settings', icon: faCog, permission: 'settings.*' },
-                { name: t('sidebar.subdomain', 'Subdomain'), path: '/subdomain', icon: faNetworkWired, permission: null },
+                { name: t('sidebar.schedules'), path: '/schedules', icon: faClock, permission: 'schedule.*', pageKey: 'schedules' },
+                { name: t('sidebar.network'), path: '/network', icon: faNetworkWired, permission: 'allocation.*', pageKey: 'network' },
+                { name: t('sidebar.startup'), path: '/startup', icon: faRocket, permission: 'startup.*', pageKey: 'startup' },
+                { name: t('sidebar.settings'), path: '/settings', icon: faCog, permission: 'settings.*', pageKey: 'settings' },
+                { name: t('sidebar.subdomain', 'Subdomain'), path: '/subdomain', icon: faNetworkWired, permission: null, pageKey: 'subdomain' },
             ],
         },
         {
             title: t('sidebar.management', 'Management'),
             items: [
-                { name: t('sidebar.fileManager'), path: '/files', icon: faFolder, permission: 'file.*' },
-                { name: t('sidebar.databases'), path: '/databases', icon: faDatabase, permission: 'database.*' },
-                { name: t('sidebar.backups'), path: '/backups', icon: faLayerGroup, permission: 'backup.*' },
-                { name: t('sidebar.minecraftPlugins', 'Plugins'), path: '/minecraft-plugins', icon: faPuzzlePiece, permission: 'file.*', allowedNests: [1] },
-                { name: t('sidebar.mods', 'Mods'), path: '/mods', icon: faBox, permission: 'file.*', allowedNests: [1] },
-                { name: t('sidebar.modpacks', 'Modpacks'), path: '/modpacks', icon: faCubes, permission: 'file.*', allowedNests: [1] },
-                { name: t('sidebar.playerManager', 'Player Manager'), path: '/minecraft/player-manager', icon: faGamepad, permission: null, allowedNests: [1] },
-                { name: t('sidebar.gameConfig', 'Game Config'), path: '/game-config', icon: faLayerGroup, permission: null },
-                { name: t('sidebar.hytaleModsManagement', 'Hytale Mods'), path: '/hytale/mods', icon: faBox, permission: 'file.*', allowedNests: [5] },
-                { name: t('sidebar.hytaleWorlds', 'Hytale Worlds'), path: '/hytale/worlds', icon: faGlobe, permission: 'file.*', allowedNests: [5] },
-                { name: t('sidebar.hytalePrefabs', 'Hytale Prefabs'), path: '/hytale/prefabs', icon: faLayerGroup, permission: 'file.*', allowedNests: [5] },
-                { name: t('sidebar.hytaleGameSettings', 'Hytale Game Settings'), path: '/hytale/game-settings', icon: faTools, permission: 'file.*', allowedNests: [5] },
-                { name: t('sidebar.hytalePlayers', 'Hytale Players'), path: '/hytale/players', icon: faUsers, permission: null, allowedNests: [5] },
+                { name: t('sidebar.fileManager'), path: '/files', icon: faFolder, permission: 'file.*', pageKey: 'files' },
+                { name: t('sidebar.databases'), path: '/databases', icon: faDatabase, permission: 'database.*', pageKey: 'databases' },
+                { name: t('sidebar.backups'), path: '/backups', icon: faLayerGroup, permission: 'backup.*', pageKey: 'backups' },
+                { name: t('sidebar.minecraftPlugins', 'Plugins'), path: '/minecraft-plugins', icon: faPuzzlePiece, permission: 'file.*', pageKey: 'minecraft-plugins', allowedNests: [1] },
+                { name: t('sidebar.mods', 'Mods'), path: '/mods', icon: faBox, permission: 'file.*', pageKey: 'mods', allowedNests: [1] },
+                { name: t('sidebar.modpacks', 'Modpacks'), path: '/modpacks', icon: faCubes, permission: 'file.*', pageKey: 'modpacks', allowedNests: [1] },
+                { name: t('sidebar.playerManager', 'Player Manager'), path: '/minecraft/player-manager', icon: faGamepad, permission: null, pageKey: 'player-manager', allowedNests: [1] },
+                { name: t('sidebar.gameConfig', 'Game Config'), path: '/game-config', icon: faLayerGroup, permission: null, pageKey: 'game-config' },
+                { name: t('sidebar.hytaleModsManagement', 'Hytale Mods'), path: '/hytale/mods', icon: faBox, permission: 'file.*', pageKey: 'hytale-mods', allowedNests: [5] },
+                { name: t('sidebar.hytaleWorlds', 'Hytale Worlds'), path: '/hytale/worlds', icon: faGlobe, permission: 'file.*', pageKey: 'hytale-worlds', allowedNests: [5] },
+                { name: t('sidebar.hytalePrefabs', 'Hytale Prefabs'), path: '/hytale/prefabs', icon: faLayerGroup, permission: 'file.*', pageKey: 'hytale-prefabs', allowedNests: [5] },
+                { name: t('sidebar.hytaleGameSettings', 'Hytale Game Settings'), path: '/hytale/game-settings', icon: faTools, permission: 'file.*', pageKey: 'hytale-game-settings', allowedNests: [5] },
+                { name: t('sidebar.hytalePlayers', 'Hytale Players'), path: '/hytale/players', icon: faUsers, permission: null, pageKey: 'hytale-players', allowedNests: [5] },
             ],
         },
         {
             title: t('sidebar.accessAndLogs', 'Access & Logs'),
             items: [
-                { name: t('sidebar.users'), path: '/users', icon: faUsers, permission: 'user.*' },
-                { name: t('sidebar.activity'), path: '/activity', icon: faHistory, permission: 'activity.*' },
+                { name: t('sidebar.users'), path: '/users', icon: faUsers, permission: 'user.*', pageKey: 'users' },
+                { name: t('sidebar.activity'), path: '/activity', icon: faHistory, permission: 'activity.*', pageKey: 'activity' },
             ],
         },
         {
             title: t('sidebar.utils', 'Utils'),
             items: [
-                { name: t('sidebar.importer', 'Importer'), path: '/importer', icon: faWrench, permission: null },
+                { name: t('sidebar.importer', 'Importer'), path: '/importer', icon: faWrench, permission: null, pageKey: 'importer' },
             ],
         },
     ];
@@ -151,7 +163,7 @@ export default () => {
                         <h3 className="rivion-nav-section-title">{section.title}</h3>
                     </div>
                     <div className="rivion-nav-list">
-                        {renderNavItems(section.items, serverId, eggId, nestId)}
+                        {renderNavItems(section.items, serverId, eggId, nestId, permissions)}
                     </div>
                 </div>
             ))}

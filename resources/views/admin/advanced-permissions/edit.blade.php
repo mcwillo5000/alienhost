@@ -16,16 +16,16 @@
 @section('content')
     <div class="row">
 
-        {{-- Left: Role Details + Permissions --}}
+
         <div class="col-md-7">
 
-            {{-- Single form: Role Details + Admin Area Access + Server Group Filter --}}
+
             <form id="role-form"
                   action="{{ route('admin.advanced-permissions.update', $role->id) }}" method="POST">
                 {!! csrf_field() !!}
                 {!! method_field('PATCH') !!}
 
-                {{-- Role Details --}}
+
                 <div class="box box-primary">
                     <div class="box-header with-border">
                         <h3 class="box-title">Role Details</h3>
@@ -57,7 +57,7 @@
                     </div>
                 </div>
 
-                {{-- Admin Area Access --}}
+
                 <div class="box box-info">
                     <div class="box-header with-border">
                         <h3 class="box-title">Admin Area Access</h3>
@@ -86,11 +86,50 @@
                     </div>
                 </div>
 
-                {{-- Server Group Filter — only visible when Server Access permission is checked --}}
+
+                <div class="box box-success" id="user-area-access-box"
+                     style="{{ in_array('special.server_access', $role->admin_routes ?? []) ? '' : 'display:none' }}">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">User Area Access</h3>
+                        <small class="text-muted" style="margin-left:8px">
+                            All the permissions are given by default. To restrict access to specific pages, select only the ones this role should be allowed to access.
+                        </small>
+                    </div>
+                    <div class="box-body">
+                        @foreach ($serverSections as $sectionName => $pages)
+                            <h5 class="text-uppercase" style="color:#aaa;font-size:11px;letter-spacing:1px;margin-top:12px;margin-bottom:6px">
+                                {{ $sectionName }}
+                            </h5>
+                            <div class="row">
+                                @foreach ($pages as $pageKey => $pageData)
+                                    @php $cbId = 'sp_' . str_replace(['.', '-'], '_', $pageKey); @endphp
+                                    <div class="col-sm-6" style="margin-bottom:6px">
+                                        <div class="checkbox checkbox-success" style="margin:2px 0">
+                                            <input type="checkbox"
+                                                   id="{{ $cbId }}"
+                                                   name="server_permissions[]"
+                                                   value="{{ $pageKey }}"
+                                                   {{ in_array($pageKey, $role->server_permissions ?? []) ? 'checked' : '' }}>
+                                            <label for="{{ $cbId }}">
+                                                <strong>{{ $pageData['label'] }}</strong>
+                                                @if (!empty($pageData['description']))
+                                                    <br><small class="text-muted">{{ $pageData['description'] }}</small>
+                                                @endif
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <hr style="margin:8px 0">
+                        @endforeach
+                    </div>
+                </div>
+
+
                 <div class="box box-warning" id="server-group-box"
                      style="{{ in_array('special.server_access', $role->admin_routes ?? []) ? '' : 'display:none' }}">
                     <div class="box-header with-border">
-                        <h3 class="box-title"><i class="fa fa-filter"></i> Server Group Filter</h3>
+                        <h3 class="box-title">Server Group Filter</h3>
                         <small class="text-muted" style="margin-left:8px">
                             Optionally restrict which servers this role can access via Server Access.
                         </small>
@@ -137,7 +176,7 @@
                     </div>
                 </div>
 
-                {{-- Save / Cancel footer --}}
+
                 <div class="box box-default">
                     <div class="box-footer">
                         <a href="{{ route('admin.advanced-permissions') }}" class="btn btn-default btn-sm">
@@ -175,10 +214,10 @@
 
         </div>
 
-        {{-- Right: User Management --}}
+
         <div class="col-md-5">
 
-            {{-- Assigned Users --}}
+
             <div class="box box-default">
                 <div class="box-header with-border">
                     <h3 class="box-title">
@@ -221,7 +260,7 @@
                 </div>
             </div>
 
-            {{-- Add Users --}}
+
             <div class="box box-success">
                 <div class="box-header with-border">
                     <h3 class="box-title">Add User</h3>
@@ -258,7 +297,7 @@
         var $results = $('#search-results');
         var searchTimer;
 
-        /* ── Live Search ── */
+
         $input.on('keyup', function () {
             clearTimeout(searchTimer);
             var q = $(this).val().trim();
@@ -311,7 +350,7 @@
             $results.html(html);
         }
 
-        /* ── Assign User ── */
+
         $results.on('click', '.assign-btn', function () {
             var $btn = $(this);
             var userId = $btn.data('user-id');
@@ -322,7 +361,7 @@
                 data: { _token: csrfToken, user_id: userId },
                 success: function (resp) {
                     var u = resp.user;
-                    // Add to assigned users table
+
                     $('#no-users-row').remove();
                     var row = '<tr id="user-row-' + u.id + '">'
                             + '<td>' + escHtml(u.username) + '</td>'
@@ -331,7 +370,7 @@
                             + ' data-user-id="' + u.id + '" data-username="' + escHtml(u.username) + '">'
                             + '<i class="fa fa-times"></i></button></td></tr>';
                     $('#assigned-users-table tbody').append(row);
-                    // Update the search result row
+
                     $btn.text('Assigned').removeClass('btn-success').addClass('btn-default').prop('disabled', true);
                     $('#result-' + u.id).find('.role-badge').remove();
                     $('#result-' + u.id).prepend('<span class="label label-warning role-badge pull-right" style="margin-top:2px">Assigned</span>');
@@ -344,7 +383,7 @@
             });
         });
 
-        /* ── Remove User ── */
+
         $(document).on('click', '.remove-user-btn', function () {
             var $btn = $(this);
             var userId = $btn.data('user-id');
@@ -362,7 +401,7 @@
                             '<tr id="no-users-row"><td colspan="3" class="text-center text-muted small" style="padding:12px">No users assigned to this role yet.</td></tr>'
                         );
                     }
-                    // Re-enable in search results if visible
+
                     var $resultBtn = $('#result-' + userId + ' .assign-btn');
                     if ($resultBtn.length) {
                         $resultBtn.prop('disabled', false).text('Assign').removeClass('btn-default').addClass('btn-success');
@@ -386,19 +425,22 @@
     })();
     </script>
 
-    {{-- Server Group Filter: show/hide based on Server Access checkbox --}}
+
     <script>
     (function () {
         var $serverAccessCb  = $('#perm_special_server_access');
         var $groupBox        = $('#server-group-box');
+        var $userAreaBox     = $('#user-area-access-box');
         var $modeSelect      = $('#group-mode-select');
         var $groupWrap       = $('#group-selector-wrap');
 
         function syncGroupBox() {
             if ($serverAccessCb.is(':checked')) {
                 $groupBox.slideDown(150);
+                $userAreaBox.slideDown(150);
             } else {
                 $groupBox.slideUp(150);
+                $userAreaBox.slideUp(150);
             }
         }
 
@@ -413,7 +455,7 @@
         $serverAccessCb.on('change', syncGroupBox);
         $modeSelect.on('change', syncGroupSelector);
 
-        // Init on page load
+
         syncGroupBox();
         syncGroupSelector();
     })();

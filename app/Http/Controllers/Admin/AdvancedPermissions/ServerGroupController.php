@@ -17,9 +17,7 @@ class ServerGroupController extends Controller
     {
     }
 
-    /**
-     * List all server groups.
-     */
+
     public function index(): View
     {
         $groups = ServerGroup::withCount(['servers', 'roles'])->latest()->paginate(20);
@@ -27,17 +25,13 @@ class ServerGroupController extends Controller
         return view('admin.advanced-permissions.server-groups.index', compact('groups'));
     }
 
-    /**
-     * Show the create form.
-     */
+
     public function create(): View
     {
         return view('admin.advanced-permissions.server-groups.create');
     }
 
-    /**
-     * Store a new server group.
-     */
+
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
@@ -55,9 +49,6 @@ class ServerGroupController extends Controller
         return redirect()->route('admin.advanced-permissions.server-groups.edit', $group->id);
     }
 
-    /**
-     * Show the edit form for a server group (with server management).
-     */
     public function edit(int $id): View
     {
         $group   = ServerGroup::findOrFail($id);
@@ -67,9 +58,6 @@ class ServerGroupController extends Controller
         return view('admin.advanced-permissions.server-groups.edit', compact('group', 'servers', 'roles'));
     }
 
-    /**
-     * Update name / description of a server group.
-     */
     public function update(Request $request, int $id): RedirectResponse
     {
         $group = ServerGroup::findOrFail($id);
@@ -89,10 +77,7 @@ class ServerGroupController extends Controller
         return redirect()->route('admin.advanced-permissions.server-groups.edit', $group->id);
     }
 
-    /**
-     * Delete a server group. Roles that referenced it will have server_group_id set to null
-     * automatically via the foreign key onDelete('set null').
-     */
+
     public function destroy(int $id): RedirectResponse
     {
         $group = ServerGroup::findOrFail($id);
@@ -104,10 +89,7 @@ class ServerGroupController extends Controller
         return redirect()->route('admin.advanced-permissions.server-groups');
     }
 
-    /**
-     * AJAX: Search for servers to add to a group.
-     * Returns servers not yet in the group matching the search query.
-     */
+
     public function searchServers(Request $request, int $id): JsonResponse
     {
         $group = ServerGroup::findOrFail($id);
@@ -143,9 +125,7 @@ class ServerGroupController extends Controller
         return response()->json($servers);
     }
 
-    /**
-     * Add a server to this group.
-     */
+
     public function addServer(Request $request, int $id): JsonResponse
     {
         $group = ServerGroup::findOrFail($id);
@@ -156,7 +136,7 @@ class ServerGroupController extends Controller
 
         $serverId = (int) $request->input('server_id');
 
-        // Avoid duplicate pivot rows — only attach if not already present.
+
         if (!$group->servers()->where('server_id', $serverId)->exists()) {
             $group->servers()->attach($serverId);
         }
@@ -174,9 +154,7 @@ class ServerGroupController extends Controller
         ]);
     }
 
-    /**
-     * Remove a server from this group.
-     */
+
     public function removeServer(int $id, int $serverId): JsonResponse
     {
         $group = ServerGroup::findOrFail($id);

@@ -17,10 +17,10 @@
 @section('content')
     <div class="row">
 
-        {{-- Left: Group Details + Danger Zone --}}
+
         <div class="col-md-5">
 
-            {{-- Group Details --}}
+
             <form action="{{ route('admin.advanced-permissions.server-groups.update', $group->id) }}" method="POST">
                 {!! csrf_field() !!}
                 {!! method_field('PATCH') !!}
@@ -65,7 +65,7 @@
 
             </form>
 
-            {{-- Roles Using This Group --}}
+
             @if ($roles->count() > 0)
                 <div class="box box-info">
                     <div class="box-header with-border">
@@ -92,7 +92,7 @@
                 </div>
             @endif
 
-            {{-- Danger Zone --}}
+
             <div class="box box-danger">
                 <div class="box-header with-border">
                     <h3 class="box-title">Delete Group</h3>
@@ -118,10 +118,10 @@
 
         </div>
 
-        {{-- Right: Server Management --}}
+
         <div class="col-md-7">
 
-            {{-- Servers in this group --}}
+
             <div class="box box-default">
                 <div class="box-header with-border">
                     <h3 class="box-title">
@@ -166,7 +166,7 @@
                 </div>
             </div>
 
-            {{-- Search & Add Servers --}}
+
             <div class="box box-success">
                 <div class="box-header with-border">
                     <h3 class="box-title">Add Server</h3>
@@ -206,7 +206,7 @@
         var serverCount  = {{ $servers->count() }};
         var searchTimer;
 
-        /* ── Live search ── */
+
         $input.on('keyup', function () {
             clearTimeout(searchTimer);
             var q = $(this).val().trim();
@@ -243,7 +243,7 @@
             $results.html(html);
         }
 
-        /* ── Add server ── */
+
         $results.on('click', '.add-server-btn', function () {
             var $btn      = $(this);
             var serverId  = $btn.data('server-id');
@@ -286,7 +286,7 @@
             );
         }
 
-        /* ── Remove server ── */
+
         $tbody.on('click', '.remove-server-btn', function () {
             var $btn       = $(this);
             var serverId   = $btn.data('server-id');
@@ -310,7 +310,7 @@
             });
         });
 
-        /* ── HTML escape helper ── */
+
         function escHtml(str) {
             return String(str)
                 .replace(/&/g, '&amp;')

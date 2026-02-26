@@ -9,7 +9,7 @@ return new class () extends Migration {
     {
         Schema::create('server_group_servers', function (Blueprint $table) {
             $table->unsignedBigInteger('server_group_id');
-            $table->unsignedInteger('server_id');  // matches servers.id int(10) unsigned
+            $table->unsignedInteger('server_id');  
 
             $table->primary(['server_group_id', 'server_id']);
 

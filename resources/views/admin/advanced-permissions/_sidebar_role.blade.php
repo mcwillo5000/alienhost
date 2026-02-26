@@ -1,8 +1,4 @@
-{{--
-    Sidebar for users who have an Advanced Permissions role (not root_admin).
-    Included from layouts/admin.blade.php inside @else block.
-    Usage: @include('admin.advanced-permissions._sidebar_role', ['role' => $advancedRole])
---}}
+
 @php
     $hasAccess = function (string $prefix) use ($role): bool {
         if (!$role) return false;
@@ -10,19 +6,20 @@
     };
 @endphp
 
-{{-- Overview is always visible --}}
-<li class="{{ starts_with(Route::currentRouteName(), 'admin.index') ? 'active' : '' }}">
+
+
+<li class="header">BASIC ADMINISTRATION</li>
+
+<li class="{{ Route::currentRouteName() === 'admin.index' ? 'active' : '' }}">
     <a href="{{ route('admin.index') }}">
         <i class="fa fa-home"></i> <span>Overview</span>
     </a>
 </li>
 
-{{-- ── BASIC ADMINISTRATION ── --}}
-
 @if ($hasAccess('admin.settings'))
     <li class="{{ starts_with(Route::currentRouteName(), 'admin.settings') ? 'active' : '' }}">
         <a href="{{ route('admin.settings') }}">
-            <i class="fa fa-cog"></i> <span>Settings</span>
+            <i class="fa fa-wrench"></i> <span>Settings</span>
         </a>
     </li>
 @endif
@@ -30,7 +27,7 @@
 @if ($hasAccess('admin.api'))
     <li class="{{ starts_with(Route::currentRouteName(), 'admin.api') ? 'active' : '' }}">
         <a href="{{ route('admin.api.index') }}">
-            <i class="fa fa-key"></i> <span>Application API</span>
+            <i class="fa fa-gamepad"></i> <span>Application API</span>
         </a>
     </li>
 @endif
@@ -43,12 +40,16 @@
     </li>
 @endif
 
-{{-- ── MANAGEMENT ── --}}
+
+
+@if ($hasAccess('admin.databases') || $hasAccess('admin.locations') || $hasAccess('admin.nodes') || $hasAccess('admin.servers') || $hasAccess('admin.users'))
+    <li class="header">MANAGEMENT</li>
+@endif
 
 @if ($hasAccess('admin.databases'))
     <li class="{{ starts_with(Route::currentRouteName(), 'admin.databases') ? 'active' : '' }}">
         <a href="{{ route('admin.databases') }}">
-            <i class="fa fa-database"></i> <span>Database Hosts</span>
+            <i class="fa fa-database"></i> <span>Databases</span>
         </a>
     </li>
 @endif
@@ -56,7 +57,7 @@
 @if ($hasAccess('admin.locations'))
     <li class="{{ starts_with(Route::currentRouteName(), 'admin.locations') ? 'active' : '' }}">
         <a href="{{ route('admin.locations') }}">
-            <i class="fa fa-map-marker"></i> <span>Locations</span>
+            <i class="fa fa-globe"></i> <span>Locations</span>
         </a>
     </li>
 @endif
@@ -85,12 +86,16 @@
     </li>
 @endif
 
-{{-- ── SERVICE MANAGEMENT ── --}}
+
+
+@if ($hasAccess('admin.mounts') || $hasAccess('admin.nests'))
+    <li class="header">SERVICE MANAGEMENT</li>
+@endif
 
 @if ($hasAccess('admin.mounts'))
     <li class="{{ starts_with(Route::currentRouteName(), 'admin.mounts') ? 'active' : '' }}">
         <a href="{{ route('admin.mounts') }}">
-            <i class="fa fa-hdd-o"></i> <span>Mounts</span>
+            <i class="fa fa-magic"></i> <span>Mounts</span>
         </a>
     </li>
 @endif
@@ -103,27 +108,31 @@
     </li>
 @endif
 
-{{-- ── ADDONS ── --}}
+
+
+@if ($hasAccess('admin.veltastudios') || $hasAccess('admin.subdomain') || $hasAccess('admin.game-configs') || $hasAccess('admin.advertisements') || $hasAccess('admin.automatic-phpmyadmin') || $hasAccess('admin.extensions.serverimporter') || $hasAccess('admin.advanced-permissions'))
+    <li class="header">ADDONS</li>
+@endif
 
 @if ($hasAccess('admin.veltastudios'))
     <li class="{{ starts_with(Route::currentRouteName(), 'admin.veltastudios') ? 'active' : '' }}">
-        <a href="{{ route('admin.veltastudios.index') }}">
-            <i class="fa fa-plug"></i> <span>Velta Studios</span>
+        <a href="{{ route('admin.veltastudios.schedule-templates') }}">
+            <i class="fa fa-calendar"></i> <span>Schedule Template Manager</span>
         </a>
     </li>
 @endif
 
 @if ($hasAccess('admin.subdomain'))
     <li class="{{ starts_with(Route::currentRouteName(), 'admin.subdomain') ? 'active' : '' }}">
-        <a href="{{ route('admin.subdomain.index') }}">
-            <i class="fa fa-globe"></i> <span>Subdomain Manager</span>
+        <a href="{{ route('admin.subdomain') }}">
+            <i class="fa fa-globe"></i> <span>SubDomain Manager</span>
         </a>
     </li>
 @endif
 
 @if ($hasAccess('admin.game-configs'))
     <li class="{{ starts_with(Route::currentRouteName(), 'admin.game-configs') ? 'active' : '' }}">
-        <a href="{{ route('admin.game-configs.index') }}">
+        <a href="{{ route('admin.game-configs') }}">
             <i class="fa fa-gamepad"></i> <span>Game Configs</span>
         </a>
     </li>
@@ -139,8 +148,8 @@
 
 @if ($hasAccess('admin.automatic-phpmyadmin'))
     <li class="{{ starts_with(Route::currentRouteName(), 'admin.automatic-phpmyadmin') ? 'active' : '' }}">
-        <a href="{{ route('admin.automatic-phpmyadmin.index') }}">
-            <i class="fa fa-table"></i> <span>phpMyAdmin</span>
+        <a href="{{ route('admin.automatic-phpmyadmin') }}">
+            <i class="fa fa-database"></i> <span>Automatic phpMyAdmin</span>
         </a>
     </li>
 @endif

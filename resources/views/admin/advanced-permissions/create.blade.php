@@ -19,7 +19,7 @@
 
         <div class="row">
 
-            {{-- Left: Role Details --}}
+
             <div class="col-md-5">
                 <div class="box box-primary">
                     <div class="box-header with-border">
@@ -64,7 +64,7 @@
                 </div>
             </div>
 
-            {{-- Right: Permission Sections --}}
+
             <div class="col-md-7">
                 <div class="box box-info">
                     <div class="box-header with-border">
@@ -94,8 +94,72 @@
                         @endforeach
                     </div>
                 </div>
+
+
+                <div class="box box-success" id="user-area-access-box" style="display:none">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="fa fa-th-list"></i> User Area Access</h3>
+                        <small class="text-muted" style="margin-left:8px">
+                            Control which server pages role users can see. Leave <strong>all unchecked</strong> for full access (no restrictions).
+                        </small>
+                    </div>
+                    <div class="box-body">
+                        @foreach ($serverSections as $sectionName => $pages)
+                            <h5 class="text-uppercase" style="color:#aaa;font-size:11px;letter-spacing:1px;margin-top:12px;margin-bottom:6px">
+                                {{ $sectionName }}
+                            </h5>
+                            <div class="row">
+                                @foreach ($pages as $pageKey => $pageData)
+                                    @php $cbId = 'sp_' . str_replace(['.', '-'], '_', $pageKey); @endphp
+                                    <div class="col-sm-6" style="margin-bottom:6px">
+                                        <div class="checkbox checkbox-success" style="margin:2px 0">
+                                            <input type="checkbox"
+                                                   id="{{ $cbId }}"
+                                                   name="server_permissions[]"
+                                                   value="{{ $pageKey }}"
+                                                   {{ in_array($pageKey, old('server_permissions', [])) ? 'checked' : '' }}>
+                                            <label for="{{ $cbId }}">
+                                                <strong>{{ $pageData['label'] }}</strong>
+                                                @if (!empty($pageData['description']))
+                                                    <br><small class="text-muted">{{ $pageData['description'] }}</small>
+                                                @endif
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <hr style="margin:8px 0">
+                        @endforeach
+                        <p class="help-block" style="margin-top:8px;margin-bottom:0">
+                            <i class="fa fa-info-circle"></i>
+                            Unchecking all boxes grants access to <strong>all</strong> pages.
+                            Check at least one box to restrict which pages are visible.
+                        </p>
+                    </div>
+                </div>
             </div>
 
         </div>
     </form>
+
+@section('footer-scripts')
+    @parent
+    <script>
+    (function () {
+        var $serverAccessCb = $('#perm_special_server_access');
+        var $userAreaBox    = $('#user-area-access-box');
+
+        function syncUserAreaBox() {
+            if ($serverAccessCb.is(':checked')) {
+                $userAreaBox.slideDown(150);
+            } else {
+                $userAreaBox.slideUp(150);
+            }
+        }
+
+        $serverAccessCb.on('change', syncUserAreaBox);
+        syncUserAreaBox();
+    })();
+    </script>
+@endsection
 @endsection

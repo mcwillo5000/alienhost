@@ -18,9 +18,7 @@ class AdvancedPermissionsController extends Controller
     {
     }
 
-    /**
-     * Display the roles index page.
-     */
+
     public function index(): View
     {
         $roles = AdvancedRole::withCount('users')->latest()->paginate(20);
@@ -28,34 +26,35 @@ class AdvancedPermissionsController extends Controller
         return view('admin.advanced-permissions.index', compact('roles'));
     }
 
-    /**
-     * Display the create role form.
-     */
+
     public function create(): View
     {
         return view('admin.advanced-permissions.create', [
-            'sections'      => AdvancedRole::$availableSections,
-            'serverGroups'  => ServerGroup::orderBy('name')->get(['id', 'name']),
+            'sections'        => AdvancedRole::$availableSections,
+            'serverSections'  => AdvancedRole::$availableServerSections,
+            'serverGroups'    => ServerGroup::orderBy('name')->get(['id', 'name']),
         ]);
     }
 
-    /**
-     * Store a newly created role.
-     */
+
     public function store(Request $request): RedirectResponse
     {
+        $validPageKeys = implode(',', array_keys(AdvancedRole::getPagePermissionMap()));
+
         $request->validate([
-            'name'              => 'required|string|max:255',
-            'description'       => 'nullable|string|max:1000',
-            'admin_routes'      => 'nullable|array',
-            'admin_routes.*'    => 'string',
-            'server_group_id'   => 'nullable|integer|exists:server_groups,id',
-            'server_group_mode' => 'nullable|in:allow,deny',
+            'name'               => 'required|string|max:255',
+            'description'        => 'nullable|string|max:1000',
+            'admin_routes'       => 'nullable|array',
+            'admin_routes.*'     => 'string',
+            'server_group_id'    => 'nullable|integer|exists:server_groups,id',
+            'server_group_mode'  => 'nullable|in:allow,deny',
+            'server_permissions' => 'nullable|array',
+            'server_permissions.*' => 'string|in:' . $validPageKeys,
         ]);
 
         $adminRoutes = $request->input('admin_routes', []);
 
-        // Only store a group filter if Server Access is enabled.
+
         $groupId   = in_array('special.server_access', $adminRoutes)
             ? $request->input('server_group_id')
             : null;
@@ -63,12 +62,19 @@ class AdvancedPermissionsController extends Controller
             ? $request->input('server_group_mode')
             : null;
 
+
+        $serverPermissions = $request->input('server_permissions', []);
+        $serverPermissions = (is_array($serverPermissions) && count($serverPermissions) > 0)
+            ? $serverPermissions
+            : null;
+
         $role = AdvancedRole::create([
-            'name'              => $request->input('name'),
-            'description'       => $request->input('description'),
-            'admin_routes'      => $adminRoutes,
-            'server_group_id'   => $groupId,
-            'server_group_mode' => $groupMode,
+            'name'               => $request->input('name'),
+            'description'        => $request->input('description'),
+            'admin_routes'       => $adminRoutes,
+            'server_group_id'    => $groupId,
+            'server_group_mode'  => $groupMode,
+            'server_permissions' => $serverPermissions,
         ]);
 
         $this->alert->success('Role "' . $role->name . '" was created successfully.')->flash();
@@ -76,9 +82,7 @@ class AdvancedPermissionsController extends Controller
         return redirect()->route('admin.advanced-permissions.edit', $role->id);
     }
 
-    /**
-     * Display the edit role form.
-     */
+
     public function edit(int $id): View
     {
         $role          = AdvancedRole::findOrFail($id);
@@ -86,32 +90,35 @@ class AdvancedPermissionsController extends Controller
         $serverGroups  = ServerGroup::orderBy('name')->get(['id', 'name']);
 
         return view('admin.advanced-permissions.edit', [
-            'role'          => $role,
-            'sections'      => AdvancedRole::$availableSections,
-            'assignedUsers' => $assignedUsers,
-            'serverGroups'  => $serverGroups,
+            'role'           => $role,
+            'sections'       => AdvancedRole::$availableSections,
+            'serverSections' => AdvancedRole::$availableServerSections,
+            'assignedUsers'  => $assignedUsers,
+            'serverGroups'   => $serverGroups,
         ]);
     }
 
-    /**
-     * Update an existing role.
-     */
+
     public function update(Request $request, int $id): RedirectResponse
     {
         $role = AdvancedRole::findOrFail($id);
 
+        $validPageKeys = implode(',', array_keys(AdvancedRole::getPagePermissionMap()));
+
         $request->validate([
-            'name'              => 'required|string|max:255',
-            'description'       => 'nullable|string|max:1000',
-            'admin_routes'      => 'nullable|array',
-            'admin_routes.*'    => 'string',
-            'server_group_id'   => 'nullable|integer|exists:server_groups,id',
-            'server_group_mode' => 'nullable|in:allow,deny',
+            'name'               => 'required|string|max:255',
+            'description'        => 'nullable|string|max:1000',
+            'admin_routes'       => 'nullable|array',
+            'admin_routes.*'     => 'string',
+            'server_group_id'    => 'nullable|integer|exists:server_groups,id',
+            'server_group_mode'  => 'nullable|in:allow,deny',
+            'server_permissions' => 'nullable|array',
+            'server_permissions.*' => 'string|in:' . $validPageKeys,
         ]);
 
         $adminRoutes = $request->input('admin_routes', []);
 
-        // Only persist a group filter when Server Access is enabled.
+
         $groupId   = in_array('special.server_access', $adminRoutes)
             ? $request->input('server_group_id')
             : null;
@@ -119,12 +126,19 @@ class AdvancedPermissionsController extends Controller
             ? $request->input('server_group_mode')
             : null;
 
+
+        $serverPermissions = $request->input('server_permissions', []);
+        $serverPermissions = (is_array($serverPermissions) && count($serverPermissions) > 0)
+            ? $serverPermissions
+            : null;
+
         $role->update([
-            'name'              => $request->input('name'),
-            'description'       => $request->input('description'),
-            'admin_routes'      => $adminRoutes,
-            'server_group_id'   => $groupId,
-            'server_group_mode' => $groupMode,
+            'name'               => $request->input('name'),
+            'description'        => $request->input('description'),
+            'admin_routes'       => $adminRoutes,
+            'server_group_id'    => $groupId,
+            'server_group_mode'  => $groupMode,
+            'server_permissions' => $serverPermissions,
         ]);
 
         $this->alert->success('Role "' . $role->name . '" was updated successfully.')->flash();
@@ -132,15 +146,12 @@ class AdvancedPermissionsController extends Controller
         return redirect()->route('admin.advanced-permissions.edit', $role->id);
     }
 
-    /**
-     * Delete a role. Will unset adv_role_id on all assigned users first.
-     */
+
     public function destroy(int $id): RedirectResponse
     {
         $role = AdvancedRole::findOrFail($id);
 
-        // Detach all users before deleting (foreign key is set to nullOnDelete,
-        // but we do it explicitly so the flash message count is accurate).
+
         $userCount = $role->users()->count();
         User::where('adv_role_id', $role->id)->update(['adv_role_id' => null]);
 
@@ -151,10 +162,7 @@ class AdvancedPermissionsController extends Controller
         return redirect()->route('admin.advanced-permissions');
     }
 
-    /**
-     * Search users by username or email (AJAX).
-     * Returns JSON for the live-search in the edit view.
-     */
+
     public function searchUsers(Request $request): JsonResponse
     {
         $query  = trim($request->input('q', ''));
@@ -185,9 +193,7 @@ class AdvancedPermissionsController extends Controller
         return response()->json($users);
     }
 
-    /**
-     * Assign a user to a role.
-     */
+
     public function assignUser(Request $request, int $id): JsonResponse
     {
         $role = AdvancedRole::findOrFail($id);
@@ -198,7 +204,7 @@ class AdvancedPermissionsController extends Controller
 
         $user = User::findOrFail($request->input('user_id'));
 
-        // Prevent assigning root admins a role (they bypass everything anyway)
+
         if ($user->root_admin) {
             return response()->json(['message' => 'Root admins cannot be assigned a role — they already have full access.'], 422);
         }
@@ -217,9 +223,7 @@ class AdvancedPermissionsController extends Controller
         ]);
     }
 
-    /**
-     * Remove a user from a role (clears adv_role_id).
-     */
+
     public function removeUser(int $id, int $userId): JsonResponse
     {
         $role = AdvancedRole::findOrFail($id);

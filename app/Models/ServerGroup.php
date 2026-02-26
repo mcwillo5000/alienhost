@@ -26,33 +26,25 @@ class ServerGroup extends Model
         'description' => null,
     ];
 
-    /**
-     * All servers that are members of this group.
-     */
+
     public function servers(): BelongsToMany
     {
         return $this->belongsToMany(Server::class, 'server_group_servers', 'server_group_id', 'server_id');
     }
 
-    /**
-     * Roles that reference this server group.
-     */
+
     public function roles(): HasMany
     {
         return $this->hasMany(AdvancedRole::class, 'server_group_id');
     }
 
-    /**
-     * Returns the number of servers in this group.
-     */
+
     public function getServerCountAttribute(): int
     {
         return $this->servers()->count();
     }
 
-    /**
-     * Returns the number of roles using this group.
-     */
+
     public function getRoleCountAttribute(): int
     {
         return $this->roles()->count();

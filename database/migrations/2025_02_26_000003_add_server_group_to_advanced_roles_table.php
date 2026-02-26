@@ -12,7 +12,7 @@ return new class () extends Migration {
                   ->nullable()
                   ->after('admin_routes');
 
-            // 'allow' = only these servers, 'deny' = all except these servers
+
             $table->string('server_group_mode', 10)
                   ->nullable()
                   ->after('server_group_id');

@@ -12,8 +12,11 @@ abstract class AdminFormRequest extends FormRequest
     abstract public function rules(): array;
 
     /**
-     * Determine if the user is an admin and has permission to access this
-     * form controller in the first place.
+     * Determine if the user has permission to submit this admin form.
+     *
+     * Root admins always pass. Users with an advanced role also pass —
+     * route-level access is already enforced by AdminAuthenticate middleware
+     * before this method is ever reached.
      */
     public function authorize(): bool
     {
@@ -21,7 +24,15 @@ abstract class AdminFormRequest extends FormRequest
             return false;
         }
 
-        return (bool) $this->user()->root_admin;
+        if ($this->user()->root_admin) {
+            return true;
+        }
+
+        // Allow users who have been granted an advanced role.
+        // The AdminAuthenticate middleware has already confirmed that this
+        // specific route is permitted for their role, so we just need to
+        // confirm they hold a role at all.
+        return !is_null($this->user()->adv_role_id);
     }
 
     /**

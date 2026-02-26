@@ -9,11 +9,6 @@ use Pterodactyl\Models\ServerGroup;
 
 class GetUserPermissionsService
 {
-    /**
-     * Returns the server specific permissions that a user has. This checks
-     * if they are an admin, the server owner, have the "server_access" advanced
-     * role permission, or are a subuser for the server.
-     */
     public function handle(Server $server, User $user): array
     {
         if ($user->root_admin || $user->id === $server->owner_id) {
@@ -28,7 +23,7 @@ class GetUserPermissionsService
             return $permissions;
         }
 
-        // Check if the user has the "server_access" advanced role permission (with optional group filter).
+
         if ($user->adv_role_id) {
             $role = AdvancedRole::find($user->adv_role_id);
             if ($role && in_array('special.server_access', $role->admin_routes ?? [])) {
@@ -40,7 +35,34 @@ class GetUserPermissionsService
                     $hasAccess = $role->server_group_mode === 'allow' ? $inGroup : !$inGroup;
                 }
                 if ($hasAccess) {
-                    return ['*'];
+                    $serverPermissions = $role->server_permissions;
+
+
+                    if (empty($serverPermissions)) {
+                        return ['*'];
+                    }
+
+
+                    $perms = [
+
+                        'websocket.connect',
+                        'control.console',
+                        'control.start',
+                        'control.stop',
+                        'control.restart',
+                        'role.server_access',
+                    ];
+
+                    $pageMap = AdvancedRole::getPagePermissionMap();
+
+                    foreach ($serverPermissions as $pageKey) {
+                        foreach ($pageMap[$pageKey]['permissions'] ?? [] as $p) {
+                            $perms[] = $p;
+                        }
+                        $perms[] = 'page.' . $pageKey;
+                    }
+
+                    return array_values(array_unique($perms));
                 }
             }
         }

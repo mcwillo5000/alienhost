@@ -38,13 +38,23 @@ class AdminAuthenticate
         $currentRoute = $request->route()?->getName() ?? '';
 
         // Only the overview is always accessible to role users as a landing page.
-        if ($currentRoute === 'admin.index') {
+        if ($currentRoute === 'admin.index' || $request->is('admin')) {
             return $next($request);
         }
 
-        // Check if the current route's prefix matches any allowed route in the role.
+        // Check if the current route matches any allowed route in the role.
+        // Many write/mutating routes have auto-generated names (generated::*) so we
+        // check both the route name prefix AND the request URI prefix as a fallback.
         foreach ($role->admin_routes ?? [] as $prefix) {
+            // 1. Route name match (works for all properly named routes).
             if ($currentRoute === $prefix || str_starts_with($currentRoute, $prefix . '.')) {
+                return $next($request);
+            }
+
+            // 2. URI match fallback (handles generated:: route names on POST/PATCH/DELETE).
+            // Convert permission prefix admin.foo.bar -> admin/foo/bar for URI comparison.
+            $uriPrefix = str_replace('.', '/', $prefix);
+            if ($request->is($uriPrefix) || $request->is($uriPrefix . '/*')) {
                 return $next($request);
             }
         }
