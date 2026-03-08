@@ -11,22 +11,12 @@ import { useTranslation } from 'react-i18next';
 const ScheduleIconContainer = styled.div`
     height: 2.5rem;
     width: 2.5rem;
-    display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(var(--theme-primary-rgb), 0.1);
-    clip-path: polygon(0px 6px, 6px 0px, 100% 0px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0px 100%);
     position: relative;
-    box-shadow: 0 0 6px rgba(var(--theme-primary-rgb), 0.3);
-    
-    &::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border: 1px solid rgba(var(--theme-primary-rgb), 0.4);
-        clip-path: polygon(0px 6px, 6px 0px, 100% 0px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0px 100%);
-        pointer-events: none;
-    }
+    z-index: 0;
+    flex-shrink: 0;
+    clip-path: polygon(0px 6px, 6px 0px, 100% 0px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0px 100%);
 `;
 
 const ScheduleIcon = styled(FontAwesomeIcon)`
@@ -67,6 +57,28 @@ export default ({ schedule }: { schedule: Schedule }) => {
     return (
         <>
             <ScheduleIconContainer css={tw`hidden md:flex`}>
+                <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 40 40'
+                    preserveAspectRatio='none'
+                    aria-hidden='true'
+                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: -1, overflow: 'visible' }}
+                >
+                    <path
+                        d='M 0.5,6.5 L 6.5,0.5 L 39.5,0.5 L 39.5,33.5 L 33.5,39.5 L 0.5,39.5 Z'
+                        fill='rgba(var(--theme-primary-rgb), 0.1)'
+                        stroke='none'
+                    />
+                    <path
+                        d='M 0.5,6.5 L 6.5,0.5 L 39.5,0.5 L 39.5,33.5 L 33.5,39.5 L 0.5,39.5 Z'
+                        fill='none'
+                        stroke='rgba(var(--theme-primary-rgb), 0.4)'
+                        strokeWidth={1}
+                        strokeLinecap='square'
+                        strokeLinejoin='miter'
+                        vectorEffect='non-scaling-stroke'
+                    />
+                </svg>
                 <ScheduleIcon icon={faCalendarAlt} />
             </ScheduleIconContainer>
             <div css={tw`flex-1 md:ml-4`}>

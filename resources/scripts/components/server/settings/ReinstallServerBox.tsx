@@ -25,7 +25,7 @@ const reinstallOptions: ReinstallOption[] = [
     },
     {
         value: 'delete_files',
-        label: 'Delete current files and reinstall server',
+        label: 'Factory reset Server (Reset all files)',
         confirmMessage: 'ALL FILES on the server will be PERMANENTLY DELETED before reinstalling!'
     },
     {
@@ -119,7 +119,7 @@ export default () => {
                                 color: 'var(--theme-text-base)'
                             }}
                         >
-                            {reinstallOptions.map((option) => (
+                            {reinstallOptions.filter((option) => option.value !== 'factory_reset').map((option) => (
                                 <option key={option.value} value={option.value}>
                                     {option.label}
                                 </option>

@@ -136,14 +136,6 @@
                                 <i class="fa fa-th-large"></i> <span>Nests</span>
                             </a>
                         </li>
-                        <li class="header">AINX ADDONS</li>
-                        @foreach (app()->make(\Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdminLibrary::class)->extensions() as $extension)
-                            <li class="{{ !starts_with(Route::currentRouteName(), "admin.extensions.{$extension['identifier']}.index") ?: 'active' }}">
-                                <a href="/admin/extensions/{{ $extension['identifier'] }}">
-                                    <i class="fa fa-puzzle-piece"></i> <span>{{ $extension['name'] }}</span>
-                                </a>
-                            </li>
-                        @endforeach
                         <li class="header">ADDONS</li>
                         @foreach (app()->make(\Pterodactyl\BlueprintFramework\Libraries\ExtensionLibrary\Admin\BlueprintAdminLibrary::class)->extensions() as $extension)
                             <li class="{{ !starts_with(Route::currentRouteName(), "admin.extensions.{$extension['identifier']}.index") ?: 'active' }}">

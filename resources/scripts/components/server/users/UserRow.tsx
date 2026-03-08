@@ -17,22 +17,12 @@ const AvatarContainer = styled.div`
     overflow: hidden;
     clip-path: polygon(0px 6px, 6px 0px, 100% 0px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0px 100%);
     position: relative;
-    box-shadow: 0 0 8px rgba(var(--theme-primary-rgb), 0.3);
-    
-    &::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border: 1px solid var(--theme-border);
-        clip-path: polygon(0px 6px, 6px 0px, 100% 0px, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0px 100%);
-        pointer-events: none;
-        z-index: 1;
-    }
     
     img {
         width: 100%;
         height: 100%;
         object-fit: cover;
+        display: block;
     }
 `;
 
@@ -122,6 +112,23 @@ export default ({ subuser }: Props) => {
             
             <AvatarContainer css={tw`hidden md:block`}>
                 <img src={`${subuser.image}?s=400`} alt={subuser.email} />
+                <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 44 44'
+                    preserveAspectRatio='none'
+                    aria-hidden='true'
+                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 2, overflow: 'visible' }}
+                >
+                    <path
+                        d='M 0.5,6.5 L 6.5,0.5 L 43.5,0.5 L 43.5,37.5 L 37.5,43.5 L 0.5,43.5 Z'
+                        fill='none'
+                        stroke='var(--theme-border)'
+                        strokeWidth={2}
+                        strokeLinecap='square'
+                        strokeLinejoin='miter'
+                        vectorEffect='non-scaling-stroke'
+                    />
+                </svg>
             </AvatarContainer>
             
             <div css={tw`ml-4 flex-1 overflow-hidden`}>
