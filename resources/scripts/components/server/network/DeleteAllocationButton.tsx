@@ -48,14 +48,13 @@ const DeleteAllocationButton = ({ allocation }: Props) => {
             >
                 {t('network.deleteAllocation.description')}
             </Dialog.Confirm>
-            <Button
-                variant={Options.Variant.Secondary}
+            <Button.Danger
                 size={Options.Size.Small}
                 onClick={() => setConfirm(true)}
-                css={tw`!bg-red-600 hover:!bg-red-700 !border-red-600 hover:!border-red-700 !text-white flex items-center justify-center w-8 h-8 p-0`}
+                css={tw`flex items-center justify-center w-8 h-8 p-0`}
             >
                 <FontAwesomeIcon icon={faTrashAlt} css={tw`w-3 h-3`} />
-            </Button>
+            </Button.Danger>
         </>
     );
 };

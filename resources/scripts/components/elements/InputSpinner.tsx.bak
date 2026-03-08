@@ -4,6 +4,12 @@ import Fade from '@/components/elements/Fade';
 import tw from 'twin.macro';
 import styled, { css } from 'styled-components/macro';
 
+/**
+ * InputBorderWrapper — exported from here for convenience.
+ * @see `Input.tsx` for the canonical definition.
+ */
+export { InputBorderWrapper } from '@/components/elements/Input';
+
 // When the spinner is visible, hide the Select dropdown arrow by targeting
 // the underlying <select> HTML element (works regardless of styled-component wrapping).
 const Container = styled.div<{ visible?: boolean }>`

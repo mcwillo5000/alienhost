@@ -233,10 +233,10 @@ export default ({ onBack }: Props) => {
                     />
                 </FilterGroup>
                 <FilterGroup>
-                    <ActionButton onClick={onBack}>
-                        <FontAwesomeIcon icon={faArrowLeft} />
+                    <Button className='w-full h-11' onClick={onBack}>
+                        <FontAwesomeIcon icon={faArrowLeft} css={tw`mr-1`} />
                         Browse
-                    </ActionButton>
+                    </Button>
                 </FilterGroup>
             </FilterContainer>
 

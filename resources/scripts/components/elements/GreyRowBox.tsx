@@ -12,6 +12,7 @@ const RowWrapper = styled.div<{ $hoverable?: boolean }>`
     color: var(--theme-text-base);
     transition: all 0.15s ease-in-out;
     margin-bottom: 0.75rem;
+    clip-path: polygon(10px 0px, 100% 0px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0px 100%, 0px 10px);
     /* Note: Removed filter from here as it creates a containing block for fixed elements */
 
     &:last-child {
@@ -59,19 +60,19 @@ interface GreyRowBoxProps {
     children: React.ReactNode;
 }
 
-const GreyRowBox: React.FC<GreyRowBoxProps> = ({ 
-    $hoverable = true, 
-    as, 
-    href, 
-    onClick, 
-    className, 
+const GreyRowBox: React.FC<GreyRowBoxProps> = ({
+    $hoverable = true,
+    as,
+    href,
+    onClick,
+    className,
     children,
-    ...props 
+    ...props
 }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [dimensions, setDimensions] = useState({ width: 300, height: 60 });
     const bleeps = useBleeps();
-    
+
     const handleClick = (e: React.MouseEvent) => {
         bleeps.click?.play();
         onClick?.(e);
@@ -89,7 +90,7 @@ const GreyRowBox: React.FC<GreyRowBoxProps> = ({
         };
 
         updateDimensions();
-        
+
         const timeoutId = setTimeout(updateDimensions, 50);
 
         const resizeObserver = new ResizeObserver(updateDimensions);
@@ -122,7 +123,7 @@ const GreyRowBox: React.FC<GreyRowBoxProps> = ({
     const componentProps = as === 'a' ? { href } : {};
 
     return (
-        <RowWrapper 
+        <RowWrapper
             as={Component}
             ref={containerRef}
             $hoverable={$hoverable}
@@ -131,7 +132,7 @@ const GreyRowBox: React.FC<GreyRowBoxProps> = ({
             {...componentProps}
             {...props}
         >
-            <FrameSVG 
+            <FrameSVG
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox={`0 0 ${width} ${height}`}
                 preserveAspectRatio="none"
@@ -154,7 +155,7 @@ const GreyRowBox: React.FC<GreyRowBoxProps> = ({
                     strokeLinecap="square"
                     strokeLinejoin="miter"
                     vectorEffect="non-scaling-stroke"
-                    style={{ 
+                    style={{
                         transition: 'stroke 0.15s ease',
                         filter: 'drop-shadow(0 0 2px var(--theme-border))'
                     }}

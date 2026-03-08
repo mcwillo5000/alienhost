@@ -19,6 +19,7 @@ import styled from 'styled-components/macro';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDownload, faClock, faThumbsUp, faBars, faPuzzlePiece, faGamepad, faSort, faExclamationCircle, faCheckCircle, faBoxOpen } from '@fortawesome/free-solid-svg-icons';
 import getInstalledMods from '@/api/server/mods/getInstalledMods';
+import { Button } from '@/components/elements/button/index';
 
 const FilterContainer = styled.div`
     ${tw`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 mb-4`};
@@ -490,10 +491,10 @@ export default () => {
                         />
                     </FilterGroup>
                     <FilterGroup>
-                        <ActionButton onClick={() => setShowInstalled(true)}>
-                            <FontAwesomeIcon icon={faBoxOpen} />
+                        <Button className='w-full h-11' onClick={() => setShowInstalled(true)}>
+                            <FontAwesomeIcon icon={faBoxOpen} css={tw`mr-1`} />
                             Installed{installedCount > 0 ? ` (${installedCount})` : ''}
-                        </ActionButton>
+                        </Button>
                     </FilterGroup>
                 </FilterContainer>
             ) : (
@@ -584,10 +585,10 @@ export default () => {
                         />
                     </FilterGroup>
                     <FilterGroup>
-                        <ActionButton onClick={() => setShowInstalled(true)}>
-                            <FontAwesomeIcon icon={faBoxOpen} />
+                        <Button className='w-full h-11' onClick={() => setShowInstalled(true)}>
+                            <FontAwesomeIcon icon={faBoxOpen} css={tw`mr-1`} />
                             Installed{installedCount > 0 ? ` (${installedCount})` : ''}
-                        </ActionButton>
+                        </Button>
                     </FilterGroup>
                 </FilterContainer>
             )}

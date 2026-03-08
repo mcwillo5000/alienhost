@@ -1,4 +1,5 @@
-import styled, { css } from 'styled-components/macro';
+import React, { forwardRef, useRef, useState, useEffect } from 'react';
+import styled from 'styled-components/macro';
 import tw from 'twin.macro';
 
 export interface Props {
@@ -6,23 +7,27 @@ export interface Props {
     hasError?: boolean;
 }
 
-const light = css<Props>`
-    background-color: var(--theme-background);
-    border-color: var(--theme-border);
-    color: var(--theme-text-base);
-    
-    &:focus {
-        border-color: var(--theme-primary);
-    }
+const CORNER = 8;
 
-    &:disabled {
-        background-color: var(--theme-background-secondary);
-        border-color: var(--theme-border);
-        opacity: 0.6;
-    }
+// ─── Shared SVG wrapper pieces (same pattern as FuturisticInput) ──────────────
+const FieldWrapper = styled.div`
+    position: relative;
+    width: 100%;
+    overflow: hidden;
 `;
 
-const checkboxStyle = css<Props>`
+const FieldSVG = styled.svg`
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    overflow: visible;
+`;
+
+// ─── Checkbox / radio (no SVG needed, keep native border) ────────────────────
+const StyledCheckbox = styled.input<Props>`
     ${tw`bg-neutral-500 cursor-pointer appearance-none inline-block align-middle select-none flex-shrink-0 w-4 h-4 text-primary-400 border border-neutral-300 rounded-sm`};
     color-adjust: exact;
     background-origin: border-box;
@@ -39,67 +44,245 @@ const checkboxStyle = css<Props>`
         ${tw`outline-none border-primary-300`};
         box-shadow: 0 0 0 1px rgba(9, 103, 210, 0.25);
     }
+
+    &[type='radio'] {
+        ${tw`rounded-full`};
+    }
 `;
 
-const inputStyle = css<Props>`
-    // Reset to normal styling.
-    resize: none;
-    ${tw`appearance-none outline-none w-full min-w-0`};
-    ${tw`text-sm transition-all duration-150`};
-    padding: 0.5rem 0.75rem;
-    background-color: var(--theme-background);
-    border: 1px solid var(--theme-border);
-    color: var(--theme-text-base);
-    border-radius: 0;
-    font-family: 'Electrolize', sans-serif;
+
+const StyledTextInput = styled.input`
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    min-width: 0;
+    padding: 0.75rem;
+    background-color: transparent;
+    border: none;
+    outline: none !important;
+    box-shadow: none !important;
+    font-size: 0.875rem;
     line-height: 1.25;
-    /* Futuristic clip-path matching search bar - TL/BR angled */
-    clip-path: polygon(0px 8px, 8px 0px, 100% 0px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0px 100%);
-    
-    &:hover {
-        border-color: var(--theme-primary);
+    color: var(--theme-text-base);
+    font-family: 'Electrolize', sans-serif;
+    -webkit-appearance: none;
+    appearance: none;
+
+    &:focus {
+        outline: none !important;
+        box-shadow: none !important;
+        border: none !important;
     }
 
-    & + .input-help {
-        ${tw`mt-1 text-xs`};
-        ${(props) => (props.hasError ? tw`text-red-200` : 'color: var(--theme-text-muted);')};
+    &:focus-visible {
+        outline: none !important;
+        box-shadow: none !important;
     }
 
-    &:required,
-    &:invalid {
-        ${tw`shadow-none`};
-    }
-
-    &:not(:disabled):not(:read-only):focus {
-        border-color: var(--theme-primary);
-        ${(props) => props.hasError && 'border-color: #DC2626;'};
+    &::placeholder {
+        color: var(--theme-text-muted);
     }
 
     &:disabled {
-        ${tw`opacity-75`};
+        opacity: 0.75;
+        cursor: not-allowed;
     }
 
-    ${(props) => props.isLight && light};
-    ${(props) => props.hasError && tw`text-red-100 border-red-400 hover:border-red-300`};
-`;
-
-const Input = styled.input<Props>`
-    &:not([type='checkbox']):not([type='radio']) {
-        ${inputStyle};
-    }
-
-    &[type='checkbox'],
-    &[type='radio'] {
-        ${checkboxStyle};
-
-        &[type='radio'] {
-            ${tw`rounded-full`};
-        }
+    &:-webkit-autofill,
+    &:-webkit-autofill:hover,
+    &:-webkit-autofill:focus,
+    &:-webkit-autofill:active {
+        -webkit-box-shadow: 0 0 0 1000px var(--theme-background) inset !important;
+        -webkit-text-fill-color: var(--theme-text-base) !important;
+        box-shadow: 0 0 0 1000px var(--theme-background) inset !important;
+        border: none !important;
+        outline: none !important;
+        caret-color: var(--theme-text-base) !important;
+        transition: background-color 5000s ease-in-out 0s !important;
     }
 `;
-const Textarea = styled.textarea<Props>`
-    ${inputStyle}
+
+// ─── Inner <textarea> ─────────────────────────────────────────────────────────
+const StyledTextarea = styled.textarea`
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    min-width: 0;
+    padding: 0.5rem 0.75rem;
+    background-color: transparent;
+    border: none;
+    outline: none !important;
+    box-shadow: none !important;
+    font-size: 0.875rem;
+    line-height: 1.25;
+    color: var(--theme-text-base);
+    font-family: 'Electrolize', sans-serif;
+    resize: none;
+
+    &:focus {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+    &::placeholder {
+        color: var(--theme-text-muted);
+    }
+
+    &:disabled {
+        opacity: 0.75;
+    }
 `;
 
-export { Textarea };
+// ─── Shared path builder ───────────────────────────────────────────────────────
+function buildPath(w: number, h: number): string {
+    const so = 0.5;
+    const c = CORNER;
+    return `M ${so},${so + c} L ${so + c},${so} L ${w - so},${so} L ${w - so},${h - so - c} L ${w - so - c},${h - so} L ${so},${h - so} Z`;
+}
+
+const CLIP_STYLE = `polygon(0 ${CORNER}px, ${CORNER}px 0, 100% 0, 100% calc(100% - ${CORNER}px), calc(100% - ${CORNER}px) 100%, 0 100%)`;
+
+// ─── Text input sub-component (all hooks unconditional) ───────────────────────
+type InputProps = Props & React.InputHTMLAttributes<HTMLInputElement>;
+
+const InputText = forwardRef<HTMLInputElement, InputProps>(
+    ({ hasError, isLight, className, onFocus, onBlur, style, ...rest }, ref) => {
+        const wrapperRef = useRef<HTMLDivElement>(null);
+        const [dim, setDim] = useState({ w: 200, h: 44 });
+        const [focused, setFocused] = useState(false);
+        const [hovered, setHovered] = useState(false);
+
+        useEffect(() => {
+            const el = wrapperRef.current;
+            if (!el) return;
+            const update = () => {
+                const { width, height } = el.getBoundingClientRect();
+                setDim({ w: Math.floor(width) || 200, h: Math.floor(height) || 36 });
+            };
+            update();
+            const ro = new ResizeObserver(update);
+            ro.observe(el);
+            return () => ro.disconnect();
+        }, []);
+
+        const { w, h } = dim;
+        const path = buildPath(w, h);
+        const stroke = hasError ? '#DC2626' : focused || hovered ? 'var(--theme-primary)' : 'var(--theme-border)';
+
+        return (
+            <FieldWrapper
+                ref={wrapperRef}
+                className={className}
+                style={{ clipPath: CLIP_STYLE }}
+                onMouseEnter={() => setHovered(true)}
+                onMouseLeave={() => setHovered(false)}
+            >
+                <FieldSVG
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox={`0 0 ${w} ${h}`}
+                    preserveAspectRatio="none"
+                >
+                    <path d={path} fill="var(--theme-background)" stroke="none" />
+                    <path
+                        d={path}
+                        fill="none"
+                        stroke={stroke}
+                        strokeWidth={1}
+                        strokeLinecap="square"
+                        strokeLinejoin="miter"
+                        vectorEffect="non-scaling-stroke"
+                        style={{ transition: 'stroke 0.15s ease' }}
+                    />
+                </FieldSVG>
+                <StyledTextInput
+                    ref={ref}
+                    style={hasError ? { color: '#fecaca', ...style } : style}
+                    onFocus={(e) => { setFocused(true); onFocus?.(e); }}
+                    onBlur={(e) => { setFocused(false); onBlur?.(e); }}
+                    {...rest}
+                />
+            </FieldWrapper>
+        );
+    }
+);
+InputText.displayName = 'InputText';
+
+// ─── Textarea sub-component ───────────────────────────────────────────────────
+type TextareaProps = Props & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
+
+const TextareaBox = forwardRef<HTMLTextAreaElement, TextareaProps>(
+    ({ hasError, isLight, className, onFocus, onBlur, style, ...rest }, ref) => {
+        const wrapperRef = useRef<HTMLDivElement>(null);
+        const [dim, setDim] = useState({ w: 200, h: 80 });
+        const [focused, setFocused] = useState(false);
+        const [hovered, setHovered] = useState(false);
+
+        useEffect(() => {
+            const el = wrapperRef.current;
+            if (!el) return;
+            const update = () => {
+                const { width, height } = el.getBoundingClientRect();
+                setDim({ w: Math.floor(width) || 200, h: Math.floor(height) || 80 });
+            };
+            update();
+            const ro = new ResizeObserver(update);
+            ro.observe(el);
+            return () => ro.disconnect();
+        }, []);
+
+        const { w, h } = dim;
+        const path = buildPath(w, h);
+        const stroke = hasError ? '#DC2626' : focused || hovered ? 'var(--theme-primary)' : 'var(--theme-border)';
+
+        return (
+            <FieldWrapper
+                ref={wrapperRef}
+                className={className}
+                style={{ clipPath: CLIP_STYLE }}
+                onMouseEnter={() => setHovered(true)}
+                onMouseLeave={() => setHovered(false)}
+            >
+                <FieldSVG
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox={`0 0 ${w} ${h}`}
+                    preserveAspectRatio="none"
+                >
+                    <path d={path} fill="var(--theme-background)" stroke="none" />
+                    <path
+                        d={path}
+                        fill="none"
+                        stroke={stroke}
+                        strokeWidth={1}
+                        strokeLinecap="square"
+                        strokeLinejoin="miter"
+                        vectorEffect="non-scaling-stroke"
+                        style={{ transition: 'stroke 0.15s ease' }}
+                    />
+                </FieldSVG>
+                <StyledTextarea
+                    ref={ref}
+                    style={hasError ? { color: '#fecaca', ...style } : style}
+                    onFocus={(e) => { setFocused(true); onFocus?.(e); }}
+                    onBlur={(e) => { setFocused(false); onBlur?.(e); }}
+                    {...rest}
+                />
+            </FieldWrapper>
+        );
+    }
+);
+TextareaBox.displayName = 'Textarea';
+
+// ─── Public exports ────────────────────────────────────────────────────────────
+// Input routes checkbox/radio to native styled element, others to SVG-bordered InputText.
+const Input = forwardRef<HTMLInputElement, InputProps>(({ type, ...props }, ref) => {
+    if (type === 'checkbox' || type === 'radio') {
+        return <StyledCheckbox ref={ref} type={type} {...props} />;
+    }
+    return <InputText ref={ref} type={type} {...props} />;
+});
+
+Input.displayName = 'Input';
+export { TextareaBox as Textarea };
 export default Input;

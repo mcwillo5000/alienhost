@@ -176,6 +176,7 @@
                             ])
                         @endif
                     </ul>
+                    <div style="height: 12rem;"></div>
                 </section>
             </aside>
             <div class="content-wrapper">

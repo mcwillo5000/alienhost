@@ -48,6 +48,7 @@ const FrameSVG = styled.svg`
 const FrameContent = styled.div`
     position: relative;
     z-index: 1;
+    clip-path: polygon(10px 0px, 100% 0px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0px 100%, 0px 10px);
 `;
 
 
@@ -483,7 +484,7 @@ export default () => {
                                     }
                                 />
                             </BreadcrumbsContainer>
-                            <Can action={'file.create'}>
+                            {!hashToPath(hash).replace(/^\/+/, '').startsWith('.trash') && <Can action={'file.create'}>
                                 <FileActionsContainer>
                                     <FileManagerStatus />
                                     <NewDirectoryButton />
@@ -510,7 +511,7 @@ export default () => {
                                         <GitActions />
                                     </Can>
                                 </FileActionsContainer>
-                            </Can>
+                            </Can>}
                         </FileManagerHeaderContainer>
                     </div>
                 </ArwesFrame>

@@ -30,6 +30,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import Label from '@/components/elements/Label';
 import { Input } from '@/components/elements/inputs/index';
+import InputSVG from '@/components/elements/Input';
 import Select from '@/components/elements/Select';
 import {
     getHytaleData,
@@ -1036,19 +1037,12 @@ export default function HytalePlayerManagerContainer() {
                                     <span className={'font-semibold'} style={{ color: 'var(--theme-text-base)' }}>Players</span>
                                 </div>
                                 {/* Search Input - Center */}
-                                <div className={'flex-1 relative max-w-md mx-auto'}>
-                                    <FontAwesomeIcon
-                                        icon={faSearch}
-                                        className={'absolute left-3 top-1/2 transform -translate-y-1/2'}
-                                        style={{ color: 'var(--theme-text-muted)' }}
-                                    />
-                                    <input
+                                <div className={'flex-1 max-w-md mx-auto'}>
+                                    <InputSVG
                                         type={'text'}
                                         placeholder={'Search players...'}
                                         value={playersSearchQuery}
                                         onChange={(e) => setPlayersSearchQuery(e.target.value)}
-                                        className={'w-full py-2 px-3 pl-9 rounded-md text-sm focus:outline-none transition-colors'}
-                                        style={{ backgroundColor: 'var(--theme-background-primary)', border: '1px solid var(--theme-border)', color: 'var(--theme-text-base)' }}
                                     />
                                 </div>
                                 <span className={'text-sm flex-shrink-0'} style={{ color: 'var(--theme-text-muted)' }}>

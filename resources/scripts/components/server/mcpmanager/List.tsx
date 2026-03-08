@@ -17,6 +17,58 @@ import {
     faCircle,
 } from '@fortawesome/free-solid-svg-icons';
 import Spinner from '@/components/elements/Spinner';
+
+const SVGFrame: React.FC<{
+    children: React.ReactNode;
+    corner?: number;
+    fill?: string;
+    stroke?: string;
+    wrapperStyle?: React.CSSProperties;
+    contentStyle?: React.CSSProperties;
+    as?: string;
+    [key: string]: any;
+}> = ({ children, corner = 5, fill = 'var(--theme-background)', stroke = 'var(--theme-border)', wrapperStyle, contentStyle, as: Tag = 'div', ...rest }) => {
+    const wrapRef = React.useRef<any>(null);
+    const [dims, setDims] = React.useState({ w: 100, h: 40 });
+    React.useEffect(() => {
+        const el = wrapRef.current;
+        if (!el) return;
+        const ro = new ResizeObserver(() => {
+            const { width, height } = el.getBoundingClientRect();
+            setDims({ w: Math.max(Math.floor(width), 1), h: Math.max(Math.floor(height), 1) });
+        });
+        ro.observe(el);
+        return () => ro.disconnect();
+    }, []);
+    const so = 0.5, c = corner, { w, h } = dims;
+    const d = `M ${so},${so + c} L ${so + c},${so} L ${w - so},${so} L ${w - so},${h - so - c} L ${w - so - c},${h - so} L ${so},${h - so} Z`;
+    const TagEl = Tag as any;
+    return (
+        <TagEl
+            ref={wrapRef}
+            style={{
+                position: 'relative',
+                clipPath: `polygon(0 ${c}px, ${c}px 0, 100% 0, 100% calc(100% - ${c}px), calc(100% - ${c}px) 100%, 0 100%)`,
+                ...wrapperStyle,
+            }}
+            {...rest}
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox={`0 0 ${w} ${h}`}
+                preserveAspectRatio="none"
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0, overflow: 'visible' }}
+            >
+                <path d={d} fill={fill} stroke="none" />
+                <path d={d} fill="none" stroke={stroke} strokeWidth={1} vectorEffect={'non-scaling-stroke' as any} />
+            </svg>
+            <div style={{ position: 'relative', zIndex: 1, ...contentStyle }}>
+                {children}
+            </div>
+        </TagEl>
+    );
+};
+
 interface Props {
     data: FastQueryResponse | null;
     selectedCategory: string;
@@ -71,19 +123,13 @@ const PlayersList: React.FC<Props> = ({
         value: string | number;
         children?: React.ReactNode;
     }) => (
-        <div style={{
-            backgroundColor: 'var(--theme-background)',
-            padding: '0.75rem',
-            textAlign: 'center',
-            border: '1px solid var(--theme-border)',
-            clipPath: 'polygon(0px 5px, 5px 0px, 100% 0px, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0px 100%)',
-        }}>
+        <SVGFrame corner={5} fill="var(--theme-background)" stroke="var(--theme-border)" contentStyle={{ padding: '0.75rem', textAlign: 'center' }}>
             <p style={{ fontSize: '0.7rem', color: 'var(--theme-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: "'Orbitron', sans-serif", margin: 0 }}>{label}</p>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
                 {children}
                 <p style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--theme-text-base)', fontFamily: "'Electrolize', sans-serif", margin: 0 }}>{value}</p>
             </div>
-        </div>
+        </SVGFrame>
     );
     const [searchTerm, setSearchTerm] = useState('');
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
@@ -298,10 +344,22 @@ const PlayersList: React.FC<Props> = ({
             {/* Category Filters */}
             <div className="player-list-categories-grid">
                 {categories.map((category) => (
-                    <button
+                    <SVGFrame
                         key={category.id}
+                        as="button"
+                        corner={4}
+                        fill={selectedCategory === category.id
+                            ? 'color-mix(in srgb, var(--theme-primary) 15%, var(--theme-background))'
+                            : 'var(--theme-background)'}
+                        stroke={selectedCategory === category.id ? 'var(--theme-primary)' : 'var(--theme-border)'}
                         onClick={() => onCategoryChange(category.id)}
-                        style={{
+                        wrapperStyle={{
+                            cursor: 'pointer',
+                            border: 'none',
+                            width: '100%',
+                            boxShadow: selectedCategory === category.id ? '0 0 8px rgba(var(--theme-primary-rgb), 0.2)' : 'none',
+                        }}
+                        contentStyle={{
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -309,45 +367,30 @@ const PlayersList: React.FC<Props> = ({
                             padding: '0.5rem 0.75rem',
                             fontSize: '0.8rem',
                             fontWeight: 500,
-                            transition: 'all 0.2s ease',
                             fontFamily: "'Electrolize', sans-serif",
-                            cursor: 'pointer',
-                            clipPath: 'polygon(0px 4px, 4px 0px, 100% 0px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0px 100%)',
-                            backgroundColor: selectedCategory === category.id
-                                ? 'color-mix(in srgb, var(--theme-primary) 15%, var(--theme-background))'
-                                : 'var(--theme-background)',
-                            color: selectedCategory === category.id
-                                ? 'var(--theme-primary)'
-                                : 'var(--theme-text-base)',
-                            border: selectedCategory === category.id
-                                ? '1px solid var(--theme-primary)'
-                                : '1px solid var(--theme-border)',
-                            boxShadow: selectedCategory === category.id
-                                ? '0 0 8px rgba(var(--theme-primary-rgb), 0.2)'
-                                : 'none',
+                            color: selectedCategory === category.id ? 'var(--theme-primary)' : 'var(--theme-text-base)',
                         }}
                     >
                         <FontAwesomeIcon icon={category.icon} />
                         <span>
                             {category.name} <span style={{ color: 'var(--theme-text-muted)' }}>({category.count})</span>
                         </span>
-                    </button>
+                    </SVGFrame>
                 ))}
             </div>
 
             {/* Search & Sort */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem', paddingBottom: '1rem', borderBottom: '1px solid var(--theme-border)' }}>
-                <div
-                    style={{
-                        flex: 1,
+                <SVGFrame
+                    corner={4}
+                    fill="var(--theme-background)"
+                    stroke="var(--theme-border)"
+                    wrapperStyle={{ flex: 1 }}
+                    contentStyle={{
                         display: 'flex',
                         alignItems: 'center',
                         gap: '0.75rem',
                         padding: '0.5rem 1rem',
-                        border: '1px solid var(--theme-border)',
-                        backgroundColor: 'var(--theme-background)',
-                        transition: 'border-color 0.15s ease',
-                        clipPath: 'polygon(0px 4px, 4px 0px, 100% 0px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0px 100%)',
                     }}
                 >
                     <FontAwesomeIcon icon={faSearch} style={{ color: 'var(--theme-text-muted)' }} />
@@ -366,24 +409,22 @@ const PlayersList: React.FC<Props> = ({
                             fontFamily: "'Electrolize', sans-serif",
                         }}
                     />
-                </div>
-                <button
+                </SVGFrame>
+                <SVGFrame
+                    as="button"
+                    corner={4}
+                    fill="var(--theme-background)"
+                    stroke="var(--theme-border)"
                     onClick={toggleSortOrder}
                     title={sortOrder === 'asc' ? 'Sort Descending' : 'Sort Ascending'}
-                    style={{
-                        padding: '0.625rem',
-                        backgroundColor: 'var(--theme-background)',
-                        border: '1px solid var(--theme-border)',
-                        cursor: 'pointer',
-                        transition: 'all 0.15s ease',
-                        clipPath: 'polygon(0px 4px, 4px 0px, 100% 0px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0px 100%)',
-                    }}
+                    wrapperStyle={{ cursor: 'pointer', border: 'none', flexShrink: 0 }}
+                    contentStyle={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.625rem' }}
                 >
                     <FontAwesomeIcon
                         icon={sortOrder === 'asc' ? faSortAlphaDown : faSortAlphaUp}
                         style={{ color: 'var(--theme-text-base)' }}
                     />
-                </button>
+                </SVGFrame>
             </div>
 
             {/* Player List */}

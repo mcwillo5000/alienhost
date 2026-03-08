@@ -87,7 +87,6 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({ title }) => {
                     </h1>
                 </div>
 
-}
                 <div 
                     role="presentation"
                     style={{

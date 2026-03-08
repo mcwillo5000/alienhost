@@ -123,21 +123,11 @@ const SubdomainManager = () => {
                             value={subdomain}
                             onChange={(e) => setSubdomain(e.target.value)}
                             css={tw`w-full md:w-64`}
-                            style={{
-                                backgroundColor: 'var(--theme-background)',
-                                borderColor: 'var(--theme-border)',
-                                color: 'var(--theme-text-base)',
-                            }}
                         />
                         <Select
                             value={selectedDomain}
                             onChange={(e) => setSelectedDomain(e.target.value)}
                             css={tw`w-full md:w-48`}
-                            style={{
-                                backgroundColor: 'var(--theme-background)',
-                                borderColor: 'var(--theme-border)',
-                                color: 'var(--theme-text-base)',
-                            }}
                         >
                             <option value="">Select Domain</option>
                             {data.domains.map((domain) => (

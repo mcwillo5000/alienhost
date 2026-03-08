@@ -134,7 +134,7 @@ const FileObjectRow = ({ file }: { file: FileObject }) => {
                     </Clickable>
                 </div>
             </div>
-            {!isTrash && (
+            {!isTrash && !file.isTrash && (
                 <div className="flex items-center mr-3 flex-shrink-0 text-xs font-mono" style={{ color: 'var(--theme-text-muted)', minWidth: '5rem', justifyContent: 'flex-end' }}>
                     <FileObjectSize file={file} />
                 </div>

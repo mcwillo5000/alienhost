@@ -1,0 +1,136 @@
+import React, { forwardRef } from 'react';
+import styled, { css } from 'styled-components/macro';
+import tw from 'twin.macro';
+
+export interface Props {
+    isLight?: boolean;
+    hasError?: boolean;
+}
+
+// ─── Shared clip-path polygon ─────────────────────────────────────────────────
+// Top-left and bottom-right corners are cut diagonally at 8 px.
+const CLIP = 'polygon(0px 8px, 8px 0px, 100% 0px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0px 100%)';
+
+// ─── Wrapper that renders the visible border ──────────────────────────────────
+// Uses the background-colour trick: the wrapper is filled with the border colour
+// and has 1 px padding, so the inner element sits 1 px inside on every edge.
+// Because both use the same clip-path, the diagonal cuts also show 1 px of the
+// wrapper background — giving a proper diagonal border stroke.
+export const InputBorderWrapper = styled.div<{ hasError?: boolean }>`
+    display: block;
+    padding: 1px;
+    background-color: ${(props) => (props.hasError ? '#DC2626' : 'var(--theme-border)')};
+    clip-path: ${CLIP};
+    transition: background-color 150ms ease;
+
+    &:hover:not(:focus-within) {
+        background-color: ${(props) => (props.hasError ? '#EF4444' : 'var(--theme-primary)')};
+    }
+
+    &:focus-within {
+        background-color: ${(props) => (props.hasError ? '#DC2626' : 'var(--theme-primary)')};
+    }
+`;
+
+// ─── Light-mode overrides ────────────────────────────────────────────────────
+const light = css<Props>`
+    background-color: var(--theme-background);
+    color: var(--theme-text-base);
+
+    &:disabled {
+        background-color: var(--theme-background-secondary);
+        opacity: 0.6;
+    }
+`;
+
+// ─── Checkbox / radio styling (unchanged) ───────────────────────────────────
+const checkboxStyle = css<Props>`
+    ${tw`bg-neutral-500 cursor-pointer appearance-none inline-block align-middle select-none flex-shrink-0 w-4 h-4 text-primary-400 border border-neutral-300 rounded-sm`};
+    color-adjust: exact;
+    background-origin: border-box;
+    transition: all 75ms linear, box-shadow 25ms linear;
+
+    &:checked {
+        ${tw`border-transparent bg-no-repeat bg-center`};
+        background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
+        background-color: currentColor;
+        background-size: 100% 100%;
+    }
+
+    &:focus {
+        ${tw`outline-none border-primary-300`};
+        box-shadow: 0 0 0 1px rgba(9, 103, 210, 0.25);
+    }
+`;
+
+// ─── Inner <input> / <textarea> style (no border — wrapper provides it) ───────
+const inputStyle = css<Props>`
+    resize: none;
+    ${tw`appearance-none outline-none w-full min-w-0`};
+    ${tw`text-sm transition-all duration-150`};
+    padding: 0.5rem 0.75rem;
+    background-color: var(--theme-background);
+    border: none;
+    color: var(--theme-text-base);
+    border-radius: 0;
+    font-family: 'Electrolize', sans-serif;
+    line-height: 1.25;
+    /* Must match the wrapper polygon so the element fills the wrapper exactly */
+    clip-path: ${CLIP};
+
+    & + .input-help {
+        ${tw`mt-1 text-xs`};
+        ${(props) => (props.hasError ? tw`text-red-200` : 'color: var(--theme-text-muted);')};
+    }
+
+    &:required,
+    &:invalid {
+        ${tw`shadow-none`};
+    }
+
+    &:disabled {
+        ${tw`opacity-75`};
+    }
+
+    ${(props) => props.isLight && light};
+    ${(props) => props.hasError && tw`text-red-100`};
+`;
+
+// ─── Raw styled-components (exported for use inside InputBorderWrapper) ───────
+const StyledInput = styled.input<Props>`
+    &:not([type='checkbox']):not([type='radio']) {
+        ${inputStyle};
+    }
+
+    &[type='checkbox'],
+    &[type='radio'] {
+        ${checkboxStyle};
+
+        &[type='radio'] {
+            ${tw`rounded-full`};
+        }
+    }
+`;
+
+export const Textarea = styled.textarea<Props>`
+    ${inputStyle}
+`;
+
+// ─── Public Input component ───────────────────────────────────────────────────
+// Wraps StyledInput in InputBorderWrapper automatically for text/number/etc.
+// Checkbox and radio are passed through unwrapped (they keep their own border).
+type InputProps = Props & React.InputHTMLAttributes<HTMLInputElement>;
+
+const Input = forwardRef<HTMLInputElement, InputProps>(({ hasError, isLight, type, ...rest }, ref) => {
+    if (type === 'checkbox' || type === 'radio') {
+        return <StyledInput ref={ref} type={type} hasError={hasError} isLight={isLight} {...rest} />;
+    }
+    return (
+        <InputBorderWrapper hasError={hasError}>
+            <StyledInput ref={ref} type={type} hasError={hasError} isLight={isLight} {...rest} />
+        </InputBorderWrapper>
+    );
+});
+
+Input.displayName = 'Input';
+export default Input;

@@ -360,11 +360,6 @@ const ConfigEditor: React.FC<Props> = ({ file }) => {
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 css={tw`w-full`}
-                                style={{
-                                    backgroundColor: 'var(--theme-background)',
-                                    borderColor: 'var(--theme-border)',
-                                    color: 'var(--theme-text-base)',
-                                }}
                             />
                         </div>
                     </div>

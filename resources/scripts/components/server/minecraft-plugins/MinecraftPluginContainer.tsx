@@ -314,16 +314,16 @@ export default () => {
                 {pluginProvider === 'polymart' &&
                     isLinkedToPolymart !== null &&
                     (isLinkedToPolymart ? (
-                        <Button css={tw`h-12`} onClick={handleDisconnectButton}>
+                        <Button css={tw`h-11`} onClick={handleDisconnectButton}>
                             Unlink Polymart account
                         </Button>
                     ) : (
-                        <Button css={tw`h-12`} onClick={handleLinkButton}>
+                        <Button css={tw`h-11`} onClick={handleLinkButton}>
                             Link Polymart account
                         </Button>
                     ))}
                 <NavLink to={`/server/${shortUuid}/minecraft-plugins/installed`}>
-                    <Button className='h-12'>Installed Plugins</Button>
+                    <Button className='h-11'>Installed Plugins</Button>
                 </NavLink>
             </div>
             <div css={tw`mt-3`}>
