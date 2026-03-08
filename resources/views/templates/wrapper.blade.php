@@ -1,4 +1,7 @@
 @include("blueprint.dashboard.dashboard")
+@include("blueprint.dashboard.dashboard")
+@yield("blueprint.lib")
+
 @yield("blueprint.lib")
 
 @php
@@ -330,6 +333,7 @@
             @yield('above-container')
             @yield('container')
             @yield('below-container')
+            @yield('blueprint.wrappers')
             @yield('blueprint.wrappers')
         @show
         @section('scripts')

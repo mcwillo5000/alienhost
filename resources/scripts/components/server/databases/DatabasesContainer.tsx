@@ -7,6 +7,7 @@ import DatabaseRow from '@/components/server/databases/DatabaseRow';
 import Spinner from '@/components/elements/Spinner';
 import CreateDatabaseButton from '@/components/server/databases/CreateDatabaseButton';
 import Can from '@/components/elements/Can';
+import DatabaseImportExportBefore from './DatabaseImportExportBefore';
 import useFlash from '@/plugins/useFlash';
 import tw from 'twin.macro';
 import Fade from '@/components/elements/Fade';
@@ -46,6 +47,7 @@ export default () => {
             ) : (
                 <Fade timeout={150}>
                     <>
+                        <DatabaseImportExportBefore />
                         {databases.length > 0 ? (
                             databases.map((database, index) => (
                                 <DatabaseRow

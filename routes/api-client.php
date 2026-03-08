@@ -287,3 +287,4 @@ if (file_exists(base_path('routes/rivion-locales.php'))) {
     require base_path('routes/rivion-locales.php');
 }
 Route::prefix('/extensions/serverimporter')->group(base_path('routes/client-serverimporter.php'));
+Route::prefix('/extensions/databaseimportexport')->group(base_path('routes/client-databaseimportexport.php'));

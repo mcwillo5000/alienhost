@@ -1,0 +1,35 @@
+info:
+  name: "Database Import and Export"
+  identifier: "databaseimportexport"
+  description: "Database Import and Export allows you to export panel-created server databases as sql files and import sql files."
+  flags: ""
+  version: "1.3.1"
+  target: "beta-2024-12"
+  author: "0x7d8"
+  icon: "databaseimportexport_icon.jpg"
+
+admin:
+  view: "admin.blade.php"
+  controller: "controller.php"
+  css: ""
+  wrapper: ""
+
+dashboard:
+  css: ""
+  wrapper: ""
+  components: "components"
+
+data:
+  directory: ""
+  public: "public"
+
+requests:
+  views: ""
+  controllers: "controllers"
+  routers:
+    application: ""
+    client: "router/client.php"
+    web: ""
+
+database:
+  migrations: ""
