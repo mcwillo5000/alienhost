@@ -138,7 +138,7 @@ const FileDropdownMenu = ({ file }: { file: FileObject }) => {
 
         mutate((files) => files.filter((f) => f.key !== file.key), false);
 
-        deleteFiles(uuid, directory, [file.name]).catch((error) => {
+        deleteFiles(uuid, directory, [file.isTrash && file.trashId ? String(file.trashId) : file.name]).catch((error) => {
             mutate();
             clearAndAddHttpError({ key: 'files', error });
         });

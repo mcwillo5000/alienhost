@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 
 const ThemeToggle = () => {
     useEffect(() => {
-        // Always force dark mode
         localStorage.setItem('theme', 'dark');
         document.documentElement.setAttribute('data-theme', 'dark');
 
@@ -19,7 +18,6 @@ const ThemeToggle = () => {
         }
     }, []);
 
-    // No toggle button rendered - always dark
     return null;
 };
 
