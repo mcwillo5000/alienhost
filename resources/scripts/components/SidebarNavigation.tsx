@@ -192,7 +192,7 @@ export default ({ className }: SidebarProps) => {
                             {!isCollapsed && <span>Dashboard</span>}
                         </FuturisticNavLink>
 
-                        {rootAdmin && (
+                        {(rootAdmin || hasAdvRole) && (
                             <FuturisticNavAnchor 
                                 href="/admin" 
                                 rel="noreferrer" 

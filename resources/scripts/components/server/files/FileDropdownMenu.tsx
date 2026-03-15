@@ -22,6 +22,7 @@ import SpinnerOverlay from '@/components/elements/SpinnerOverlay';
 import copyFile from '@/api/server/files/copyFile';
 import Can from '@/components/elements/Can';
 import getFileDownloadUrl from '@/api/server/files/getFileDownloadUrl';
+import { usePermissions } from '@/plugins/usePermissions';
 import useFlash from '@/plugins/useFlash';
 import tw from 'twin.macro';
 import { FileObject } from '@/api/server/files/loadDirectory';
@@ -104,6 +105,23 @@ const FileDropdownMenu = ({ file }: { file: FileObject }) => {
     const { clearAndAddHttpError, clearFlashes } = useFlash();
     const directory = ServerContext.useStoreState((state) => state.files.directory);
 
+    const [canUpdate] = usePermissions(['file.update']);
+    const [canCreate] = usePermissions(['file.create']);
+    const [canArchive] = usePermissions(['file.archive']);
+    const [canReadContent] = usePermissions(['file.read-content']);
+    const [canDelete] = usePermissions(['file.delete']);
+
+    const hasAnyAction = file.isTrash 
+        ? canDelete 
+        : (
+            canUpdate || 
+            (canCreate && file.isFile) || 
+            (canCreate && file.isArchiveType()) || 
+            (canArchive && !file.isArchiveType()) || 
+            (canReadContent && file.isFile) || 
+            canDelete 
+        );
+
     useEventListener(`pterodactyl:files:ctx:${file.key}`, (e: CustomEvent) => {
         if (onClickRef.current) {
             const detail = e.detail;
@@ -179,6 +197,10 @@ const FileDropdownMenu = ({ file }: { file: FileObject }) => {
             .then(() => setShowSpinner(false));
     };
 
+    if (!hasAnyAction) {
+        return null;
+    }
+
     return (
         <>
             <Dialog.Confirm
@@ -244,7 +266,11 @@ const FileDropdownMenu = ({ file }: { file: FileObject }) => {
                                 <Row onClick={doArchive} icon={faFileArchive} title={t('files.dropdown.compress')} />
                             </Can>
                         )}
-                        {file.isFile && <Row onClick={doDownload} icon={faFileDownload} title={t('files.dropdown.download')} />}
+                                        {file.isFile && (
+                                            <Can action={'file.read-content'}>
+                                                <Row onClick={doDownload} icon={faFileDownload} title={t('files.dropdown.download')} />
+                                            </Can>
+                                        )}
                         <Can action={'file.delete'}>
                             <Row onClick={() => setShowConfirmation(true)} icon={faTrashAlt} title={t('files.dropdown.delete')} $danger />
                         </Can>
