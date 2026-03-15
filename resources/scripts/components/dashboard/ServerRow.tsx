@@ -116,7 +116,6 @@ const ServerRowFrame: React.FC<{ children: React.ReactNode; backgroundImage?: st
                     />
                 )}
                 
-                {/* Red overlay when suspended */}
                 {isSuspended && (
                     <path
                         d={framePath}
@@ -197,22 +196,19 @@ const AngledButton = styled.button`
 `;
 
 const StatusIndicatorBox = styled(GreyRowBox)<{ $status: ServerPowerState | undefined; $backgroundImage?: string }>`
-    /* Override GreyRowBox defaults and use grid layout matching existing structure */
     display: grid !important;
     grid-template-columns: repeat(12, minmax(0, 1fr));
     gap: 0.5rem;
     position: relative !important;
     overflow: hidden !important;
-    padding: 0.75rem !important; /* Override GreyRowBox padding */
+    padding: 0.75rem !important; 
     height: auto !important;
-    min-height: 0 !important; /* Remove min-height constraint */
+    min-height: 0 !important; 
 
-    /* Match your theme's background styling */
     background-color: var(--theme-background-secondary) !important;
     border: 1px solid var(--theme-border) !important;
     border-radius: 0.5rem !important;
 
-    /* Add background image support from egg configuration */
     ${({ $backgroundImage }) =>
         $backgroundImage &&
         `
@@ -222,7 +218,6 @@ const StatusIndicatorBox = styled(GreyRowBox)<{ $status: ServerPowerState | unde
         background-repeat: no-repeat !important;
         `};
 
-    /* Add simple semi-transparent overlay using theme background color */
     ${({ $backgroundImage }) =>
         $backgroundImage &&
         `
@@ -240,7 +235,6 @@ const StatusIndicatorBox = styled(GreyRowBox)<{ $status: ServerPowerState | unde
         }
         `};
 
-    /* Add gradient overlay similar to sidebar selected items but vertical (bottom to top) */
     ${({ $backgroundImage }) =>
         $backgroundImage &&
         `
@@ -258,19 +252,16 @@ const StatusIndicatorBox = styled(GreyRowBox)<{ $status: ServerPowerState | unde
         }
         `};
 
-    /* Disable GreyRowBox hover effect completely */
     &:hover {
         border-color: var(--theme-border) !important;
         opacity: 1; /* Reset opacity from GreyRowBox */
     }
 
-    /* Ensure content is above any background when present */
     & > * {
         position: relative;
         z-index: 3;
     }
 
-    /* Status badge styling matching your theme */
     .status-badge {
         position: absolute;
         top: 0.75rem;
@@ -439,6 +430,72 @@ export default ({ server, className, onPowerAction }: {
                 }}>
 
                     <div css={tw`col-span-12 mb-3`}>
+                        {(() => {
+                            const statusInfo = getStatusBadge(stats?.status, isSuspended, server.isTransferring, server.status, t);
+                            return (
+                                <div 
+                                    className="status-badge"
+                                    css={[tw`flex sm:hidden mb-2 justify-end`, {
+                                        alignItems: 'center',
+                                        gap: '0.625rem',
+                                        backgroundColor: 'transparent',
+                                        color: statusInfo.color,
+                                        padding: '0.25rem 0',
+                                        fontSize: '0.8125rem',
+                                        fontWeight: 600,
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '0.05em',
+                                        zIndex: 20,
+                                    }]}
+                                >
+                                    <span 
+                                        css={{
+                                            position: 'relative',
+                                            display: 'inline-block',
+                                            width: '10px',
+                                            height: '10px',
+                                        }}
+                                    >
+                                        <span 
+                                            css={{
+                                                position: 'absolute',
+                                                inset: 0,
+                                                borderRadius: '50%',
+                                                backgroundColor: statusInfo.color,
+                                                animation: status === 'running' ? 'dotPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' : 'none',
+                                                '@keyframes dotPulse': {
+                                                    '0%, 100%': { opacity: 1 },
+                                                    '50%': { opacity: 0.6 }
+                                                }
+                                            }}
+                                        />
+                                        {status === 'running' && (
+                                            <span 
+                                                css={{
+                                                    position: 'absolute',
+                                                    inset: '-4px',
+                                                    borderRadius: '50%',
+                                                    border: `2px solid ${statusInfo.color}`,
+                                                    animation: 'ringPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                                                    '@keyframes ringPulse': {
+                                                        '0%': { 
+                                                            opacity: 0.8,
+                                                            transform: 'scale(1)'
+                                                        },
+                                                        '100%': { 
+                                                            opacity: 0,
+                                                            transform: 'scale(1.5)'
+                                                        }
+                                                    }
+                                                }}
+                                            />
+                                        )}
+                                    </span>
+                                    {statusInfo.text}
+                                </div>
+                            );
+                        })()}
+
                         <div>
                             <p css={[
                                 tw`text-lg font-semibold break-words`, 
@@ -469,8 +526,7 @@ export default ({ server, className, onPowerAction }: {
                             return (
                                 <div 
                                     className="status-badge"
-                                    css={{
-                                        display: 'flex',
+                                    css={[tw`hidden sm:flex`, {
                                         alignItems: 'center',
                                         gap: '0.625rem',
                                         backgroundColor: 'transparent',
@@ -486,7 +542,7 @@ export default ({ server, className, onPowerAction }: {
                                         right: '1.25rem',
                                         zIndex: 20,
                                         transition: 'transform 0.15s ease-in-out',
-                                    }}
+                                    }]}
                                 >
                                     <span 
                                         css={{
@@ -496,7 +552,6 @@ export default ({ server, className, onPowerAction }: {
                                             height: '10px',
                                         }}
                                     >
-                                        {/* Dot */}
                                         <span 
                                             css={{
                                                 position: 'absolute',
@@ -510,7 +565,6 @@ export default ({ server, className, onPowerAction }: {
                                                 }
                                             }}
                                         />
-                                        {/* Ring animation */}
                                         {status === 'running' && (
                                             <span 
                                                 css={{
@@ -540,8 +594,7 @@ export default ({ server, className, onPowerAction }: {
                     </div>
 
 
-            <div css={[tw`col-span-12 grid grid-cols-2 gap-x-6 gap-y-3`, { marginTop: '0.5rem' }]}>
-                {/* Top Row */}
+            <div css={[tw`col-span-12 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3`, { marginTop: '0.5rem' }]}>
                 <div css={tw`flex items-center`}>
                     <p css={[tw`text-sm font-medium`, { color: 'var(--theme-text-muted)' }]}>
                         {t('dashboard.serverRow.resources.ip')}: <span css={{ color: 'var(--theme-text-base)', fontWeight: 500 }}>
@@ -573,7 +626,7 @@ export default ({ server, className, onPowerAction }: {
                     )}
                 </div>
                 
-                {/* Bottom Row */}
+
                 <div css={tw`flex items-center`}>
                     {!stats || isSuspended ? (
                         <p css={[tw`text-sm font-medium`, { color: 'var(--theme-text-muted)' }]}>
