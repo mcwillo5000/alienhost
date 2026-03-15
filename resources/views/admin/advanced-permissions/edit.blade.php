@@ -126,6 +126,56 @@
                 </div>
 
 
+                <div class="box box-info" id="action-permissions-box"
+                     style="{{ in_array('special.server_access', $role->admin_routes ?? []) ? '' : 'display:none' }}">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="fa fa-key"></i> Action Permissions</h3>
+                        <small class="text-muted" style="margin-left:8px">
+                            Fine-tune which specific actions this role can perform on servers. Leave <strong>all unchecked</strong> for full action access.
+                        </small>
+                    </div>
+                    <div class="box-body">
+                        @foreach ($actionPermissions as $categoryName => $perms)
+                            @php $catSlug = \Illuminate\Support\Str::slug($categoryName); @endphp
+                            <h5 class="text-uppercase" style="color:#aaa;font-size:11px;letter-spacing:1px;margin-top:12px;margin-bottom:6px">
+                                {{ $categoryName }}
+                                <a href="#" class="toggle-all-actions" data-category="{{ $catSlug }}"
+                                   style="float:right;font-size:10px;text-transform:none;letter-spacing:0;color:#3c8dbc">
+                                    Toggle All
+                                </a>
+                            </h5>
+                            <div class="row">
+                                @foreach ($perms as $permKey => $permData)
+                                    @php $cbId = 'ap_' . str_replace(['.', '-'], '_', $permKey); @endphp
+                                    <div class="col-sm-6" style="margin-bottom:6px">
+                                        <div class="checkbox checkbox-info" style="margin:2px 0">
+                                            <input type="checkbox"
+                                                   id="{{ $cbId }}"
+                                                   name="server_sub_permissions[]"
+                                                   value="{{ $permKey }}"
+                                                   data-category="{{ $catSlug }}"
+                                                   {{ in_array($permKey, $role->server_sub_permissions ?? []) ? 'checked' : '' }}>
+                                            <label for="{{ $cbId }}">
+                                                <strong>{{ $permData['label'] }}</strong>
+                                                @if (!empty($permData['description']))
+                                                    <br><small class="text-muted">{{ $permData['description'] }}</small>
+                                                @endif
+                                            </label>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <hr style="margin:8px 0">
+                        @endforeach
+                        <p class="help-block" style="margin-top:8px;margin-bottom:0">
+                            <i class="fa fa-info-circle"></i>
+                            Pages above control <strong>visibility only</strong>. Actions must be explicitly granted here.
+                            If no action permissions are checked, the role can see the page but cannot perform any actions.
+                        </p>
+                    </div>
+                </div>
+
+
                 <div class="box box-warning" id="server-group-box"
                      style="{{ in_array('special.server_access', $role->admin_routes ?? []) ? '' : 'display:none' }}">
                     <div class="box-header with-border">
@@ -431,16 +481,21 @@
         var $serverAccessCb  = $('#perm_special_server_access');
         var $groupBox        = $('#server-group-box');
         var $userAreaBox     = $('#user-area-access-box');
+        var $actionPermsBox  = $('#action-permissions-box');
         var $modeSelect      = $('#group-mode-select');
         var $groupWrap       = $('#group-selector-wrap');
+
+        var pageToActions = @json($pageToActions);
 
         function syncGroupBox() {
             if ($serverAccessCb.is(':checked')) {
                 $groupBox.slideDown(150);
                 $userAreaBox.slideDown(150);
+                $actionPermsBox.slideDown(150);
             } else {
                 $groupBox.slideUp(150);
                 $userAreaBox.slideUp(150);
+                $actionPermsBox.slideUp(150);
             }
         }
 
@@ -455,6 +510,25 @@
         $serverAccessCb.on('change', syncGroupBox);
         $modeSelect.on('change', syncGroupSelector);
 
+        // When a page checkbox is checked, auto-check related action permissions
+        $('[name="server_permissions[]"]').on('change', function () {
+            if ($(this).is(':checked')) {
+                var pageKey = $(this).val();
+                var actions = pageToActions[pageKey] || [];
+                actions.forEach(function (action) {
+                    $('[name="server_sub_permissions[]"][value="' + action + '"]').prop('checked', true);
+                });
+            }
+        });
+
+        // Toggle all action permissions in a category
+        $('.toggle-all-actions').on('click', function (e) {
+            e.preventDefault();
+            var cat = $(this).data('category');
+            var $cbs = $('[name="server_sub_permissions[]"][data-category="' + cat + '"]');
+            var allChecked = $cbs.filter(':checked').length === $cbs.length;
+            $cbs.prop('checked', !allChecked);
+        });
 
         syncGroupBox();
         syncGroupSelector();

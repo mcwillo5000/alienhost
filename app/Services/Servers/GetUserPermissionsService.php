@@ -36,6 +36,7 @@ class GetUserPermissionsService
                 }
                 if ($hasAccess) {
                     $serverPermissions = $role->server_permissions;
+                    $serverSubPermissions = $role->server_sub_permissions;
 
 
                     if (empty($serverPermissions)) {
@@ -44,22 +45,29 @@ class GetUserPermissionsService
 
 
                     $perms = [
-
                         'websocket.connect',
-                        'control.console',
-                        'control.start',
-                        'control.stop',
-                        'control.restart',
                         'role.server_access',
                     ];
 
                     $pageMap = AdvancedRole::getPagePermissionMap();
+                    $actionPermissionKeys = array_flip(AdvancedRole::getValidActionPermissionKeys());
 
                     foreach ($serverPermissions as $pageKey) {
-                        foreach ($pageMap[$pageKey]['permissions'] ?? [] as $p) {
-                            $perms[] = $p;
-                        }
+                        // Page visibility marker for sidebar
                         $perms[] = 'page.' . $pageKey;
+
+                        // Auto-grant only permissions that are NOT in the action permissions pool.
+                        // Permissions that ARE in the action pool must be explicitly checked.
+                        foreach ($pageMap[$pageKey]['permissions'] ?? [] as $p) {
+                            if (!isset($actionPermissionKeys[$p])) {
+                                $perms[] = $p;
+                            }
+                        }
+                    }
+
+                    // Add explicitly granted action permissions
+                    foreach ($serverSubPermissions ?? [] as $p) {
+                        $perms[] = $p;
                     }
 
                     return array_values(array_unique($perms));

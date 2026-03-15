@@ -26,19 +26,22 @@ class AdvancedRole extends Model
         'server_group_id',
         'server_group_mode',
         'server_permissions',
+        'server_sub_permissions',
     ];
 
     protected $casts = [
-        'admin_routes'       => 'array',
-        'server_permissions' => 'array',
+        'admin_routes'           => 'array',
+        'server_permissions'     => 'array',
+        'server_sub_permissions' => 'array',
     ];
 
     protected $attributes = [
-        'description'        => null,
-        'admin_routes'       => null,
-        'server_group_id'    => null,
-        'server_group_mode'  => null,
-        'server_permissions' => null,
+        'description'            => null,
+        'admin_routes'           => null,
+        'server_group_id'        => null,
+        'server_group_mode'      => null,
+        'server_permissions'     => null,
+        'server_sub_permissions' => null,
     ];
 
     /**
@@ -218,6 +221,191 @@ class AdvancedRole extends Model
     ];
 
     /**
+     * All granular action permissions that can be individually toggled per role.
+     * These match the Pterodactyl subuser permission keys.
+     * When server_sub_permissions is NULL on a role, the legacy page-level
+     * permission bundles are used instead (backward compatible).
+     */
+    public static array $availableActionPermissions = [
+        'CONTROL' => [
+            'control.console' => [
+                'label'       => 'Send Console Command',
+                'description' => 'Send commands to the server instance via the console.',
+            ],
+            'control.start' => [
+                'label'       => 'Start Server',
+                'description' => 'Start the server if it is stopped.',
+            ],
+            'control.stop' => [
+                'label'       => 'Stop Server',
+                'description' => 'Stop the server if it is running.',
+            ],
+            'control.restart' => [
+                'label'       => 'Restart Server',
+                'description' => 'Perform a server restart.',
+            ],
+        ],
+        'USER MANAGEMENT' => [
+            'user.create' => [
+                'label'       => 'Create Subusers',
+                'description' => 'Create new subusers for servers.',
+            ],
+            'user.read' => [
+                'label'       => 'View Subusers',
+                'description' => 'View subusers and their permissions.',
+            ],
+            'user.update' => [
+                'label'       => 'Update Subusers',
+                'description' => 'Modify subuser permissions.',
+            ],
+            'user.delete' => [
+                'label'       => 'Delete Subusers',
+                'description' => 'Remove subusers from servers.',
+            ],
+        ],
+        'FILE MANAGEMENT' => [
+            'file.create' => [
+                'label'       => 'Create Files',
+                'description' => 'Create additional files and folders via the Panel or direct upload.',
+            ],
+            'file.read' => [
+                'label'       => 'List Directory',
+                'description' => 'View the contents of a directory.',
+            ],
+            'file.read-content' => [
+                'label'       => 'Read File Content',
+                'description' => 'View the contents of a file and download files.',
+            ],
+            'file.update' => [
+                'label'       => 'Update Files',
+                'description' => 'Update the contents of an existing file or directory.',
+            ],
+            'file.delete' => [
+                'label'       => 'Delete Files',
+                'description' => 'Delete files or directories.',
+            ],
+            'file.archive' => [
+                'label'       => 'Archive Files',
+                'description' => 'Archive directory contents and decompress archives.',
+            ],
+            'file.sftp' => [
+                'label'       => 'SFTP Access',
+                'description' => 'Connect to SFTP and manage server files.',
+            ],
+        ],
+        'BACKUP MANAGEMENT' => [
+            'backup.create' => [
+                'label'       => 'Create Backups',
+                'description' => 'Create new server backups.',
+            ],
+            'backup.read' => [
+                'label'       => 'View Backups',
+                'description' => 'View all backups that exist for a server.',
+            ],
+            'backup.delete' => [
+                'label'       => 'Delete Backups',
+                'description' => 'Remove backups from the system.',
+            ],
+            'backup.download' => [
+                'label'       => 'Download Backups',
+                'description' => 'Download server backups.',
+            ],
+            'backup.restore' => [
+                'label'       => 'Restore Backups',
+                'description' => 'Restore a backup. Warning: this may delete all server files.',
+            ],
+        ],
+        'ALLOCATION (NETWORK)' => [
+            'allocation.read' => [
+                'label'       => 'View Allocations',
+                'description' => 'View all allocations assigned to a server.',
+            ],
+            'allocation.create' => [
+                'label'       => 'Create Allocations',
+                'description' => 'Assign additional allocations to a server.',
+            ],
+            'allocation.update' => [
+                'label'       => 'Update Allocations',
+                'description' => 'Change primary allocation and attach notes.',
+            ],
+            'allocation.delete' => [
+                'label'       => 'Delete Allocations',
+                'description' => 'Remove allocations from a server.',
+            ],
+        ],
+        'STARTUP' => [
+            'startup.read' => [
+                'label'       => 'View Startup',
+                'description' => 'View the startup variables for a server.',
+            ],
+            'startup.update' => [
+                'label'       => 'Update Startup',
+                'description' => 'Modify the startup variables for a server.',
+            ],
+            'startup.docker-image' => [
+                'label'       => 'Change Docker Image',
+                'description' => 'Modify the Docker image used when running the server.',
+            ],
+        ],
+        'DATABASE MANAGEMENT' => [
+            'database.create' => [
+                'label'       => 'Create Databases',
+                'description' => 'Create new databases for servers.',
+            ],
+            'database.read' => [
+                'label'       => 'View Databases',
+                'description' => 'View databases associated with a server.',
+            ],
+            'database.update' => [
+                'label'       => 'Rotate Password',
+                'description' => 'Rotate the password on a database instance.',
+            ],
+            'database.delete' => [
+                'label'       => 'Delete Databases',
+                'description' => 'Remove database instances from a server.',
+            ],
+            'database.view_password' => [
+                'label'       => 'View Password',
+                'description' => 'View the password associated with a database.',
+            ],
+        ],
+        'SCHEDULE MANAGEMENT' => [
+            'schedule.create' => [
+                'label'       => 'Create Schedules',
+                'description' => 'Create new task schedules for servers.',
+            ],
+            'schedule.read' => [
+                'label'       => 'View Schedules',
+                'description' => 'View schedules and their associated tasks.',
+            ],
+            'schedule.update' => [
+                'label'       => 'Update Schedules',
+                'description' => 'Update schedules and schedule tasks.',
+            ],
+            'schedule.delete' => [
+                'label'       => 'Delete Schedules',
+                'description' => 'Delete schedules from servers.',
+            ],
+        ],
+        'SETTINGS' => [
+            'settings.rename' => [
+                'label'       => 'Rename Server',
+                'description' => 'Rename a server and change its description.',
+            ],
+            'settings.reinstall' => [
+                'label'       => 'Reinstall Server',
+                'description' => 'Trigger a reinstall of a server.',
+            ],
+        ],
+        'ACTIVITY' => [
+            'activity.read' => [
+                'label'       => 'View Activity Log',
+                'description' => 'View the server activity logs.',
+            ],
+        ],
+    ];
+
+    /**
      * Returns a flat map of all server page keys => their data.
      * Used by GetUserPermissionsService to build permission arrays.
      */
@@ -227,6 +415,35 @@ class AdvancedRole extends Model
         foreach (static::$availableServerSections as $pages) {
             foreach ($pages as $key => $data) {
                 $map[$key] = $data;
+            }
+        }
+        return $map;
+    }
+
+    /**
+     * Returns a flat list of all valid action permission keys.
+     */
+    public static function getValidActionPermissionKeys(): array
+    {
+        $keys = [];
+        foreach (static::$availableActionPermissions as $perms) {
+            foreach ($perms as $key => $data) {
+                $keys[] = $key;
+            }
+        }
+        return $keys;
+    }
+
+    /**
+     * Returns a map of page key => array of action permission keys.
+     * Used by frontend JS to auto-check action permissions when a page is toggled.
+     */
+    public static function getPageToActionMap(): array
+    {
+        $map = [];
+        foreach (static::$availableServerSections as $pages) {
+            foreach ($pages as $key => $data) {
+                $map[$key] = $data['permissions'] ?? [];
             }
         }
         return $map;

@@ -30,9 +30,11 @@ class AdvancedPermissionsController extends Controller
     public function create(): View
     {
         return view('admin.advanced-permissions.create', [
-            'sections'        => AdvancedRole::$availableSections,
-            'serverSections'  => AdvancedRole::$availableServerSections,
-            'serverGroups'    => ServerGroup::orderBy('name')->get(['id', 'name']),
+            'sections'          => AdvancedRole::$availableSections,
+            'serverSections'    => AdvancedRole::$availableServerSections,
+            'actionPermissions' => AdvancedRole::$availableActionPermissions,
+            'pageToActions'     => AdvancedRole::getPageToActionMap(),
+            'serverGroups'      => ServerGroup::orderBy('name')->get(['id', 'name']),
         ]);
     }
 
@@ -40,16 +42,19 @@ class AdvancedPermissionsController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validPageKeys = implode(',', array_keys(AdvancedRole::getPagePermissionMap()));
+        $validActionKeys = implode(',', AdvancedRole::getValidActionPermissionKeys());
 
         $request->validate([
-            'name'               => 'required|string|max:255',
-            'description'        => 'nullable|string|max:1000',
-            'admin_routes'       => 'nullable|array',
-            'admin_routes.*'     => 'string',
-            'server_group_id'    => 'nullable|integer|exists:server_groups,id',
-            'server_group_mode'  => 'nullable|in:allow,deny',
-            'server_permissions' => 'nullable|array',
-            'server_permissions.*' => 'string|in:' . $validPageKeys,
+            'name'                      => 'required|string|max:255',
+            'description'               => 'nullable|string|max:1000',
+            'admin_routes'              => 'nullable|array',
+            'admin_routes.*'            => 'string',
+            'server_group_id'           => 'nullable|integer|exists:server_groups,id',
+            'server_group_mode'         => 'nullable|in:allow,deny',
+            'server_permissions'        => 'nullable|array',
+            'server_permissions.*'      => 'string|in:' . $validPageKeys,
+            'server_sub_permissions'    => 'nullable|array',
+            'server_sub_permissions.*'  => 'string|in:' . $validActionKeys,
         ]);
 
         $adminRoutes = $request->input('admin_routes', []);
@@ -68,13 +73,19 @@ class AdvancedPermissionsController extends Controller
             ? $serverPermissions
             : null;
 
+        $serverSubPermissions = $request->input('server_sub_permissions', []);
+        $serverSubPermissions = (is_array($serverSubPermissions) && count($serverSubPermissions) > 0)
+            ? $serverSubPermissions
+            : null;
+
         $role = AdvancedRole::create([
-            'name'               => $request->input('name'),
-            'description'        => $request->input('description'),
-            'admin_routes'       => $adminRoutes,
-            'server_group_id'    => $groupId,
-            'server_group_mode'  => $groupMode,
-            'server_permissions' => $serverPermissions,
+            'name'                   => $request->input('name'),
+            'description'            => $request->input('description'),
+            'admin_routes'           => $adminRoutes,
+            'server_group_id'        => $groupId,
+            'server_group_mode'      => $groupMode,
+            'server_permissions'     => $serverPermissions,
+            'server_sub_permissions' => $serverSubPermissions,
         ]);
 
         $this->alert->success('Role "' . $role->name . '" was created successfully.')->flash();
@@ -90,11 +101,13 @@ class AdvancedPermissionsController extends Controller
         $serverGroups  = ServerGroup::orderBy('name')->get(['id', 'name']);
 
         return view('admin.advanced-permissions.edit', [
-            'role'           => $role,
-            'sections'       => AdvancedRole::$availableSections,
-            'serverSections' => AdvancedRole::$availableServerSections,
-            'assignedUsers'  => $assignedUsers,
-            'serverGroups'   => $serverGroups,
+            'role'              => $role,
+            'sections'          => AdvancedRole::$availableSections,
+            'serverSections'    => AdvancedRole::$availableServerSections,
+            'actionPermissions' => AdvancedRole::$availableActionPermissions,
+            'pageToActions'     => AdvancedRole::getPageToActionMap(),
+            'assignedUsers'     => $assignedUsers,
+            'serverGroups'      => $serverGroups,
         ]);
     }
 
@@ -104,16 +117,19 @@ class AdvancedPermissionsController extends Controller
         $role = AdvancedRole::findOrFail($id);
 
         $validPageKeys = implode(',', array_keys(AdvancedRole::getPagePermissionMap()));
+        $validActionKeys = implode(',', AdvancedRole::getValidActionPermissionKeys());
 
         $request->validate([
-            'name'               => 'required|string|max:255',
-            'description'        => 'nullable|string|max:1000',
-            'admin_routes'       => 'nullable|array',
-            'admin_routes.*'     => 'string',
-            'server_group_id'    => 'nullable|integer|exists:server_groups,id',
-            'server_group_mode'  => 'nullable|in:allow,deny',
-            'server_permissions' => 'nullable|array',
-            'server_permissions.*' => 'string|in:' . $validPageKeys,
+            'name'                      => 'required|string|max:255',
+            'description'               => 'nullable|string|max:1000',
+            'admin_routes'              => 'nullable|array',
+            'admin_routes.*'            => 'string',
+            'server_group_id'           => 'nullable|integer|exists:server_groups,id',
+            'server_group_mode'         => 'nullable|in:allow,deny',
+            'server_permissions'        => 'nullable|array',
+            'server_permissions.*'      => 'string|in:' . $validPageKeys,
+            'server_sub_permissions'    => 'nullable|array',
+            'server_sub_permissions.*'  => 'string|in:' . $validActionKeys,
         ]);
 
         $adminRoutes = $request->input('admin_routes', []);
@@ -132,13 +148,19 @@ class AdvancedPermissionsController extends Controller
             ? $serverPermissions
             : null;
 
+        $serverSubPermissions = $request->input('server_sub_permissions', []);
+        $serverSubPermissions = (is_array($serverSubPermissions) && count($serverSubPermissions) > 0)
+            ? $serverSubPermissions
+            : null;
+
         $role->update([
-            'name'               => $request->input('name'),
-            'description'        => $request->input('description'),
-            'admin_routes'       => $adminRoutes,
-            'server_group_id'    => $groupId,
-            'server_group_mode'  => $groupMode,
-            'server_permissions' => $serverPermissions,
+            'name'                   => $request->input('name'),
+            'description'            => $request->input('description'),
+            'admin_routes'           => $adminRoutes,
+            'server_group_id'        => $groupId,
+            'server_group_mode'      => $groupMode,
+            'server_permissions'     => $serverPermissions,
+            'server_sub_permissions' => $serverSubPermissions,
         ]);
 
         $this->alert->success('Role "' . $role->name . '" was updated successfully.')->flash();
