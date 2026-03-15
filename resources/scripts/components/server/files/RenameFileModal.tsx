@@ -83,7 +83,7 @@ const RenameFileModal = ({ files, useMoveTerminology, ...props }: OwnProps) => {
                                 />
                             </div>
                             <div css={tw`w-full sm:w-auto mt-4 sm:mt-0`}>
-                                <Button disabled={pointsToTrash(values)} css={tw`w-full`}>{useMoveTerminology ? t('files.renameModal.move') : t('files.renameModal.rename')}</Button>
+                                <Button type={'submit'} disabled={pointsToTrash(values)} css={tw`w-full`}>{useMoveTerminology ? t('files.renameModal.move') : t('files.renameModal.rename')}</Button>
                             </div>
                         </div>
                         {pointsToTrash(values) && (

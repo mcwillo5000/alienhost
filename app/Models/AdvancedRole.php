@@ -44,11 +44,6 @@ class AdvancedRole extends Model
         'server_sub_permissions' => null,
     ];
 
-    /**
-     * All assignable admin route sections. These are the route name prefixes
-     * that can be granted to a role. Each key maps to the route prefix used
-     * in admin.php.
-     */
     public static array $availableSections = [
         'BASIC ADMINISTRATION' => [
             'admin.settings'              => 'Settings',
@@ -76,20 +71,10 @@ class AdvancedRole extends Model
             'admin.advanced-permissions'       => 'Advanced Permissions',
         ],
         'FRONTEND' => [
-            // Special non-route permissions that control frontend behaviour.
-            // These are stored in admin_routes JSON but do NOT map to admin panel routes.
             'special.server_access' => 'Server Access (view & access all servers on the dashboard)',
         ],
     ];
 
-    /**
-     * All server-side pages that can be enabled/disabled per role.
-     *
-     * 'permissions' are injected into GetUserPermissionsService for role users.
-     * An empty 'permissions' array means there is no Pterodactyl permission gate
-     * for this page — sidebar visibility is still controlled via page.{key}.
-     * NULL server_permissions on a role means unrestricted access (legacy behaviour).
-     */
     public static array $availableServerSections = [
         'OVERVIEW' => [
             'console'    => [
@@ -127,7 +112,7 @@ class AdvancedRole extends Model
             'subdomain'  => [
                 'label'       => 'Subdomain',
                 'description' => 'Manage the server subdomain (Subdomain Manager addon).',
-                'permissions' => [],
+                'permissions' => ['subdomain.manage'],
             ],
         ],
         'MANAGEMENT' => [
@@ -220,12 +205,7 @@ class AdvancedRole extends Model
         ],
     ];
 
-    /**
-     * All granular action permissions that can be individually toggled per role.
-     * These match the Pterodactyl subuser permission keys.
-     * When server_sub_permissions is NULL on a role, the legacy page-level
-     * permission bundles are used instead (backward compatible).
-     */
+
     public static array $availableActionPermissions = [
         'CONTROL' => [
             'control.console' => [
@@ -405,10 +385,7 @@ class AdvancedRole extends Model
         ],
     ];
 
-    /**
-     * Returns a flat map of all server page keys => their data.
-     * Used by GetUserPermissionsService to build permission arrays.
-     */
+
     public static function getPagePermissionMap(): array
     {
         $map = [];
@@ -420,9 +397,7 @@ class AdvancedRole extends Model
         return $map;
     }
 
-    /**
-     * Returns a flat list of all valid action permission keys.
-     */
+
     public static function getValidActionPermissionKeys(): array
     {
         $keys = [];
@@ -434,10 +409,7 @@ class AdvancedRole extends Model
         return $keys;
     }
 
-    /**
-     * Returns a map of page key => array of action permission keys.
-     * Used by frontend JS to auto-check action permissions when a page is toggled.
-     */
+
     public static function getPageToActionMap(): array
     {
         $map = [];
@@ -449,34 +421,25 @@ class AdvancedRole extends Model
         return $map;
     }
 
-    /**
-     * Returns the users assigned to this role.
-     */
+
     public function users(): HasMany
     {
         return $this->hasMany(User::class, 'adv_role_id');
     }
 
-    /**
-     * Returns the number of users currently assigned to this role.
-     */
+
     public function getUserCountAttribute(): int
     {
         return $this->users()->count();
     }
 
-    /**
-     * Returns the number of route sections this role has access to.
-     */
+
     public function getRouteCountAttribute(): int
     {
         return count($this->admin_routes ?? []);
     }
 
-    /**
-     * Checks whether this role grants access to a given admin route name.
-     * The overview (admin.index) is always accessible.
-     */
+
     public function canAccessRoute(string $routeName): bool
     {
         if ($routeName === 'admin.index') {
@@ -492,20 +455,13 @@ class AdvancedRole extends Model
         return false;
     }
 
-    /**
-     * Checks whether this role has a specific special (non-route) permission,
-     * e.g. 'special.server_access'.
-     */
+
     public function hasSpecialPermission(string $key): bool
     {
         return in_array($key, $this->admin_routes ?? [], true);
     }
 
-    /**
-     * The server group filter applied to the Server Access permission.
-     * When set together with server_group_mode ('allow'/'deny') it limits
-     * which servers a Server Access user can actually reach.
-     */
+
     public function serverGroup(): BelongsTo
     {
         return $this->belongsTo(ServerGroup::class, 'server_group_id');

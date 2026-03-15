@@ -1,73 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
+import React, { useEffect } from 'react';
 
 const ThemeToggle = () => {
-    const [isDark, setIsDark] = useState(false);
-
     useEffect(() => {
-        const siteConfig = (window as any).SiteConfiguration?.theme;
-        const defaultTheme = siteConfig?.defaultTheme || 'dark';
-        
-        const savedTheme = localStorage.getItem('theme');
-        
-        let shouldBeDark: boolean;
-        
-        if (savedTheme) {
-            shouldBeDark = savedTheme === 'dark';
-        } else {
-            if (defaultTheme === 'system') {
+        // Always force dark mode
+        localStorage.setItem('theme', 'dark');
+        document.documentElement.setAttribute('data-theme', 'dark');
 
-                shouldBeDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            } else {
-
-                shouldBeDark = defaultTheme === 'dark';
-            }
-        }
-        
-        setIsDark(shouldBeDark);
-        applyTheme(shouldBeDark);
-    }, []);
-
-    const applyTheme = (dark: boolean) => {
-        if (dark) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-        } else {
-            document.documentElement.removeAttribute('data-theme');
-        }
-        
         const siteConfig = (window as any).SiteConfiguration?.theme;
         if (siteConfig) {
-            const prefix = dark ? 'dark' : 'light';
-            document.documentElement.style.setProperty('--theme-primary', siteConfig[`${prefix}_primary`]);
-            document.documentElement.style.setProperty('--theme-secondary', siteConfig[`${prefix}_secondary`]);
-            document.documentElement.style.setProperty('--theme-border', siteConfig[`${prefix}_border`]);
-            document.documentElement.style.setProperty('--theme-text-base', siteConfig[`${prefix}_text_base`]);
-            document.documentElement.style.setProperty('--theme-text-muted', siteConfig[`${prefix}_text_muted`]);
-            document.documentElement.style.setProperty('--theme-text-inverted', siteConfig[`${prefix}_text_inverted`]);
-            document.documentElement.style.setProperty('--theme-background', siteConfig[`${prefix}_background`]);
-            document.documentElement.style.setProperty('--theme-background-secondary', siteConfig[`${prefix}_background_secondary`]);
+            document.documentElement.style.setProperty('--theme-primary', siteConfig.dark_primary);
+            document.documentElement.style.setProperty('--theme-secondary', siteConfig.dark_secondary);
+            document.documentElement.style.setProperty('--theme-border', siteConfig.dark_border);
+            document.documentElement.style.setProperty('--theme-text-base', siteConfig.dark_text_base);
+            document.documentElement.style.setProperty('--theme-text-muted', siteConfig.dark_text_muted);
+            document.documentElement.style.setProperty('--theme-text-inverted', siteConfig.dark_text_inverted);
+            document.documentElement.style.setProperty('--theme-background', siteConfig.dark_background);
+            document.documentElement.style.setProperty('--theme-background-secondary', siteConfig.dark_background_secondary);
         }
-    };
+    }, []);
 
-    const toggleTheme = () => {
-        const newTheme = !isDark;
-        setIsDark(newTheme);
-        localStorage.setItem('theme', newTheme ? 'dark' : 'light');
-        applyTheme(newTheme);
-    };
-
-
-    const siteConfig = (window as any).SiteConfiguration?.theme;
-    if (siteConfig?.disableThemeToggle) {
-        return null; 
-    }
-
-    return (
-        <button className="theme-toggle" onClick={toggleTheme} title={`Switch to ${isDark ? 'light' : 'dark'} theme`}>
-            <FontAwesomeIcon icon={isDark ? faSun : faMoon} />
-        </button>
-    );
+    // No toggle button rendered - always dark
+    return null;
 };
 
 export default ThemeToggle;

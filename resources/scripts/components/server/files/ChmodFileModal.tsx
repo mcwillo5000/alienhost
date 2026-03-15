@@ -64,7 +64,7 @@ const ChmodFileModal = ({ files, ...props }: OwnProps) => {
                                 <Field type={'string'} id={'file_mode'} name={'mode'} label={t('files.chmodModal.title')} autoFocus />
                             </div>
                             <div css={tw`w-full sm:w-auto mt-4 sm:mt-0`}>
-                                <Button css={tw`w-full`}>{t('files.chmodModal.update')}</Button>
+                                <Button type={'submit'} css={tw`w-full`}>{t('files.chmodModal.update')}</Button>
                             </div>
                         </div>
                     </Form>
